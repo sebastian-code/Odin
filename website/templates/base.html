@@ -1,17 +1,17 @@
 <!doctype html>
 <!--[if IE 9]><html class="lt-ie10" lang="en" > <![endif]-->
 <html class="no-js" lang="en" data-useragent="Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; Trident/6.0)">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>HackBulgaria</title>
-    <meta name="description" content="" />
-        
-    <link rel="stylesheet" href="{{ STATIC_URL }}css/foundation.css" />
-    <script src="{{ STATIC_URL }}js/vendor/modernizr.js"></script>
-  </head>
-  <body>
-    
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HackBulgaria</title>
+  <meta name="description" content="" />
+  
+  <link rel="stylesheet" href="{{ STATIC_URL }}css/foundation.css" />
+  <script src="{{ STATIC_URL }}js/vendor/modernizr.js"></script>
+</head>
+<body>
+  
 
   <div class="row">
     <div class="large-3 columns">
@@ -19,66 +19,29 @@
     </div>
     <div class="large-9 columns">
       <ul class="right button-group">
-      <li><a href="#" class="button">Начало</a></li>
-      <li><a href="#" class="button">Курсове</a></li>
-      <li><a href="#" class="button">ЧЗВ</a></li>
-      <li><a href="#" class="button">Форум</a></li>
-      <li><a href="#" class="button">Вход</a></li>
-      </ul>
-  </div>
-  </div>
-  
-<!-- End Header and Nav -->
-
-<!-- First Band (Slider) -->
-
-
-  <div class="row">
-    <div class="large-12 columns">
-      <ul class="example-orbit" data-orbit>
-        <li><img src=
-        "http://placehold.it/1000x400&amp;text=[%20img%201%20]"></li>
-        <li><img src=
-        "http://placehold.it/1000x400&amp;text=[%20img%202%20]"></li>
-        <li><img src=
-        "http://placehold.it/1000x400&amp;text=[%20img%203%20]"></li>
+        <li><a href="#" class="button">Начало</a></li>
+        <li><a href="#" class="button">Курсове</a></li>
+        <li><a href="#" class="button">ЧЗВ</a></li>
+        <li><a href="#" class="button">Форум</a></li>
+        <li><a href="#" class="button">Вход</a></li>
       </ul>
     </div>
   </div>
-    
-<hr/>
-
   
-<!-- Three-up Content Blocks -->
+  <!-- End Header and Nav -->
 
+  <!-- First Band (Slider) -->
+
+  {% block content %}
+
+  {% endblock %}
+  <!-- Call to Action Panel -->
   <div class="row">
-    <div class="large-4 columns">
-      <img src="http://placehold.it/400x300&text=[Python Course]" />
-      <h4>This is a content section.</h4>
-      <p>Bacon ipsum dolor sit amet nulla ham qui sint exercitation eiusmod commodo, chuck duis velit. Aute in reprehenderit, dolore aliqua non est magna in labore pig pork biltong. Eiusmod swine spare ribs reprehenderit culpa. Boudin aliqua adipisicing rump corned beef.</p>
-    </div>
-    
-    <div class="large-4 columns">
-      <img src="http://placehold.it/400x300&text=[img]" />
-      <h4>This is a content section.</h4>
-      <p>Bacon ipsum dolor sit amet nulla ham qui sint exercitation eiusmod commodo, chuck duis velit. Aute in reprehenderit, dolore aliqua non est magna in labore pig pork biltong. Eiusmod swine spare ribs reprehenderit culpa. Boudin aliqua adipisicing rump corned beef.</p>
-    </div>
-    
-    <div class="large-4 columns">
-      <img src="http://placehold.it/400x300&text=[img]" />
-      <h4>This is a content section.</h4>
-      <p>Bacon ipsum dolor sit amet nulla ham qui sint exercitation eiusmod commodo, chuck duis velit. Aute in reprehenderit, dolore aliqua non est magna in labore pig pork biltong. Eiusmod swine spare ribs reprehenderit culpa. Boudin aliqua adipisicing rump corned beef.</p>
-    </div>
-  
-    </div>
-    
-<!-- Call to Action Panel -->
-<div class="row">
     <div class="large-12 columns">
-    
+      
       <div class="panel">
         <h4>Get in touch!</h4>
-            
+        
         <div class="row">
           <div class="large-9 columns">
             <p>We'd love to hear from you, you attractive person you.</p>
@@ -88,7 +51,6 @@
           </div>
         </div>
       </div>
-      
     </div>
   </div>
 
@@ -113,16 +75,13 @@
     </div> 
   </footer>
 
-    <script src="{{ STATIC_URL }}js/vendor/jquery.js"></script>
-    <script src="{{ STATIC_URL }}js/foundation.min.js"></script>
-    <script>
-      $(document).foundation();
+  <script src="{{ STATIC_URL }}js/vendor/jquery.js"></script>
+  <script src="{{ STATIC_URL }}js/foundation.min.js"></script>
+  <script>
+  $(document).foundation();
 
-      var doc = document.documentElement;
-      doc.setAttribute('data-useragent', navigator.userAgent);
-    </script>
-  </body>
+  var doc = document.documentElement;
+  doc.setAttribute('data-useragent', navigator.userAgent);
+  </script>
+</body>
 </html>
-
-{% block content %}
-{% endblock %}
