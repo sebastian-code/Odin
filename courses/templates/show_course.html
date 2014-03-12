@@ -1,9 +1,23 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <div class="row">
+<div class="row">
     <div class="large-12 columns">
-    da
+        <div class="panel">
+            <div class="row">
+                <div class="large-3 columns">
+                    <img src="http://placehold.it/200x200&text=Python">
+                </div>
+                <div class="large-9 columns">
+                    <h5>{{ course.name }}</h5>
+                    <p>{{ course.description }}</p>
+                    <ul>
+                        <li>Начало: {{ course.start_time|date:"d-m-Y" }}</li>
+                        <li>Край: {{ course.end_time|date:"d-m-Y" }}</li>
+                    </ul>
+                </div>
+        </div>
+        </div>
     </div>
-  </div>
+</div>
 {% endblock %}

@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Course(models.Model):
-    name = models.CharField(blank=False, max_length=20)
+    name = models.CharField(blank=False, max_length=64)
     description = models.TextField(blank=False)
     #image = models.ImageField()
     start_time = models.DateField()
