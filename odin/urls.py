@@ -12,4 +12,6 @@ urlpatterns = patterns('',
 
     url(r'', include('website.urls')),
     url(r'', include('courses.urls')),
+    url(r'', include('faq.urls')),
+
 )

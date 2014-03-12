@@ -39,6 +39,7 @@ INSTALLED_APPS = (
     'south',
     'website',
     'courses',
+    'faq',
 )
 
 MIDDLEWARE_CLASSES = (

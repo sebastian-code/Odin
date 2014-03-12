@@ -20,23 +20,15 @@
 <!-- Three-up Content Blocks -->
 
   <div class="row">
-    <div class="large-4 columns">
-      <img src="http://placehold.it/400x300&text=[Python Course]" />
-      <h4>This is a content section.</h4>
-      <p>Bacon ipsum dolor sit amet nulla ham qui sint exercitation eiusmod commodo, chuck duis velit. Aute in reprehenderit, dolore aliqua non est magna in labore pig pork biltong. Eiusmod swine spare ribs reprehenderit culpa. Boudin aliqua adipisicing rump corned beef.</p>
-    </div>
-    
-    <div class="large-4 columns">
-      <img src="http://placehold.it/400x300&text=[img]" />
-      <h4>This is a content section.</h4>
-      <p>Bacon ipsum dolor sit amet nulla ham qui sint exercitation eiusmod commodo, chuck duis velit. Aute in reprehenderit, dolore aliqua non est magna in labore pig pork biltong. Eiusmod swine spare ribs reprehenderit culpa. Boudin aliqua adipisicing rump corned beef.</p>
-    </div>
-    
-    <div class="large-4 columns">
-      <img src="http://placehold.it/400x300&text=[img]" />
-      <h4>This is a content section.</h4>
-      <p>Bacon ipsum dolor sit amet nulla ham qui sint exercitation eiusmod commodo, chuck duis velit. Aute in reprehenderit, dolore aliqua non est magna in labore pig pork biltong. Eiusmod swine spare ribs reprehenderit culpa. Boudin aliqua adipisicing rump corned beef.</p>
-    </div>
-  
+    {% for course in courses %}
+      <div class="large-4 columns">
+        <img src="{{MEDIA_URL}}{{ course.image }}">
+        <h4>{{ course.name }}</h4>
+        <p>{{ course.description }}</p>
+        <div class="text-center">
+          <a href="/course/{{ course.id }}/"><button>Прочети повече</button>
+        </div>
+      </div>  
+    {% endfor %}
   </div>
 {% endblock %}

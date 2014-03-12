@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+<div class="row">
+    <div class="large-12 columns">
+        <dl class="accordion" data-accordion>
+          {% for faq in faqs %}
+          <dd>
+            <a href="#panel{{ faq.id }}">{{ faq.title }}</a>
+            <div id="panel{{ faq.id }}" class="content">
+              {{ faq.text }}
+            </div>
+          </dd>
+          {% endfor %}
+        </dl>
+    </div>
+</div>
+<p></p>
+{% endblock %}
