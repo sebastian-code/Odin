@@ -6,7 +6,7 @@
         <div class="panel">
             <div class="row">
                 <div class="large-3 columns">
-                    <img src="http://placehold.it/200x200&text=Python">
+                    <img src="{{MEDIA_URL}}{{ course.image }}">
                 </div>
                 <div class="large-9 columns">
                     <h5>{{ course.name }}</h5>
@@ -16,8 +16,48 @@
                         <li>Край: {{ course.end_time|date:"d-m-Y" }}</li>
                     </ul>
                 </div>
-        </div>
+            </div>
         </div>
     </div>
+    <div class="large-12 columns">
+    <table>
+      <thead>
+        <tr>
+          <th width="300">Седмица</th>
+          <th width="900">Материали</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+            <td>1. Въведение в програмиране:</td>
+            <td>
+                <ul>
+                    <li>Задачи</li>
+                    <li>Видео</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td>2. Езици за програмиране:</td>
+            <td>
+                <ul>
+                    <li>Задачи</li>
+                    <li>Видео</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td>3. Git и GitHub:</td>
+            <td>
+                <ul>
+                    <li>Задачи</li>
+                    <li>Видео</li>
+                </ul>
+            </td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
 </div>
+
 {% endblock %}
