@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+    <div class="large-7 columns">
+        <form method="post" action="#">
+            {% csrf_token %}
+            <fieldset>
+                <legend>Вход за курсисти</legend>
+                <div class="row">
+                    <div class="large-12 columns">
+                        <label>Email
+                            <input type="text" name="username" class="error" />
+                        </label>
+                        {# <small class="error">Invalid entry</small> #}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="large-12 columns">
+                        <label>Парола
+                            <input type="password" name="password" class="error" />
+                        </label>
+                        {# <small class="error">Invalid entry</small> #}
+                    </div>
+                </div>
+                <p></p>
+                <button>Вход</button>
+            </fildset>
+        </form>
+    </div>
+</div>
+{% endblock %}

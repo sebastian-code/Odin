@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+    <div class="large-12 columns">
+        <div class="panel">
+            <div class="row">
+                <div class="large-3 columns">
+                    <img src="{{MEDIA_URL}}{{ user.avatar }}" alt="">
+                </div>
+                <div class="large-9 columns">
+                    <h3>{{ user.first_name }} {{ user.last_name }} - {{ user.faculty_number }}</h3>
+                </div>
+                <ul style="list-style-type: none;">
+                    <li>LinkedIn: <a href="{{ user.linkedin_account }}">{{ user.linkedin_account }}</a></li>
+                    <li>GitHub: <a href="{{ user.github_account }}">{{ user.github_account }}</a></li>
+                </ul>
+                <div class="large-12">
+                    {{ user.description }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
