@@ -21,7 +21,18 @@
         <li><a href="/course/" class="button">Курсове</a></li>
         <li><a href="/FAQ" class="button">ЧЗВ</a></li>
         <li><a href="#" class="button">Форум</a></li>
-        <li><a href="/login" class="button">Вход</a></li>
+        {% if user.is_authenticated %}
+        <li>
+          <a href="/profile" data-dropdown="drop1" class="button dropdown">{{ user.first_name }} {{ user.last_name }}</a><br>
+          <ul id="drop1" data-dropdown-content class="f-dropdown">
+            <li><a href="/profile">Профил</a></li>
+            <li><a href="/profile">Редактиране на Профил</a></li>
+            <li><a href="/logout">Изход</a></li>
+          </ul>
+        </li>
+        {% else %}
+          <li><a href="/login" class="button">Вход</a></li>
+        {% endif %}
       </ul>
     </div>
   </div>
