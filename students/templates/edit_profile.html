@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+    <div class="large-12 columns">
+        <h3>{{ user.first_name }} {{ user.last_name }} -  {{ user.faculty_number }}</h3>
+        <form  method="post" action="" enctype="multipart/form-data">
+            <fieldset>
+                <legend>Редактиране на профил</legend>
+                {% csrf_token %}
+                <div class="large-3 columns">
+                    {% if user.avatar %}
+                        <img src="{{ MEDIA_URL   }}{{ form.avatar.value }}" alt="" class="th">
+                    {% else %}
+                        <img src="{{ STATIC_URL }}img/no-avatar.png" alt="" class="th">
+                    {% endif %}
+                    <p></p>
+                    {# <input id="id_avatar" type="file" name="avatar" /> #}
+                </div>
+
+                <div class="large-8 columns">
+                    <label>GitHub Account:
+                        <input type="text" name="github_account" placeholder="https://github.com/" value="{{ form.github_account.value|default:"" }}"/>
+                    </label>
+                </div>
+                
+                <div class="large-8 columns">
+                    <label>LinkedIn Account:
+                        <input type="text" name="linkedin_account" placeholder="https://linkedin.com/" value="{{ form.linkedin_account.value|default:"" }}" />
+                    </label>
+                </div>
+                
+                <div class="large-9 columns">
+                    <label>Описание:
+                        <textarea id="" rows="10" name="description" placeholder="Опиши се с няколко думи">{{ form.description.value|default:"" }}</textarea>
+                    </label>
+                </div>
+            </fieldset>
+            <button>Промени</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
