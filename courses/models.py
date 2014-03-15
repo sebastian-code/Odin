@@ -8,6 +8,7 @@ class Course(models.Model):
     git_repository = models.CharField(blank=True, max_length=256)
     show_on_index = models.BooleanField(default=False)
     enable_applications = models.BooleanField(default=False)
+    applications_url = models.URLField(null=True, blank=True)
     start_time = models.DateField()
     end_time = models.DateField()
 

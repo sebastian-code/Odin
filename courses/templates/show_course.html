@@ -16,7 +16,7 @@
                         <li>Край: {{ course.end_time|date:"d-m-Y" }}</li>
                     </ul>
                 {% if course.enable_applications %}
-                    <a href="#" class="button large-3 columns" style="margin-top:30px;">Кандидатствай</a>
+                    <a target="_blank" href="{{ course.applications_url }}" class="button large-3 columns" style="margin-top:30px;">Кандидатствай</a>
                 {% endif %}
                 </div>
             </div>
