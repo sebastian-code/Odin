@@ -6,17 +6,20 @@
         <form  method="post" action="" enctype="multipart/form-data">
             <fieldset>
                 <legend>Редактиране на профил</legend>
+                {% if form.errors %}
+                    {% for fieldName, errorMessage in form.errors.items %}
+                        {{ errorMessage }}
+                    {% endfor %}
+                {% endif %}
                 {% csrf_token %}
-                <div class="large-3 columns">
+                <div class="large-3 columns" style="height: 400px;">
                     {% if user.avatar %}
                         <img src="{{ MEDIA_URL   }}{{ form.avatar.value }}" alt="" class="th">
                     {% else %}
                         <img src="{{ STATIC_URL }}img/no-avatar.png" alt="" class="th">
                     {% endif %}
                     <p></p>
-                    {# <input id="id_avatar" type="file" name="avatar" /> #}
                 </div>
-
                 <div class="large-8 columns">
                     <label>GitHub Account:
                         <input type="text" name="github_account" placeholder="https://github.com/" value="{{ form.github_account.value|default:"" }}"/>
@@ -34,6 +37,19 @@
                         <textarea id="" rows="10" name="description" placeholder="Опиши се с няколко думи">{{ form.description.value|default:"" }}</textarea>
                     </label>
                 </div>
+
+                <div class="large-9 columns">
+                    <label>Нова Парола: (Остави празно, ако не искаш да смениш паролата)
+                        <input type="password" name="new_password1"/>
+                    </label>
+                </div>
+
+                <div class="large-9 columns">
+                    <label>Парола Отново:
+                        <input type="password" name="new_password2"/>
+                    </label>
+                </div>
+
             </fieldset>
             <button>Промени</button>
         </form>
