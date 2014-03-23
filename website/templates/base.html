@@ -18,20 +18,20 @@
     <div class="large-9 columns">
       <ul class="right button-group">
         <li><a href="/" class="button">Начало</a></li>
-        <li><a href="/course/" class="button">Курсове</a></li>
-        <li><a href="/FAQ" class="button">ЧЗВ</a></li>
+        <li><a href="{% url 'show-all-courses' %}" class="button">Курсове</a></li>
+        <li><a href="{% url 'show-faqs' %}" class="button">ЧЗВ</a></li>
         <li><a href="#" class="button">Форум</a></li>
         {% if user.is_authenticated %}
         <li>
-          <a href="/profile" data-dropdown="drop1" class="button dropdown">{{ user.first_name }} {{ user.last_name }}</a><br>
+          <a href="" data-dropdown="drop1" class="button dropdown">{{ user.first_name }} {{ user.last_name }}</a><br>
           <ul id="drop1" data-dropdown-content class="f-dropdown">
-            <li><a href="/accounts/profile">Профил</a></li>
-            <li><a href="/accounts/edit">Редактиране на Профил</a></li>
-            <li><a href="/logout">Изход</a></li>
+            <li><a href="{% url 'user-profile' %}">Профил</a></li>
+            <li><a href="{% url 'edit-profile' %}">Редактиране на Профил</a></li>
+            <li><a href="{% url 'logout' %}">Изход</a></li>
           </ul>
         </li>
         {% else %}
-          <li><a href="/login" class="button">Вход</a></li>
+          <li><a href="{% url 'login' %}" class="button">Вход</a></li>
         {% endif %}
       </ul>
     </div>
