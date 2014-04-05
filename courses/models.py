@@ -3,6 +3,7 @@ from django.db import models
 
 class Course(models.Model):
     name = models.CharField(blank=False, max_length=64)
+    short_description = models.CharField(blank=True, max_length=300)
     description = models.TextField(blank=False)
     image = models.ImageField(upload_to="courses_logoes", null=True, blank=True)
     git_repository = models.CharField(blank=True, max_length=256)

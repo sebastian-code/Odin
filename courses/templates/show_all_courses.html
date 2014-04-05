@@ -2,17 +2,15 @@
 
 {% block content %}
 <div class="row">
-    <div class="large-12 columns">
-        {% for course in courses %}
-        <div class="large-3 columns">
-            <div class="panel">
+    {% for course in courses %}
+        <div class="small-2 large-4 columns">
+            <div class="panel text-center">
                 <h5>{{ course.name }}</h5>
-                <img src="{{MEDIA_URL}}{{ course.image }}">
-                {# <h6 class="subheader"></h6> #}
-                <a href="/course/{{ course.id }}/" class="button">Повече информация</a>
+                <img style="height: 200px;" src="{{MEDIA_URL}}{{ course.image }}">
+                <a href="/course/{{ course.id }}/" class="button" style="margin-top: 20px" >Повече информация</a>
             </div>
         </div>
-        {% endfor %}
-    </div>
+    {% endfor %}
 </div>
+
 {% endblock %}

@@ -21,12 +21,12 @@
 
   <div class="row">
     {% for course in courses %}
-      <div class="large-4 columns">
-        <img src="{{MEDIA_URL}}{{ course.image }}">
+      <div class="large-4 columns text-center">
+        <img src="{{MEDIA_URL}}{{ course.image }}" style="height: 300px;">
         <h4>{{ course.name }}</h4>
-        <p>{{ course.description }}</p>
+        <p style="min-height: 200px;">{{ course.short_description }}</p>
         <div class="text-center">
-          <a href="/course/{{ course.id }}/"><button>Прочети повече</button>
+          <a href="/course/{{ course.id }}/"><button>Прочети повече</button></a>
         </div>
       </div>  
     {% endfor %}
