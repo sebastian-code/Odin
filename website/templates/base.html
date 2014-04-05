@@ -8,43 +8,37 @@
   <meta name="description" content=""/>
   
   <link rel="stylesheet" href="{{ STATIC_URL }}css/foundation.css" />
+  <link rel="stylesheet" href="{{ STATIC_URL }}css/base.css" />
   <script src="{{ STATIC_URL }}js/vendor/modernizr.js"></script>
 </head>
 <body>
   <div class="row">
-    <div class="large-3 columns">
-      <h1><img src="http://placehold.it/400x100&text=Logo" /></h1>
-    </div>
-    <div class="large-9 columns">
-      <ul class="right button-group">
-        <li><a href="/" class="button">Начало</a></li>
-        <li><a href="{% url 'show-all-courses' %}" class="button">Курсове</a></li>
-        <li><a href="{% url 'show-faqs' %}" class="button">ЧЗВ</a></li>
-        <li><a href="#" class="button">Форум</a></li>
+  <nav class="top-bar" id="main-nav" data-topbar>
+      <section class="top-bar-section">
+      <!-- Right Nav Section -->
+      <ul class="right">
+        <li><a href="/">Начало</a></li>
+        <li><a href="{% url 'show-all-courses' %}" >Курсове</a></li>
+        <li><a href="{% url 'show-faqs' %}" >ЧЗВ</a></li>
+        <li><a href="#">Форум</a></li>
         {% if user.is_authenticated %}
-        <li>
-          <a href="" data-dropdown="drop1" class="button dropdown">{{ user.first_name }} {{ user.last_name }}</a><br>
-          <ul id="drop1" data-dropdown-content class="f-dropdown">
+        <li class="has-dropdown">
+          <a href="#">{{ user.first_name }} {{ user.last_name }}</a>
+          <ul class="dropdown">
             <li><a href="{% url 'user-profile' %}">Профил</a></li>
             <li><a href="{% url 'edit-profile' %}">Редактиране на Профил</a></li>
             <li><a href="{% url 'logout' %}">Изход</a></li>
           </ul>
         </li>
         {% else %}
-          <li><a href="{% url 'login' %}" class="button">Вход</a></li>
+          <li><a href="{% url 'login' %}">Вход</a></li>
         {% endif %}
       </ul>
-    </div>
-  </div>
-  
-  <!-- End Header and Nav -->
-  
-  <!-- First Band (Slider) -->
-
+    </section>
+  </nav>
   {% block content %}
 
   {% endblock %}
-  <!-- Call to Action Panel -->
   <div class="row">
     <div class="large-12 columns">
       

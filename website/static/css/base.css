@@ -1,0 +1,12 @@
+#main-nav {
+    margin-bottom: 20px;
+    background: #008cba;
+}
+
+#main-nav a {
+    background: #008cba;
+}
+
+#main-nav a:hover {
+    background: #007095;
+}
