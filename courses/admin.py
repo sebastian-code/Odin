@@ -1,5 +1,8 @@
 from django.contrib import admin
+from pagedown.widgets import AdminPagedownWidget
 from models import Course
+from django.db import models
+
 
 # Register your models here.
 class CourseAdmin(admin.ModelAdmin):
@@ -8,7 +11,11 @@ class CourseAdmin(admin.ModelAdmin):
         'name',
         'start_time',
         'end_time'
-        ]
+    ]
+
+    formfield_overrides = {
+        models.TextField: {'widget': AdminPagedownWidget},
+    }
 
     list_display_links = ['name']
 

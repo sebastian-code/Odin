@@ -38,7 +38,9 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     
     'south',
-    
+    'pagedown',
+    'markdown_deux',
+
     'website',
     'courses',
     'faq',
