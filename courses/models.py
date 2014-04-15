@@ -13,5 +13,9 @@ class Course(models.Model):
     start_time = models.DateField()
     end_time = models.DateField()
 
+    SEO_title = models.CharField(blank=False, max_length=255)
+    SEO_description = models.CharField(blank=False, max_length=255)
+    url = models.SlugField(max_length=80, unique=True)
+
     def __unicode__(self):
         return self.name

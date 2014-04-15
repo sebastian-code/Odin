@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+{% block meta %}
+    <title>Курсове по програмиране - HackBulgaria</title>
+{% endblock %}
+
 {% block content %}
 <div class="row">
     {% for course in courses %}
@@ -7,7 +11,7 @@
             <div class="panel text-center">
                 <h5>{{ course.name }}</h5>
                 <img style="height: 200px;" src="{{MEDIA_URL}}{{ course.image }}">
-                <a href="/course/{{ course.id }}/" class="button" style="margin-top: 20px" >Повече информация</a>
+                <a href="/course/{{ course.url }}/" class="button" style="margin-top: 20px" >Повече информация</a>
             </div>
         </div>
     {% endfor %}

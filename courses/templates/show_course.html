@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 
+{% block meta %}
+    <title>{{ course.SEO_title }}</title>
+    <meta name="description" content="{{ course.SEO_description }}"/>
+{% endblock %}
+
 {% block content %}
 <div class="row">
     <div class="large-12 columns">
@@ -8,7 +13,7 @@
                 <div class="large-2 columns">
                     <img src="{{MEDIA_URL}}{{ course.image }}">
                 </div>
-                <div class="large-10 columns">
+                <div class="large-9 columns">
                     {% load markdown_deux_tags %}
 
                     <p>{{ course.description | markdown }}</p>
