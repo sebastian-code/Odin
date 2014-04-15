@@ -12,7 +12,9 @@
           <dd>
             <a href="#panel{{ faq.id }}">{{ faq.title }}</a>
             <div id="panel{{ faq.id }}" class="content">
-              {{ faq.text }}
+              {% load markdown_deux_tags %}
+              
+              <p>{{ faq.text | markdown }}</p>
             </div>
           </dd>
           {% endfor %}
