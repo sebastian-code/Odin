@@ -9,7 +9,6 @@
                     <img src="{{MEDIA_URL}}{{ course.image }}">
                 </div>
                 <div class="large-9 columns">
-                    <h5>{{ course.name }}</h5>
                     {% load markdown_deux_tags %}
 
                     <p>{{ course.description | markdown }}</p>
