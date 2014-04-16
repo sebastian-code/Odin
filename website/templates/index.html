@@ -3,7 +3,7 @@
 {% block content %}
   <div class="row">
     <div class="large-12 columns text-center">
-      <img src="{{ STATIC_URL }}/img/HackBG-logo.png" alt="">
+      <img src="{{ STATIC_URL }}/img/HackBG-logo.png" alt="Hack Bulgaria" style="padding-top: 20px;">
       <p>
         <h2>Курсове по програмиране, в които писането на код е задължение, а лекциите са за домашно.</h2>
       </p>
@@ -27,9 +27,9 @@
   <div class="row">
     {% for course in courses %}
       <div class="large-4 columns text-center">
-        <img src="{{MEDIA_URL}}{{ course.image }}" style="height: 300px;">
+        <a href="/course/{{ course.url }}"><img src="{{MEDIA_URL}}{{ course.image }}" style="height: 300px;"></a>
         <h4>{{ course.name }}</h4>
-        <p style="min-height: 200px;">{{ course.short_description }}</p>
+        <p style="min-height: 150px;">{{ course.short_description }}</p>
         <div class="text-center">
           <a href="/course/{{ course.url }}/"><button>Прочети повече</button></a>
         </div>

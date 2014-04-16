@@ -10,7 +10,7 @@
         <div class="small-2 large-4 columns">
             <div class="panel text-center">
                 <h5>{{ course.name }}</h5>
-                <img style="height: 200px;" src="{{MEDIA_URL}}{{ course.image }}">
+                <a href="/course/{{ course.url }}/"><img style="height: 200px;" src="{{MEDIA_URL}}{{ course.image }}"></a>
                 <a href="/course/{{ course.url }}/" class="button" style="margin-top: 20px" >Повече информация</a>
             </div>
         </div>

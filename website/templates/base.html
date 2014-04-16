@@ -21,8 +21,8 @@
         <li><a href="/">Начало</a></li>
         <li><a href="{% url 'show-all-courses' %}" >Курсове</a></li>
         <li><a target="_blank" href="http://blog.hackbulgaria.com/" >Блог</a></li>
-        <li><a href="{% url 'forum' %}">Форум</a></li>
-        <li><a href="{% url 'show-faqs' %}" >ЧЗВ</a></li>
+        <!-- <li><a href="{% url 'forum' %}">Форум</a></li> 
+        <li><a href="{% url 'show-faqs' %}" >ЧЗВ</a></li> -->
         {% if user.is_authenticated %}
         <li class="has-dropdown">
           <a href="#">{{ user.first_name }} {{ user.last_name }}</a>
