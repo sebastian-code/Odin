@@ -11,8 +11,9 @@
         <div class="panel">
             <div class="row" id="course-page">
                 <img src="{{MEDIA_URL}}{{ course.image }}" class="medium-2 columns">
-                
+                    {% autoescape off %}
                     <p>{{ course.description }}</p>
+                    {% endautoescape %}
                     <ul class="large-4 columns">
 
                     </ul>
