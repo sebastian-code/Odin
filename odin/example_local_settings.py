@@ -8,3 +8,5 @@ DATABASES = {
         'PORT': '',
     }
 }
+
+GOOGLE_ANALYTICS_KEY = ""

@@ -27,7 +27,7 @@
   <div class="row">
     {% for course in courses %}
       <div class="large-4 columns text-center">
-        <a href="/course/{{ course.url }}"><img src="{{MEDIA_URL}}{{ course.image }}" style="height: 300px;"></a>
+        <a href="/course/{{ course.url }}/"><img src="{{MEDIA_URL}}{{ course.image }}" style="height: 300px;"></a>
         <h4>{{ course.name }}</h4>
         <p style="min-height: 150px;">{{ course.short_description }}</p>
         <div class="text-center">

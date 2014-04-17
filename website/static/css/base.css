@@ -3,8 +3,9 @@
     background: #008cba;
 }
 
-#main-nav a {
-    background: #008cba;
+#main-nav a, .title-area, .toggle-topbar > a {
+    background: #008cba !important;
+    color: #FFF;
 }
 
 #main-nav a:hover {
@@ -16,6 +17,10 @@
     padding-right: 20px;
 }
 
-#course-page > ul {
+#course-page > ul, ol {
     padding-left: 25px;
+}
+
+.entypo-export {
+    display: inline;
 }
