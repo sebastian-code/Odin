@@ -1,10 +1,11 @@
 from django.db import models
+from tinymce import models as tinymce_models
 
 
 class Course(models.Model):
     name = models.CharField(blank=False, max_length=64)
     short_description = models.CharField(blank=True, max_length=300)
-    description = models.TextField(blank=False)
+    description = tinymce_models.HTMLField(blank=False)
     image = models.ImageField(upload_to="courses_logoes", null=True, blank=True)
     git_repository = models.CharField(blank=True, max_length=256)
     show_on_index = models.BooleanField(default=False)

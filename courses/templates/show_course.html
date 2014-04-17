@@ -12,9 +12,7 @@
             <div class="row" id="course-page">
                 <img src="{{MEDIA_URL}}{{ course.image }}" class="medium-2 columns">
                 
-                    {% load markdown_deux_tags %}
-
-                    <p>{{ course.description | markdown }}</p>
+                    <p>{{ course.description }}</p>
                     <ul class="large-4 columns">
 
                     </ul>

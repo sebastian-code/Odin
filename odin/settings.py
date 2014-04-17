@@ -38,8 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     
     'south',
-    'pagedown',
-    'markdown_deux',
+    'tinymce',
 
     'website',
     'courses',
@@ -87,8 +86,15 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # trailing slash.
 # Examples: "http://example.com/media/", "http://media.example.com/"
 MEDIA_URL = '/media/'
+DJANGO_WYSIWYG_FLAVOR = "tinymce_advanced"
 
 try:
     from local_settings import *
 except ImportError:
     exit("local_settings.py not found!")
+
+TINYMCE_DEFAULT_CONFIG = {
+    'plugins': "table,spellchecker,paste,searchreplace",
+    'width' : 900,
+    'height' : 400,
+}
