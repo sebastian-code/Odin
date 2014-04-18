@@ -24,3 +24,24 @@
 .entypo-export {
     display: inline;
 }
+
+#socials > li {
+    float: left;
+    display: inline-block;
+    list-style: none;
+}
+
+#socials {
+    width: 265px;
+    float: right;
+    margin-top: -10px;
+}
+
+#socials > li > a{
+    display: inline-block;
+    height: 32px;
+    width: 32px;
+    text-indent: -9999em;
+    margin: 3px;
+    float: right;
+}
