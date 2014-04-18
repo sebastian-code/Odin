@@ -9,8 +9,6 @@ DATABASES = {
     }
 }
 
-GOOGLE_ANALYTICS_KEY = ""
-
 ALLOWED_HOSTS = []
 
 DEBUG = False
