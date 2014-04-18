@@ -7,7 +7,6 @@ https://docs.djangoproject.com/en/1.6/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.6/ref/settings/
 """
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -36,6 +35,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'django.contrib.flatpages',
     
     'south',
     'tinymce',
@@ -75,6 +76,8 @@ USE_TZ = True
 
 AUTH_USER_MODEL = 'students.User'
 
+SITE_ID = 1
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
@@ -86,6 +89,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # trailing slash.
 # Examples: "http://example.com/media/", "http://media.example.com/"
 MEDIA_URL = '/media/'
+
 DJANGO_WYSIWYG_FLAVOR = "tinymce_advanced"
 
 try:
