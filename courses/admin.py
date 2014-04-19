@@ -7,8 +7,6 @@ class CourseAdmin(admin.ModelAdmin):
     list_display = [
         'id',
         'name',
-        'start_time',
-        'end_time'
     ]
 
     list_display_links = ['name']

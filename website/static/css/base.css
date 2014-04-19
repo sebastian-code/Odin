@@ -25,6 +25,10 @@
     display: inline;
 }
 
+#social-button {
+    margin-top: 40px;
+}
+
 #socials > li {
     float: left;
     display: inline-block;
