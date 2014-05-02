@@ -1,5 +1,5 @@
 from django import forms
-from .models import User
+from .models import User, UserNote
 from django.utils.translation import ugettext as _
 
 
@@ -39,4 +39,16 @@ class UserEditForm(forms.ModelForm):
             'linkedin_account',
             'description',
             'avatar',
+        )
+
+
+class AddNote(forms.ModelForm):
+    def save(self, *args, **kwargs):
+        return super(AddNote, self).save()
+
+    class Meta:
+        model = UserNote
+        fields = (
+            "text",
+            "assignment",
         )

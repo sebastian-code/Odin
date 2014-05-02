@@ -16,6 +16,24 @@
                 <div>
                     <a href="{{ assignment.course.git_repository }}" target="_blank">Материали в GitHub</a>
                 </div>
+
+                {% if is_teacher %}
+                    {% for note in notes %}
+                        <p class="large-12 columns" style="padding-top: 40px;">
+                            {{ note.text }}
+                            <hr>
+                        </p>
+                    {% endfor %}
+                   
+                    {{ form.errors }}
+                    <form method="POST">
+                    {% csrf_token %}
+
+                        <textarea cols="40" id="id_text" name="text" rows="10"></textarea>
+                        <input type="hidden" name="assignment" value="{{ assignment.id }}">
+                        <button>Дай коментар!</button>
+                    </form>
+                {% endif %}
             </div>
         </div>
     </div>
