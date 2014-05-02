@@ -7,7 +7,7 @@
 {% block content %}
 <div class="row">
     <div class="large-12 columns">
-        <h3>{{ user.first_name }} {{ user.last_name }} -  {{ user.faculty_number }}</h3>
+        <h3>{{ user.get_full_name }} -  {{ user.faculty_number }}</h3>
         <form  method="post" action="" enctype="multipart/form-data">
             <fieldset>
                 <legend>Редактиране на профил</legend>

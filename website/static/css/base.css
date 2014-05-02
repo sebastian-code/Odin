@@ -49,3 +49,15 @@
     margin: 3px;
     float: right;
 }
+
+#profile-avatar{
+    float: left;
+}
+
+#points{
+    border:1px solid;
+    padding: 15px; 
+    width: 100px; 
+    float: right; 
+    margin-top: -45px;
+}

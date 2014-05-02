@@ -13,3 +13,8 @@ def show_all_courses(request):
     courses = Course.objects.all()
 
     return render(request, "show_all_courses.html", locals())
+
+
+def course_materials(request):
+
+    return render(request, "show_materials.html", locals())

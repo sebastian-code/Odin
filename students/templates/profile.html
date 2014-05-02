@@ -10,25 +10,33 @@
     <div class="large-12 columns">
         <div class="panel">
             <div class="row">
-                <div class="large-3 columns">
-                    {% if user.avatar %}
-                        <img src="{{ MEDIA_URL   }}{{ user.avatar }}" alt="" class="th">
-                    {% else %}
-                        <img src="{{ STATIC_URL }}img/no-avatar.png" alt="" class="th">
-                    {% endif %}
-                </div>
-                <div class="large-9 columns">
-                    <h3>{{ user.first_name }} {{ user.last_name }} - {{ user.faculty_number }}</h3>
-                </div>
-                <ul style="list-style-type: none;">
+
+                {% if user.avatar %}
+                    <img src="{{ MEDIA_URL   }}{{ user.avatar }}" class="medium-3 columns" id="profile-avatar">
+                {% else %}
+                    <img src="{{ STATIC_URL }}img/no-avatar.png" class="medium-3 columns" id="profile-avatar">
+                {% endif %}
+                <ul>
+
+                <h1>{{ user.first_name }} {{ user.last_name }} - {{ user.faculty_number }}</h1>
+
+                <p>
+                    {{ user.description }}
+                </p>
+
+                <h5>Курсове:</h5>
+
+                <ol>
+                    {% for assignment in user.courseassignment_set.all %}
+                        <li><a href="{% url 'assignment' assignment.pk %}">{{ assignment.course }}</a></li>
+                    {% endfor %}
+                </ol>
+
+                <h5>Контакти:</h5>
+                <ul>
                     <li>LinkedIn: <a href="{{ user.linkedin_account }}">{{ user.linkedin_account }}</a></li>
                     <li>GitHub: <a href="{{ user.github_account }}">{{ user.github_account }}</a></li>
                 </ul>
-                <div class="large-12">
-                    <p>
-                        {{ user.description }}
-                    </p>
-                </div>
             </div>
         </div>
     </div>

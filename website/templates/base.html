@@ -31,7 +31,7 @@
         <li><a href="{% url 'show-faqs' %}" >ЧЗВ</a></li> -->
         {% if user.is_authenticated %}
         <li class="has-dropdown">
-          <a href="#">{{ user.first_name }} {{ user.last_name }}</a>
+          <a href="#">{{ user.get_full_name }}</a>
           <ul class="dropdown">
             <li><a href="{% url 'user-profile' %}">Профил</a></li>
             <li><a href="{% url 'edit-profile' %}">Редактиране на Профил</a></li>

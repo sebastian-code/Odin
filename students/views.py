@@ -1,7 +1,8 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth import views
 from .forms import UserEditForm
+from .models import CourseAssignment
 
 
 def login(request):
@@ -30,3 +31,10 @@ def edit_profile(request):
     else:
         form = UserEditForm(instance=request.user)
     return render(request, 'edit_profile.html', locals())
+
+
+@login_required
+def assignment(request, id):
+    assignment = get_object_or_404(CourseAssignment, pk=id)
+
+    return render(request, "assignment.html", locals())

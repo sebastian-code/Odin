@@ -11,20 +11,20 @@
         <div class="panel">
             <div class="row" id="course-page">
                 <img src="{{MEDIA_URL}}{{ course.image }}" class="medium-2 columns">
-                    {% autoescape off %}
-                    <p>{{ course.description }}</p>
-                    {% endautoescape %}
-                    <ul class="large-4 columns">
+                {% autoescape off %}
+                <p>{{ course.description }}</p>
+                {% endautoescape %}
+                <ul class="large-4 columns">
 
-                    </ul>
-                    <div class="large-12 columns text-center">
+                </ul>
+                <div class="large-12 columns text-center">
                     {% if enable_applications %}
-                        <a target="_blank" href="{{ course.applications_url }}" class="button large-3">Кандидатствай</a>
-                        <p>(Краен срок - {{ course.application_until | date:"d-m-Y" }})</p>
+                    <a target="_blank" href="{{ course.applications_url }}" class="button large-3">Кандидатствай</a>
+                    <p>(Краен срок - {{ course.application_until | date:"d-m-Y" }})</p>
                     {% else %}
-                        <p><strong>Срокът за записване изтече. <a href="{{ course. }}"  rel="nofollow">Абонирайте се за нашия бюлетин, за да получите информация за следващия сезон.</strong></a></p>
+                    <p><strong>Срокът за записване изтече. <a href="{{ course. }}"  rel="nofollow">Абонирайте се за нашия бюлетин, за да получите информация за следващия сезон.</strong></a></p>
                     {% endif %}
-                    </div>
+                </div>
             </div>
             
             <div id="social-button">
@@ -37,65 +37,27 @@
             </div>
         </div>
     </div>
-    <!-- <div class="large-12 columns">
-    <table>
-      <thead>
-        <tr>
-          <th width="300">Седмица</th>
-          <th width="900">Материали</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-            <td>1. Въведение в програмиране:</td>
-            <td>
-                <ul>
-                    <li>Задачи</li>
-                    <li>Видео</li>
-                </ul>
-            </td>
-        </tr>
-        <tr>
-            <td>2. Езици за програмиране:</td>
-            <td>
-                <ul>
-                    <li>Задачи</li>
-                    <li>Видео</li>
-                </ul>
-            </td>
-        </tr>
-        <tr>
-            <td>3. Git и GitHub:</td>
-            <td>
-                <ul>
-                    <li>Задачи</li>
-                    <li>Видео</li>
-                </ul>
-            </td>
-        </tr>
-      </tbody>
-    </table>-->
-    </div>
+</div>
 </div>
 {% endblock %}
 
 
 {% block jsfooter %}
-    <div id="fb-root"></div>
-    <script>(function(d, s, id) {
-      var js, fjs = d.getElementsByTagName(s)[0];
-      if (d.getElementById(id)) return;
-      js = d.createElement(s); js.id = id;
-      js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1";
-      fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));</script>
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
 
 
-    <script type="text/javascript" src="https://apis.google.com/js/platform.js"></script>
-    
-    <script src="//platform.linkedin.com/in.js" type="text/javascript">
-      lang: en_US
-    </script>
+<script type="text/javascript" src="https://apis.google.com/js/platform.js"></script>
 
-    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+<script src="//platform.linkedin.com/in.js" type="text/javascript">
+lang: en_US
+</script>
+
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 {% endblock %}

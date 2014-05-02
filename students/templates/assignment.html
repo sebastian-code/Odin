@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="large-12 columns">
+        <div class="panel">
+            <div class="row" id="course-page">
+                <img src="{{MEDIA_URL}}{{ assignment.course.image }}" class="medium-2 columns">
+                <h2>{{ assignment.course }}</h2>
+
+                <div id="points">
+                    Точки:
+                    <strong>{{ assignment.points }}</strong>
+                </div>
+                
+                <div>
+                    <a href="{{ assignment.course.git_repository }}" target="_blank">Материали в GitHub</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
