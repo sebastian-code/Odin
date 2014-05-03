@@ -11,6 +11,11 @@ class User(AbstractUser):
     description = models.TextField(blank=True)
     courses = models.ManyToManyField(Course, through='CourseAssignment')
 
+    AbstractUser._meta.get_field('email')._unique = True
+    AbstractUser.REQUIRED_FIELDS.remove('email')
+    
+    USERNAME_FIELD = 'email'
+    
     def __unicode__(self):
         return unicode(self.username)
 
