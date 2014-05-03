@@ -25,7 +25,7 @@
       <!-- Right Nav Section -->
       <ul class="right">
         <li><a href="{% url 'courses:show-all-courses' %}" >Курсове</a></li>
-        <!-- <li><a href="{% url 'about-us' %}">За нас</a></li> -->
+        <li><a href="{% url 'about-us' %}">За нас</a></li>
         <li><a target="_blank" href="http://blog.hackbulgaria.com/" >Блог</a></li>
         <!-- <li><a href="{% url 'forum' %}">Форум</a></li> 
         <li><a href="{% url 'show-faqs' %}" >ЧЗВ</a></li> -->
@@ -83,6 +83,7 @@
 
   <script src="{{ STATIC_URL }}js/vendor/jquery.js"></script>
   <script src="{{ STATIC_URL }}js/foundation.min.js"></script>
+  <script src="{{ STATIC_URL }}js/soft_description_generator.js"></script>
   <script>
   $(document).foundation();
 
