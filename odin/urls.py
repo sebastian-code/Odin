@@ -11,9 +11,9 @@ urlpatterns = patterns('',
     url(r'^tinymce/', include('tinymce.urls')),
     
     url(r'', include('website.urls')),
-    url(r'', include('courses.urls')),
+    url(r'', include('courses.urls', namespace='courses')),
     url(r'', include('faq.urls')),
-    url(r'', include('students.urls')),
+    url(r'', include('students.urls', namespace='students')),
     url(r'', include('forum.urls')),
 
 )

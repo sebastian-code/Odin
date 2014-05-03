@@ -38,17 +38,16 @@ def edit_profile(request):
 def assignment(request, id):
     assignment = get_object_or_404(CourseAssignment, pk=id)
     is_teacher = request.user.has_perm('student.add_courseassignment')
-    
-    if assignment.user != request.user or not is_teacher:
-        raise Http404()
 
     if is_teacher:
-        notes =  UserNote.objects.filter(assignment=id)
+        notes = UserNote.objects.filter(assignment=id)
         if request.method == 'POST':
             form = AddNote(request.POST)
             if form.is_valid():
-                form.save()
-                return redirect('assignment', id=id)
+                submission = form.save(commit=False)
+                submission.author = request.user
+                submission.save()
+                return redirect('students:assignment', id=id)
         else:
             form = AddNote()
 

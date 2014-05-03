@@ -18,7 +18,7 @@
                 {% endif %}
                 <ul>
 
-                <h1>{{ user.first_name }} {{ user.last_name }} - {{ user.faculty_number }}</h1>
+                <h1>{{ user.get_full_name }} - {{ user.faculty_number }}</h1>
 
                 <p>
                     {{ user.description }}
@@ -28,7 +28,7 @@
 
                 <ol>
                     {% for assignment in user.courseassignment_set.all %}
-                        <li><a href="{% url 'assignment' assignment.pk %}">{{ assignment.course }}</a></li>
+                        <li><a href="{% url 'students:assignment' assignment.pk %}">{{ assignment.course }}</a></li>
                     {% endfor %}
                 </ol>
 

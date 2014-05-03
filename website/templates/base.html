@@ -24,7 +24,7 @@
       <section class="top-bar-section">
       <!-- Right Nav Section -->
       <ul class="right">
-        <li><a href="{% url 'show-all-courses' %}" >Курсове</a></li>
+        <li><a href="{% url 'courses:show-all-courses' %}" >Курсове</a></li>
         <!-- <li><a href="{% url 'about-us' %}">За нас</a></li> -->
         <li><a target="_blank" href="http://blog.hackbulgaria.com/" >Блог</a></li>
         <!-- <li><a href="{% url 'forum' %}">Форум</a></li> 
@@ -33,13 +33,13 @@
         <li class="has-dropdown">
           <a href="#">{{ user.get_full_name }}</a>
           <ul class="dropdown">
-            <li><a href="{% url 'user-profile' %}">Профил</a></li>
-            <li><a href="{% url 'edit-profile' %}">Редактиране на Профил</a></li>
-            <li><a href="{% url 'logout' %}">Изход</a></li>
+            <li><a href="{% url 'students:user-profile' %}">Профил</a></li>
+            <li><a href="{% url 'students:edit-profile' %}">Редактиране на Профил</a></li>
+            <li><a href="{% url 'students:logout' %}">Изход</a></li>
           </ul>
         </li>
         {% else %}
-          <li><a href="{% url 'login' %}">Вход</a></li>
+          <li><a href="{% url 'students:login' %}">Вход</a></li>
         {% endif %}
       </ul>
     </section>

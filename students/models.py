@@ -30,3 +30,5 @@ class CourseAssignment(models.Model):
 class UserNote(models.Model):
     text = models.TextField(blank=True)
     assignment = models.ForeignKey(CourseAssignment)
+    author = models.ForeignKey(User, null=True, blank=True)
+    post_time = models.DateTimeField(auto_now=True)
