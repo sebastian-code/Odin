@@ -28,7 +28,7 @@ def edit_profile(request):
         form = UserEditForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             form.save()
-            return redirect('/accounts/profile/')
+            return redirect('students:user-profile')
     else:
         form = UserEditForm(instance=request.user)
     return render(request, 'edit_profile.html', locals())

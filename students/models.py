@@ -1,11 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from awesome_avatar.fields import AvatarField
 from courses.models import Course
 
 
 class User(AbstractUser):
     faculty_number = models.CharField(max_length=8)
-    avatar = models.ImageField(upload_to="avatars", null=True, blank=True)
+    avatar = AvatarField(upload_to='avatars', width=150, height=150)
     github_account = models.URLField(null=True, blank=True)
     linkedin_account = models.URLField(null=True, blank=True)
     description = models.TextField(blank=True)

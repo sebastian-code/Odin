@@ -32,6 +32,7 @@ INSTALLED_APPS = (
     
     'south',
     'tinymce',
+    'awesome_avatar',
 
     'website',
     'courses',
@@ -93,4 +94,9 @@ TINYMCE_DEFAULT_CONFIG = {
     'plugins': "table,spellchecker,paste,searchreplace",
     'width' : 900,
     'height' : 400,
+}
+
+AWESOME_AVATAR = {
+    'width': 150,
+    'height': 150,
 }
