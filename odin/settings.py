@@ -99,4 +99,7 @@ TINYMCE_DEFAULT_CONFIG = {
 AWESOME_AVATAR = {
     'width': 150,
     'height': 150,
+
+    'save_quality': 90,
+    'save_format': 'png',
 }

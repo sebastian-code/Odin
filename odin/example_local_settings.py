@@ -1,8 +1,8 @@
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'odin',
-        'USER': 'root',
+        'NAME': '',
+        'USER': '',
         'PASSWORD': '',
         'HOST': '',
         'PORT': '',
@@ -11,6 +11,6 @@ DATABASES = {
 
 ALLOWED_HOSTS = []
 
-DEBUG = False
+DEBUG = True
 
-TEMPLATE_DEBUG = False
+TEMPLATE_DEBUG = True
