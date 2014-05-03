@@ -1,0 +1,16 @@
+<meta charset="utf-8">
+
+<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.1.js"
+></script>
+<script type="text/javascript" src="soft_description_generator.js"></script>
+
+<script type="text/javascript">
+    jQuery(document).ready(function($) {
+        $("#generate-description-button").on('click', function(event) {
+            $("#description-placehoder").html(window.DescriptionGenerator.give_me_new_one());
+        });
+    });
+</script>
+
+<button id="generate-description-button">Генерирай ново описание</button>
+<pre id="description-placehoder"></pre>
