@@ -122,6 +122,6 @@ Array.prototype.shuffle = function () {
 
 jQuery(document).ready(function($) {
     $("#generate-description-button").on('click', function(event) {
-        $("#description-placehoder").html(window.DescriptionGenerator.give_me_new_one());
+        $("#description-placehoder").html(window.DescriptionGenerator.give_me_new_one().replace("\n", "<br />"));
     });
 });
