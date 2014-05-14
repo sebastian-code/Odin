@@ -32,7 +32,7 @@ INSTALLED_APPS = (
     
     'south',
     'tinymce',
-    'awesome_avatar',
+    'adminsortable',
 
     'website',
     'courses',

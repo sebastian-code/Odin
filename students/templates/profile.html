@@ -12,15 +12,15 @@
             <div class="row">
 
                 {% if user.avatar %}
-                    <img src="{{ MEDIA_URL   }}{{ user.avatar }}" class="medium-3 columns" id="profile-avatar">
+                    <img src="{{ MEDIA_URL   }}{{ user.avatar }}" class="medium-2 th" id="profile-avatar">
                 {% else %}
-                    <img src="{{ STATIC_URL }}img/no-avatar.png" class="medium-3 columns" id="profile-avatar">
+                    <img src="{{ STATIC_URL }}img/no-avatar.png" class="medium-2 th" id="profile-avatar">
                 {% endif %}
                 <ul>
 
                 <h1>{{ user.get_full_name }} - {{ user.faculty_number }}</h1>
 
-                <p style="min-height: 180px;">
+                <p style="min-height: 120px;">
                     {{ user.description }}
                 </p>
 

@@ -5,7 +5,18 @@
 {% endblock %}
 
 {% block content %}
-<div class="row text-center">
-    <img src="http://www.ozaukeemag.com/wp-content/uploads/2013/11/cs.jpg" alt="">
+<div class="row">
+    <div class="large-12 columns">
+        {% for category in categories %}
+        <div class="row">
+            <div class="large-12 columns">
+                <div class="radius panel">
+                    <a href="{% url 'forum:show-category' category.id %}"><h4>{{ category }}</h4></a>
+                    <p>{{ category.text }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
 </div>
 {% endblock %}

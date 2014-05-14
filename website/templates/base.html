@@ -26,9 +26,9 @@
       <ul class="right">
         <li><a href="{% url 'courses:show-all-courses' %}" >Курсове</a></li>
         <li><a href="{% url 'about-us' %}">За нас</a></li>
+        <li><a href="{% url 'forum:forum' %}">Форум</a></li> 
         <li><a target="_blank" href="http://blog.hackbulgaria.com/" >Блог</a></li>
-        <!-- <li><a href="{% url 'forum' %}">Форум</a></li> 
-        <li><a href="{% url 'show-faqs' %}" >ЧЗВ</a></li> -->
+        <!-- <li><a href="{% url 'show-faqs' %}" >ЧЗВ</a></li> -->
         {% if user.is_authenticated %}
         <li class="has-dropdown">
           <a href="#">{{ user.get_full_name }}</a>

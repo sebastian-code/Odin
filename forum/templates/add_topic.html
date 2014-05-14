@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block meta %}
+    <title>Форум на Hack Bulgaria</title>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="large-12 columns">
+        <form action="" method="POST">
+            {% csrf_token %}
+            {{ form }}
+            <button>Пускай</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

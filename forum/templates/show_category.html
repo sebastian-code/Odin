@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block meta %}
+    <title>Форум на Hack Bulgaria</title>
+{% endblock %}
+
+{% block content %}
+    <div class="large-12 columns">
+<div class="row">
+    <a href="{% url 'forum:add-topic' category.id %}"><button>Отвори нова тема</button></a>
+<table>
+    <thead>
+        <tr>
+            <th width="700">Тема</th>
+            <th width="250">Автор</th>
+            <th width="100">Отговори</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for topic in topics %}
+        <tr>
+            <td><a href="{% url 'forum:show-topic' topic.id %}">{{ topic.title }}</a></td>
+            <td>{{ topic.author.get_full_name }}</td>
+            <td>1</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endblock %}
