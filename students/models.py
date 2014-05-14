@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django_resized import ResizedImageField
-from awesome_avatar.fields import AvatarField
 from courses.models import Course
 
 
