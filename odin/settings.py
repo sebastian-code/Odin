@@ -70,6 +70,8 @@ USE_TZ = True
 
 AUTH_USER_MODEL = 'students.User'
 LOGIN_URL = 'students:login'
+NO_AVATAR_IMG = 'img/no-avatar.png'
+
 SITE_ID = 1
 
 # Static files (CSS, JavaScript, Images)

@@ -6,7 +6,7 @@
         <div class="medium-4 columns">
             <div class="panel text-center">
                 <h5>{{ assignment.user.get_full_name }}</h5>
-                <a href="{% url 'students:assignment' assignment.id  %}"><img style="height: 200px; width: 200px;" src="{{MEDIA_URL}}{{ assignment.user.avatar }}"></a>
+                <a href="{% url 'students:assignment' assignment.id  %}"><img style="height: 200px; width: 200px;" src="{{ assignment.user.getAvatarUrl }}" class="th"></a>
             </div>
         </div>
     {% endfor %}

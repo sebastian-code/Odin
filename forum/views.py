@@ -23,8 +23,8 @@ def show_topic(request, topic_id):
 
     data = request.POST if request.POST else None
     form = AddCommentForm(data, author=request.user, topic=topic)
-    
-    if request.method == 'POST':
+
+    if request.method == 'POST' and request.user.is_authenticated():
         if form.is_valid():
             form.save()
             return redirect('forum:show-topic', topic_id=topic_id)

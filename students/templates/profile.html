@@ -10,33 +10,31 @@
     <div class="large-12 columns">
         <div class="panel">
             <div class="row">
+                <div class="medium-3 columns">
+                    <img src="{{ user.getAvatarUrl }}" class="th" id="profile-avatar">
+                </div>
+                <div class="medium-9 columns">
+                    <h1>{{ user.get_full_name }} - {{ user.faculty_number }}</h1>
 
-                {% if user.avatar %}
-                    <img src="{{ MEDIA_URL   }}{{ user.avatar }}" class="medium-2 th" id="profile-avatar">
-                {% else %}
-                    <img src="{{ STATIC_URL }}img/no-avatar.png" class="medium-2 th" id="profile-avatar">
-                {% endif %}
-                <ul>
+                    <p style="min-height: 120px;">
+                        {{ user.description }}
+                    </p>
+                </div>
+                <div class="medium-12 columns">
+                    <h5>Курсове:</h5>
 
-                <h1>{{ user.get_full_name }} - {{ user.faculty_number }}</h1>
+                    <ol>
+                        {% for assignment in user.courseassignment_set.all %}
+                            <li><a href="{% url 'students:assignment' assignment.pk %}">{{ assignment.course }}</a></li>
+                        {% endfor %}
+                    </ol>
 
-                <p style="min-height: 120px;">
-                    {{ user.description }}
-                </p>
-
-                <h5>Курсове:</h5>
-
-                <ol>
-                    {% for assignment in user.courseassignment_set.all %}
-                        <li><a href="{% url 'students:assignment' assignment.pk %}">{{ assignment.course }}</a></li>
-                    {% endfor %}
-                </ol>
-
-                <h5>Контакти:</h5>
-                <ul>
-                    <li>LinkedIn: <a href="{{ user.linkedin_account }}">{{ user.linkedin_account }}</a></li>
-                    <li>GitHub: <a href="{{ user.github_account }}">{{ user.github_account }}</a></li>
-                </ul>
+                    <h5>Контакти:</h5>
+                    <ul>
+                        <li>LinkedIn: <a href="{{ user.linkedin_account }}">{{ user.linkedin_account }}</a></li>
+                        <li>GitHub: <a href="{{ user.github_account }}">{{ user.github_account }}</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>

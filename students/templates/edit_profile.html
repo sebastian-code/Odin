@@ -18,13 +18,10 @@
                 {% endif %}
                 {% csrf_token %}
                 <div class="large-3 columns" style="height: 400px;">
-                    {% if user.avatar %}
-                        <img src="{{ MEDIA_URL   }}{{ form.avatar.value }}" alt="" class="th">
-                    {% else %}
-                        <img src="{{ STATIC_URL }}img/no-avatar.png" alt="" class="th">
-                    {% endif %}
+                   <img src="{{ user.getAvatarUrl }}" class="th">
+
                     <input id="id_avatar" name="avatar" type="file" style="margin-top:20px">
-                    <input id="avatar-clear_id" name="avatar-clear" type="checkbox"> Премахни снимката
+                    {{ form.avatar_clear }} Премахни снимката
                 </div>
                 <div class="large-8 columns">
                     <label>GitHub Account:
