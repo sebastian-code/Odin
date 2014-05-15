@@ -1,0 +1,9 @@
+.wmd-panel {
+    width: 100% !important;
+    margin: 0 !important;
+}
+
+#id_text_wmd_preview {
+    padding: 10px !important;
+    margin-bottom: 10px !important;
+}

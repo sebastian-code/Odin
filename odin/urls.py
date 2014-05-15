@@ -10,6 +10,7 @@ urlpatterns = patterns('',
         'document_root': settings.MEDIA_ROOT}),
     url(r'^tinymce/', include('tinymce.urls')),
     
+
     url(r'', include('website.urls')),
     url(r'', include('courses.urls', namespace='courses')),
     url(r'', include('faq.urls')),

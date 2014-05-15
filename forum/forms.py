@@ -1,7 +1,11 @@
 from django.forms import ModelForm
-from .models import Topic
+from django import forms
+from pagedown.widgets import PagedownWidget
+from .models import Topic, Comment
 
 class AddTopicForm(ModelForm):
+    text = forms.CharField(widget=PagedownWidget())
+
     def __init__(self, *args, **kwargs):
         self.author = kwargs.pop('author')
         self.category = kwargs.pop('category')
@@ -17,3 +21,22 @@ class AddTopicForm(ModelForm):
     class Meta:
         model = Topic
         exclude = ['author', 'category']
+
+class AddCommentForm(ModelForm):
+    text = forms.CharField(widget=PagedownWidget())
+    
+    def __init__(self, *args, **kwargs):
+        self.author = kwargs.pop('author')
+        self.topic = kwargs.pop('topic')
+        super(AddCommentForm, self).__init__(*args, **kwargs)\
+
+    def save(self, *args, **kwargs):
+        instance = super(AddCommentForm, self).save(commit=False)
+        instance.author = self.author
+        instance.topic = self.topic
+        instance.save(*args, **kwargs)
+        return instance
+
+    class Meta:
+        model = Comment
+        exclude = ['author', 'topic']

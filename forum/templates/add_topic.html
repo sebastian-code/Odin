@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 
 {% block meta %}
+    {{ form.media }}
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/forum-style.css" />
     <title>Форум на Hack Bulgaria</title>
 {% endblock %}
-
 {% block content %}
 <div class="row">
     <div class="large-12 columns">

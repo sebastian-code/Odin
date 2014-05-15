@@ -14,7 +14,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
-
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '*08ji*lhdl*-z7smqprw8g1r!ez0&n78s1kjue#g3@s(^hx%z('
 
@@ -33,6 +32,8 @@ INSTALLED_APPS = (
     'south',
     'tinymce',
     'adminsortable',
+    'pagedown',
+    'markdown_deux',
 
     'website',
     'courses',
