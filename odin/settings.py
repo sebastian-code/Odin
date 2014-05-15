@@ -69,7 +69,7 @@ USE_L10N = True
 USE_TZ = True
 
 AUTH_USER_MODEL = 'students.User'
-
+LOGIN_URL = 'students:login'
 SITE_ID = 1
 
 # Static files (CSS, JavaScript, Images)

@@ -20,7 +20,11 @@
             
             <div class="large-9 columns">
                 <div class="panel">
-                    <h3>{{ topic.title }}</h3>
+                    <h3>{{ topic.title }} 
+                        {% if topic.author == user %} 
+                            <a href="{% url 'forum:edit-topic' topic.id %}"><img src="{{ STATIC_URL }}img/edit-icon.png" alt=""></a>
+                        {% endif %}
+                    </h3>
                     <p>{{ topic.text|markdown }}</p>
                 </div>
             </div>
@@ -44,12 +48,14 @@
             <hr>
         </div>
         {% endfor %}
+        {% if user.is_authenticated %}
         <h3>Нов отговор:</h3>
         <form action="" method="POST">
             {% csrf_token %}
             {{ form.text }}
             <button>Пускай</button>
         </form>
+        {% endif %}
     </div>
 </div>
 
