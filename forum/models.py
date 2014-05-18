@@ -12,14 +12,17 @@ class Category(models.Model):
     class Meta:
         ordering = ('ordering',)
 
+
 class Topic(models.Model):
     title = models.CharField(blank=False, max_length=128)
     text = models.TextField(blank=False)
     author = models.ForeignKey(User)
     category = models.ForeignKey(Category)
-    
+    date = models.DateField(auto_now=True)
+
     def __unicode__(self):
         return self.title
+
 
 class Comment(models.Model):
     text = models.TextField(blank=False)

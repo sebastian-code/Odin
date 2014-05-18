@@ -13,6 +13,7 @@
         <tr>
             <th width="700">Тема</th>
             <th width="250">Автор</th>
+            <th width="180">Дата</th>
             <th width="100">Отговори</th>
         </tr>
     </thead>
@@ -21,7 +22,8 @@
         <tr>
             <td><a href="{% url 'forum:show-topic' topic.id %}">{{ topic.title }}</a></td>
             <td>{{ topic.author.get_full_name }}</td>
-            <td>1</td>
+            <td>{{ topic.date|date:"d-m-Y" }}</td>
+            <td>{{ topic.comment_set.count }}</td>
         </tr>
     {% endfor %}
     </tbody>
