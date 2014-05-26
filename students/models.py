@@ -51,9 +51,18 @@ class User(AbstractUser):
         return self.avatar.url
 
 class CourseAssignment(models.Model):
+    EARLY = 1
+    LATE = 2
+
+    GROUP_TIME_CHOICES = (
+        (EARLY, 'Early'),
+        (LATE, 'Late'),
+    )
+
     user = models.ForeignKey(User)
     course = models.ForeignKey(Course)
     points = models.PositiveIntegerField(default='0')
+    group_time = models.SmallIntegerField(choices=GROUP_TIME_CHOICES)
 
     class Meta:
         unique_together = ('user', 'course')

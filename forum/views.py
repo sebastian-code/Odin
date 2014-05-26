@@ -10,12 +10,13 @@ def show_categories(request):
 
     return render(request, "categories.html", locals())
 
+
 def show_category(request, category_id):
     category = get_object_or_404(Category, pk=category_id)
     topics = reversed(Topic.objects.filter(category=category))
     
     return render(request, "show_category.html", locals())
-    
+
 
 def show_topic(request, topic_id):
     topic = get_object_or_404(Topic, pk=topic_id)
@@ -30,6 +31,7 @@ def show_topic(request, topic_id):
             return redirect('forum:show-topic', topic_id=topic_id)
 
     return render(request, "show_topic.html", locals())
+
 
 @login_required
 def edit_topic(request, topic_id):
@@ -46,6 +48,7 @@ def edit_topic(request, topic_id):
             return redirect('forum:show-topic', topic_id=topic_id)
 
     return render(request, "edit_topic.html", locals())
+
 
 @login_required
 def add_topic(request, category_id):
