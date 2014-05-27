@@ -29,7 +29,7 @@ class UserManager(BaseUserManager):
 
 class User(AbstractUser):
     avatar = ResizedImageField(
-        upload_to='link_images',
+        upload_to='avatar',
         max_width=200,
     )
     github_account = models.URLField(null=True, blank=True)
