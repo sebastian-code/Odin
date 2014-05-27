@@ -89,11 +89,6 @@ MEDIA_URL = '/media/'
 
 DJANGO_WYSIWYG_FLAVOR = "tinymce_advanced"
 
-try:
-    from local_settings import *
-except ImportError:
-    exit("local_settings.py not found!")
-
 TINYMCE_DEFAULT_CONFIG = {
     'plugins': "table,spellchecker,paste,searchreplace",
     'width' : 900,
@@ -107,3 +102,8 @@ AWESOME_AVATAR = {
     'save_quality': 90,
     'save_format': 'png',
 }
+
+try:
+    from local_settings import *
+except ImportError:
+    exit("local_settings.py not found!")

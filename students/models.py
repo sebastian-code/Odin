@@ -1,6 +1,6 @@
 from django.db import models
 from django.conf import settings
-from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.contrib.auth.models import AbstractUser, BaseUserManager, PermissionsMixin
 from django_resized import ResizedImageField
 from courses.models import Course
 
@@ -13,20 +13,21 @@ class UserManager(BaseUserManager):
         user = self.model(
             email=UserManager.normalize_email(email),
         )
-
+        user.username = email
         user.set_password(password)
         user.save(using=self._db)
         return user
 
     def create_superuser(self, email, password):
-        user = self.m(email, password=password)
-        user.is_admin = True
+        user = self.create_user(email, password=password)
+        user.is_superuser = True
+        user.is_staff = True
+        user.username = email
         user.save(using=self._db)
         return user
 
 
 class User(AbstractUser):
-    faculty_number = models.CharField(max_length=8)
     avatar = ResizedImageField(
         upload_to='link_images',
         max_width=200,
@@ -38,10 +39,12 @@ class User(AbstractUser):
 
     AbstractUser._meta.get_field('email')._unique = True
     AbstractUser.REQUIRED_FIELDS.remove('email')
+
     objects = UserManager()
+
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
-
+    
     def __unicode__(self):
         return unicode(self.username)
 

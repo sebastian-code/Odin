@@ -4,12 +4,13 @@ from models import User, CourseAssignment, UserNote
 
 class UsersAdmin(admin.ModelAdmin):
     list_display = [
-        'faculty_number',
+        'id',
+        'email',
         'first_name',
         'last_name',
     ]
 
-    list_display_links = ['faculty_number']
+    list_display_links = ['email']
 
 admin.site.register(User, UsersAdmin)
 
