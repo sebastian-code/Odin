@@ -31,6 +31,7 @@ class User(AbstractUser):
     avatar = ResizedImageField(
         upload_to='avatar',
         max_width=200,
+        blank=True,
     )
     github_account = models.URLField(null=True, blank=True)
     linkedin_account = models.URLField(null=True, blank=True)
