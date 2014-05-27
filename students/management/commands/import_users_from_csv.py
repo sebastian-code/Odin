@@ -18,7 +18,7 @@ class Command(BaseCommand):
         I will import users from the csv file. 
         I will generate a random passwords for them and send some emails to them.
         You can edit the email template is is located in students/management/commands/tempalte.txt
-        The format of the CSV file must be like: email, fisrt_name last_name, 1/2, course_name
+        The format of the CSV file must be like: email, fisrt_name last_name, 1/2, course_id
         1 is for early group_time
         2 is for late group_time
         
