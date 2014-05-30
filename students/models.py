@@ -33,6 +33,7 @@ class User(AbstractUser):
         max_width=200,
         blank=True,
     )
+
     github_account = models.URLField(null=True, blank=True)
     linkedin_account = models.URLField(null=True, blank=True)
     description = models.TextField(blank=True)
@@ -53,6 +54,7 @@ class User(AbstractUser):
         if not self.avatar:
             return settings.STATIC_URL + settings.NO_AVATAR_IMG 
         return self.avatar.url
+
 
 class CourseAssignment(models.Model):
     EARLY = 1
@@ -80,5 +82,3 @@ class UserNote(models.Model):
     assignment = models.ForeignKey(CourseAssignment)
     author = models.ForeignKey(User, null=True, blank=True)
     post_time = models.DateTimeField(auto_now=True)
-
-
