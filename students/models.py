@@ -41,7 +41,7 @@ class User(AbstractUser):
 
     AbstractUser._meta.get_field('email')._unique = True
     AbstractUser.REQUIRED_FIELDS.remove('email')
-
+    AbstractUser._meta.get_field_by_name('username')[0].max_length=75
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
