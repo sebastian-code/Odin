@@ -9,26 +9,26 @@
                     <img src="{{ assignment.user.getAvatarUrl }}" class="th">
                 </div>
                 <h2>{{ assignment.course }} и {{ assignment.user.get_full_name }}</h2>
-                
+
                 <div>
                     <p>
                         <a href="{{ assignment.course.git_repository }}" target="_blank">Материали в GitHub</a>
                     </p>
                     <p>
-                        <a href="{% url 'courses:course-students' assignment.course.id %}">Виш всички записали курса.</a>
+                        <a href="{% url 'courses:course-students' assignment.course.id %}">Виж всички записали курса</a>
                     </p>
                 </div>
 
                 {% if is_teacher %}
                     {% for note in notes %}
                         <p class="large-12 columns">
-                            <strong>{{ note.author.get_full_name }}</strong>: 
-                            <br><small>{{ note.post_time|date:"d-m-Y" }} </small> 
+                            <strong>{{ note.author.get_full_name }}</strong>:
+                            <br><small>{{ note.post_time|date:"d-m-Y" }} </small>
                             <br>{{ note.text }}
                             <hr>
                         </p>
                     {% endfor %}
-                   
+
                     {{ form.errors }}
                     <form method="POST">
                     {% csrf_token %}
