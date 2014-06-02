@@ -17,7 +17,7 @@
                     {% endfor %}
                 {% endif %}
                 {% csrf_token %}
-                <div class="large-3 columns" style="height: 400px;">
+                <div class="large-3 columns" style="height: 600px;">
                    <img src="{{ user.getAvatarUrl }}" class="th">
 
                     <input id="id_avatar" name="avatar" type="file" style="margin-top:20px">
@@ -35,6 +35,13 @@
                     </label>
                 </div>
                 
+                <div class="large-8 columns">
+                    <label>Mac Address:
+                        <input type="text" name="mac" placeholder="e0:2b:32:aa:02:a4
+" value="{{ form.mac.value|default:"" }}"/>
+                    </label>
+                </div>
+
                 <div class="large-9 columns">
                     <label>Описание:
                         <textarea id="" rows="10" name="description" placeholder="Опиши се с няколко думи">{{ form.description.value|default:"" }}</textarea>

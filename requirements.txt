@@ -10,5 +10,6 @@ django-pagedown==0.1.0
 django-resized==0.2.4
 django-tinymce==1.5.2
 markdown2==2.2.1
+netaddr==0.7.11
 sqlparse==0.1.11
 wsgiref==0.1.2

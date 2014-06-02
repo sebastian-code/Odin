@@ -3,7 +3,8 @@ from django.conf import settings
 from django.contrib.auth.models import AbstractUser, BaseUserManager, PermissionsMixin
 from django_resized import ResizedImageField
 from courses.models import Course
-
+from django.core.exceptions import ValidationError
+import re
 
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None):
@@ -26,7 +27,6 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-
 class User(AbstractUser):
     avatar = ResizedImageField(
         upload_to='avatar',
@@ -38,6 +38,7 @@ class User(AbstractUser):
     linkedin_account = models.URLField(null=True, blank=True)
     description = models.TextField(blank=True)
     courses = models.ManyToManyField(Course, through='CourseAssignment')
+    mac = models.CharField(max_length=17)
 
     AbstractUser._meta.get_field('email')._unique = True
     AbstractUser.REQUIRED_FIELDS.remove('email')
@@ -55,6 +56,11 @@ class User(AbstractUser):
             return settings.STATIC_URL + settings.NO_AVATAR_IMG 
         return self.avatar.url
 
+    def clean(self, *args, **kwargs):
+        mac_pattern = re.compile(r'^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$', re.IGNORECASE)
+        if not re.match(mac_pattern, self.mac):
+            raise ValidationError(u'%s is not a valid mac address' % self.mac)
+        super(AbstractUser, self).clean(*args, **kwargs)
 
 class CourseAssignment(models.Model):
     EARLY = 1

@@ -44,6 +44,7 @@ class UserEditForm(forms.ModelForm):
             'linkedin_account',
             'description',
             'avatar',
+            'mac',
         )
 
 

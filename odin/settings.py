@@ -35,7 +35,7 @@ INSTALLED_APPS = (
     'pagedown',
     'markdown_deux',
     'debug_toolbar',
-    
+
     'website',
     'courses',
     'faq',
