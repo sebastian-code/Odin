@@ -62,7 +62,7 @@ def set_check_in(request):
     if request.method == 'POST':
         mac = request.POST['mac']
         
-        student = get_object_or_404(User, mace__iexact=mac)
+        student = get_object_or_404(User, mac__iexact=mac)
 
         day = datetime.timedelta(days=1)
         checkin = CheckIn(mac=mac, student=student, date=datetime.date.today() - day)
