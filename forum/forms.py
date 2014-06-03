@@ -22,6 +22,7 @@ class AddTopicForm(ModelForm):
         model = Topic
         exclude = ['author', 'category']
 
+
 class AddCommentForm(ModelForm):
     text = forms.CharField(widget=PagedownWidget())
     

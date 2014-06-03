@@ -1,5 +1,5 @@
 from django import forms
-from .models import User, UserNote
+from .models import User, UserNote, CheckIn
 from django.utils.translation import ugettext as _
 
 

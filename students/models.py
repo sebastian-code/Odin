@@ -51,16 +51,25 @@ class User(AbstractUser):
     def __unicode__(self):
         return unicode(self.username)
 
+
     def getAvatarUrl(self):
         if not self.avatar:
             return settings.STATIC_URL + settings.NO_AVATAR_IMG 
         return self.avatar.url
+
+
+    def  get_courses(self):
+        return "; ".join([courseassignment.course.name + ' - ' + str(courseassignment.group_time) 
+            for courseassignment 
+                in self.courseassignment_set.all()])
+
 
     def clean(self, *args, **kwargs):
         mac_pattern = re.compile(r'^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$', re.IGNORECASE)
         if not re.match(mac_pattern, self.mac):
             raise ValidationError(u'%s is not a valid mac address' % self.mac)
         super(AbstractUser, self).clean(*args, **kwargs)
+
 
 class CourseAssignment(models.Model):
     EARLY = 1
@@ -79,8 +88,8 @@ class CourseAssignment(models.Model):
     class Meta:
         unique_together = ('user', 'course')
 
-    def __unicode__(self):
-        return unicode('{} - {}'.format(self.user, self.course))
+    def __str__(self):
+        return unicode('{} - {}'.format(self.course, self.group_time))
 
 
 class UserNote(models.Model):
@@ -88,3 +97,9 @@ class UserNote(models.Model):
     assignment = models.ForeignKey(CourseAssignment)
     author = models.ForeignKey(User, null=True, blank=True)
     post_time = models.DateTimeField(auto_now=True)
+
+
+class CheckIn(models.Model):
+    mac = models.CharField(max_length=17)
+    student = models.ForeignKey(User, null=True, blank=True)
+    date = models.DateField()

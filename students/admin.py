@@ -1,5 +1,5 @@
 from django.contrib import admin
-from models import User, CourseAssignment, UserNote
+from models import User, CourseAssignment, UserNote, CheckIn
 
 
 class UsersAdmin(admin.ModelAdmin):
@@ -8,6 +8,8 @@ class UsersAdmin(admin.ModelAdmin):
         'email',
         'first_name',
         'last_name',
+        'mac',
+        'get_courses'
     ]
 
     list_display_links = ['email']
@@ -34,3 +36,15 @@ class UserNoteAdmin(admin.ModelAdmin):
     ]
 
 admin.site.register(UserNote, UserNoteAdmin)
+
+
+class CheckInAdmin(admin.ModelAdmin):
+    list_display = [
+        'id',
+        'mac',
+        'student',
+        'date',
+
+    ]
+
+admin.site.register(CheckIn, CheckInAdmin)

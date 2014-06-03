@@ -3,7 +3,9 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.http import Http404  
 from django.contrib.auth import views
 from .forms import UserEditForm, AddNote
-from .models import CourseAssignment, UserNote
+from .models import CourseAssignment, UserNote, User, CheckIn
+from django.http import HttpResponse
+import datetime
 
 
 def login(request):
@@ -52,3 +54,15 @@ def assignment(request, id):
             form = AddNote()
 
     return render(request, "assignment.html", locals())
+
+def set_check_in(request):
+    if request.method == 'POST':
+        mac = request.POST['mac']
+        
+        student = User.objects.get(mac=mac)
+        
+        day = datetime.timedelta(days=1)
+        checkin = CheckIn(mac=mac, student=student, date=datetime.date.today() - day)
+        checkin.save()
+
+        return HttpResponse(status=200)
