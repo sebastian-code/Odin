@@ -17,9 +17,14 @@ class CheckInCase(unittest.TestCase):
         response = client.post('/set-check-in/', {'mac': self.new_user.mac})
         self.assertEqual(response.status_code, 200)
 
-
     def test_new_check_in_result(self):
         response = client.post('/set-check-in/', {'mac': self.new_user.mac})
+        checkin = CheckIn.objects.get(student=self.new_user)
+
+        assert checkin is not None
+
+    def test_new_check_in_case_insensitive(self):
+        response = client.post('/set-check-in/', {'mac': self.new_user.mac.upper()})
         checkin = CheckIn.objects.get(student=self.new_user)
 
         assert checkin is not None

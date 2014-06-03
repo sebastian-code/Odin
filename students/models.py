@@ -68,6 +68,8 @@ class User(AbstractUser):
         mac_pattern = re.compile(r'^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$', re.IGNORECASE)
         if not re.match(mac_pattern, self.mac):
             raise ValidationError(u'%s is not a valid mac address' % self.mac)
+        self.mac = self.mac.lower()
+        
         super(AbstractUser, self).clean(*args, **kwargs)
 
 
