@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render, get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
 from django.http import Http404  
 from django.contrib.auth import views
 from .forms import UserEditForm, AddNote
@@ -55,12 +56,14 @@ def assignment(request, id):
 
     return render(request, "assignment.html", locals())
 
+
+@csrf_exempt
 def set_check_in(request):
     if request.method == 'POST':
         mac = request.POST['mac']
         
         student = User.objects.get(mac=mac)
-        
+
         day = datetime.timedelta(days=1)
         checkin = CheckIn(mac=mac, student=student, date=datetime.date.today() - day)
         checkin.save()
