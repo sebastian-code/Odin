@@ -64,8 +64,7 @@ def set_check_in(request):
         
         student = get_object_or_404(User, mac__iexact=mac)
 
-        day = datetime.timedelta(days=1)
-        checkin = CheckIn(mac=mac, student=student, date=datetime.date.today() - day)
+        checkin = CheckIn(mac=mac, student=student, date=datetime.date.today())
         checkin.save()
 
         return HttpResponse(status=200)
