@@ -7,6 +7,10 @@
             <div class="panel text-center">
                 <h5>{{ assignment.user.get_full_name }}</h5>
                 <a href="{% url 'students:assignment' assignment.id  %}"><img style="height: 200px; width: 200px;" src="{{ assignment.user.getAvatarUrl }}" class="th"></a>
+                {% if is_teacher %}
+                    <hr>
+                    <a href="{% url 'students:assignment' assignment.id  %}" class="button tiny">Notes: {{ assignment.usernote_set.count }}</a>
+                {% endif %}
             </div>
         </div>
     {% endfor %}

@@ -25,5 +25,6 @@ def course_materials(request):
 @login_required
 def course_students(request, course_id):
     assignments = CourseAssignment.objects.filter(course=course_id)
-
+    is_teacher = request.user.has_perm('student.add_courseassignment')
+    
     return render(request, "course_students.html", locals())
