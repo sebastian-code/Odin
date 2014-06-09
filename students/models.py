@@ -28,6 +28,19 @@ class UserManager(BaseUserManager):
         return user
 
 class User(AbstractUser):
+    STUDENT = 1
+    HR = 2
+    TEACHER = 3
+
+    STATUSES = (
+        (STUDENT, 'Student'),
+        (HR, 'HR'),
+        (TEACHER, 'Teacher'),
+
+    )
+
+    status = models.SmallIntegerField(choices=STATUSES, default=STUDENT)
+
     avatar = ResizedImageField(
         upload_to='avatar',
         max_width=200,

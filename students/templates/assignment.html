@@ -21,7 +21,6 @@
                         <a href="{% url 'courses:course-students' assignment.course.id %}">Виж всички записали курса</a>
                     </p>
                 </div>
-
                 {% if is_teacher or is_hr %}
                     {% for note in notes %}
                         <p class="large-12 columns">

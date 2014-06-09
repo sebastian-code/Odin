@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Course
-from students.models import CourseAssignment
+from students.models import CourseAssignment, User
 from datetime import datetime
 
 
@@ -24,7 +24,7 @@ def course_materials(request):
 
 @login_required
 def course_students(request, course_id):
-    assignments = CourseAssignment.objects.filter(course=course_id)
-    is_teacher = request.user.has_perm('student.add_courseassignment')
+    assignments = CourseAssignment.objects.filter(course=course_id, user__status=User.STUDENT)
+    is_teacher_or_hr = request.user.status == User.HR or request.user.status == User.TEACHER
     
     return render(request, "course_students.html", locals())
