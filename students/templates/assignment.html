@@ -22,7 +22,7 @@
                     </p>
                 </div>
 
-                {% if is_teacher %}
+                {% if is_teacher or is_hr %}
                     {% for note in notes %}
                         <p class="large-12 columns">
                             <strong>{{ note.author.get_full_name }}</strong>:
@@ -31,11 +31,12 @@
                             <hr>
                         </p>
                     {% endfor %}
+                {% endif %}
 
+                {% if is_teacher %}
                     {{ form.errors }}
                     <form method="POST">
                     {% csrf_token %}
-
                         <textarea cols="40" id="id_text" name="text" rows="10"></textarea>
                         <input type="hidden" name="assignment" value="{{ assignment.id }}">
                         <button>Дай коментар!</button>

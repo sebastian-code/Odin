@@ -40,7 +40,8 @@ def edit_profile(request):
 @login_required
 def assignment(request, id):
     assignment = get_object_or_404(CourseAssignment, pk=id)
-    is_teacher = request.user.has_perm('student.add_courseassignment')
+    is_teacher = request.user.has_perm('students.edit_usernote')
+    is_hr = request.user.has_perm('students.add_usernote')
 
     if is_teacher:
         notes = UserNote.objects.filter(assignment=id)
