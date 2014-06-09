@@ -36,6 +36,9 @@ INSTALLED_APPS = (
     'markdown_deux',
     'debug_toolbar',
 
+    "filer", 
+    "mptt",
+    "easy_thumbnails",
     'website',
     'courses',
     'faq',
@@ -51,6 +54,11 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
+
+SOUTH_MIGRATION_MODULES = {
+    'easy_thumbnails': 'easy_thumbnails.south_migrations',
+}
+
 
 ROOT_URLCONF = 'odin.urls'
 
