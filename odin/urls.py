@@ -16,5 +16,7 @@ urlpatterns = patterns('',
     url(r'', include('faq.urls')),
     url(r'', include('students.urls', namespace='students')),
     url(r'', include('forum.urls', namespace='forum')),
+    
+    url(r'^adminfiles/', include('adminfiles.urls'))
 
 )
