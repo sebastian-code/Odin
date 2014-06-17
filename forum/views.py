@@ -20,7 +20,7 @@ def show_category(request, category_id):
 
 def show_topic(request, topic_id):
     topic = get_object_or_404(Topic, pk=topic_id)
-    comments = Comment.objects.filter(topic=topic)
+    comments = Comment.objects.filter(topic=topic).order_by('id')
 
     data = request.POST if request.POST else None
     form = AddCommentForm(data, author=request.user, topic=topic)
