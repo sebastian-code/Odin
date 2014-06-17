@@ -7,3 +7,7 @@
     padding: 10px !important;
     margin-bottom: 10px !important;
 }
+
+#comment-edit {
+    float: right;
+}

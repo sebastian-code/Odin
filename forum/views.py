@@ -34,6 +34,20 @@ def show_topic(request, topic_id):
 
 
 @login_required
+def add_topic(request, category_id):
+    category = get_object_or_404(Category, pk=category_id)
+    data = request.POST if request.POST else None
+    form = AddTopicForm(data, author=request.user, category=category)
+    
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            return redirect('forum:show-category', category_id=category_id)
+
+    return render(request, "add_topic.html", locals())
+
+
+@login_required
 def edit_topic(request, topic_id):
     topic = get_object_or_404(Topic, pk=topic_id)
 
@@ -51,14 +65,18 @@ def edit_topic(request, topic_id):
 
 
 @login_required
-def add_topic(request, category_id):
-    category = get_object_or_404(Category, pk=category_id)
-    data = request.POST if request.POST else None
-    form = AddTopicForm(data, author=request.user, category=category)
+def edit_comment(request, comment_id):
+    comment = get_object_or_404(Comment, pk=comment_id)
+
+    if comment.author != request.user:
+        return HttpResponseForbidden()
     
+    data = request.POST if request.POST else None
+    form = AddCommentForm(data, author=request.user, instance=comment, topic=comment.topic)
+
     if request.method == 'POST':
         if form.is_valid():
             form.save()
-            return redirect('forum:show-category', category_id=category_id)
+            return redirect('forum:show-topic', topic_id=comment.topic.pk)
 
-    return render(request, "add_topic.html", locals())
+    return render(request, "edit_comment.html", locals())

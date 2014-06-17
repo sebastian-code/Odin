@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block meta %}
+    {{ form.media }}
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/forum-style.css" />
+    <title>Форум на Hack Bulgaria</title>
+{% endblock %}
+
+{% block content %}
+<form action="" method="POST">
+    {% csrf_token %}
+    {{ form.text }}
+    <button>Редактирай!</button>
+</form>
+{% endblock %}
