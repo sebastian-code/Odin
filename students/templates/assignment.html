@@ -1,5 +1,11 @@
 {% extends "base.html" %}
 
+{% block meta %}
+    {{ form.media }}
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/forum-style.css" />
+{% endblock %}
+
+
 {% block content %}
 <div class="row">
     <div class="large-12 columns">
@@ -36,7 +42,7 @@
                     {{ form.errors }}
                     <form method="POST">
                     {% csrf_token %}
-                        <textarea cols="40" id="id_text" name="text" rows="10"></textarea>
+                        {{form.text}}
                         <input type="hidden" name="assignment" value="{{ assignment.id }}">
                         <button>Дай коментар!</button>
                     </form>

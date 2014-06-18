@@ -1,5 +1,6 @@
 from django import forms
 from .models import User, UserNote, CheckIn
+from pagedown.widgets import PagedownWidget
 from django.utils.translation import ugettext as _
 
 
@@ -49,6 +50,8 @@ class UserEditForm(forms.ModelForm):
 
 
 class AddNote(forms.ModelForm):
+    text = forms.CharField(widget=PagedownWidget())
+
     def save(self, *args, **kwargs):
         return super(AddNote, self).save()
 
@@ -59,7 +62,7 @@ class AddNote(forms.ModelForm):
         )
         
         fields = (
-            "text",
             "assignment",
+            'text',
         )
         
