@@ -1,5 +1,6 @@
 from django.conf.urls import patterns, url
 
+
 urlpatterns = patterns('forum.views',
     url(r'^forum/$', 'show_categories', name='forum'),
     url(r'^category/(?P<category_id>[0-9]+)/$', 'show_category', name='show-category'),
