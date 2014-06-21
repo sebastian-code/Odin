@@ -15,7 +15,7 @@ urlpatterns = patterns('',
 
     url(r'', include('website.urls')),
     url(r'', include('courses.urls', namespace='courses')),
-    url(r'', include('faq.urls')),
+    url(r'', include('faq.urls', namespace='faq')),
     url(r'', include('students.urls', namespace='students')),
     url(r'', include('forum.urls', namespace='forum')),
 
