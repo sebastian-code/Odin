@@ -83,10 +83,13 @@ def api_students(request):
     for student in all_students:
         student_courses = []
         available = CheckIn.objects.filter(date=datetime.datetime.now, student=student).count() != 0
-        print(CheckIn.objects.filter(date=datetime.datetime.now(), student=student).all())
+
         for assignment in student.courseassignment_set.all():
-            student_courses.append(assignment.course.name)
-            student_courses.append(assignment.group_time)
+            course = {
+                'name': assignment.course.name,
+                'group': assignment.group_time
+            }
+            student_courses.append(course)
 
         needed_data.append({
             'name': student.get_full_name(),
