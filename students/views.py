@@ -6,6 +6,8 @@ from django.contrib.auth import views
 from .forms import UserEditForm, AddNote
 from .models import CourseAssignment, UserNote, User, CheckIn
 from django.http import HttpResponse
+
+import json
 import datetime
 
 
@@ -71,3 +73,26 @@ def set_check_in(request):
         checkin.save()
 
         return HttpResponse(status=200)
+
+from django.utils import simplejson
+@csrf_exempt
+def api_students(request):
+    all_students = User.objects.filter(status=User.STUDENT).all()
+    needed_data = []
+
+    for student in all_students:
+        student_courses = []
+        available = CheckIn.objects.filter(date=datetime.datetime.now, student=student).count() != 0
+        print(CheckIn.objects.filter(date=datetime.datetime.now(), student=student).all())
+        for assignment in student.courseassignment_set.all():
+            student_courses.append(assignment.course.name)
+            student_courses.append(assignment.group_time)
+
+        needed_data.append({
+            'name': student.get_full_name(),
+            'courses': student_courses,
+            'github': student.github_account,
+            'available': available,
+        })
+
+    return HttpResponse(simplejson.dumps(needed_data, indent=2, ensure_ascii=False), content_type = 'application/javascript; charset=utf8')

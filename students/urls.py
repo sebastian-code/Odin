@@ -2,6 +2,7 @@ from django.conf.urls import patterns, url
 
 urlpatterns = patterns('students.views',
     url(r'^login/$', 'login', name='login'),
+    url(r'^students/$', 'api_students', name='api-students'),
     url(r'^assignment/(?P<id>[0-9]+)/$', 'assignment', name='assignment'),
     url(r'^accounts/profile/$', 'user_profile', name='user-profile'),
     url(r'^set-check-in/$', 'set_check_in', name='set-check-in'),
