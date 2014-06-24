@@ -1,13 +1,12 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
-from django.http import Http404  
 from django.contrib.auth import views
 from .forms import UserEditForm, AddNote
 from .models import CourseAssignment, UserNote, User, CheckIn
 from django.http import HttpResponse
+from django.utils import simplejson
 
-import json
 import datetime
 
 
@@ -74,7 +73,7 @@ def set_check_in(request):
 
         return HttpResponse(status=200)
 
-from django.utils import simplejson
+
 @csrf_exempt
 def api_students(request):
     all_students = User.objects.filter(status=User.STUDENT).all()
@@ -98,4 +97,4 @@ def api_students(request):
             'available': available,
         })
 
-    return HttpResponse(simplejson.dumps(needed_data, indent=2, ensure_ascii=False), content_type = 'application/javascript; charset=utf8')
+    return HttpResponse(simplejson.dumps(needed_data, ensure_ascii=False), content_type = 'application/json; charset=utf8')

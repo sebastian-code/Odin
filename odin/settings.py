@@ -35,7 +35,7 @@ INSTALLED_APPS = (
     'pagedown',
     'markdown_deux',
     'debug_toolbar',
-
+    'corsheaders',
     'adminfiles',
     'sorl.thumbnail',
 
@@ -53,6 +53,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'corsheaders.middleware.CorsMiddleware',
 )
 
 ROOT_URLCONF = 'odin.urls'
