@@ -9,7 +9,7 @@ class Course(models.Model):
     image = models.ImageField(upload_to="courses_logoes", null=True, blank=True)
     git_repository = models.CharField(blank=True, max_length=256)
     show_on_index = models.BooleanField(default=False)
-    partner = models.ManyToManyField('Partner')
+    partner = models.ManyToManyField('Partner', null=True, blank=True)
 
     applications_url = models.URLField(null=True, blank=True)
     application_until = models.DateField()
