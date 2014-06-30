@@ -52,6 +52,7 @@ class User(AbstractUser):
     description = models.TextField(blank=True)
     courses = models.ManyToManyField(Course, through='CourseAssignment')
     mac = models.CharField(max_length=17)
+    works_at = models.CharField(null=True, blank=True, max_length="40")
 
     AbstractUser._meta.get_field('email')._unique = True
     AbstractUser.REQUIRED_FIELDS.remove('email')
