@@ -17,6 +17,10 @@ class PartnerAdmin(admin.ModelAdmin):
     list_display = [
         'id',
         'name',
+        'logo',
+        'facebook',
+        'twitter',
+        'website',
     ]
 
     list_display_links = ['name']
