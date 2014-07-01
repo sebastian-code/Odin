@@ -9,10 +9,12 @@ class UsersAdmin(admin.ModelAdmin):
         'first_name',
         'last_name',
         'mac',
-        'get_courses'
+        'get_courses',
+        'works_at',
     ]
     list_display_links = ['email']
 
+    list_filter = ('works_at',)
 
 admin.site.register(User, UsersAdmin)
 
