@@ -58,5 +58,5 @@ class Command(BaseCommand):
                 
                 email_text = template_text.format(full_name[0], email, new_password)
                 new_user.email_user("Registration in hackbulgaria.com", email_text)
-                print(full_name + " registered successfully")
+                print(" ".join(full_name) + " registered successfully")
                 time.sleep(2)     
