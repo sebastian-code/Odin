@@ -11,8 +11,8 @@ class UsersAdmin(admin.ModelAdmin):
         'mac',
         'get_courses'
     ]
-
     list_display_links = ['email']
+
 
 admin.site.register(User, UsersAdmin)
 
