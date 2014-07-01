@@ -18,7 +18,7 @@ class Command(BaseCommand):
         I will import users from the csv file. 
         I will generate a random passwords for them and send some emails to them.
         You can edit the email template is is located in students/management/commands/tempalte.txt
-        The format of the CSV file must be like: email, fisrt_name last_name, 1/2, course_id
+        The format of the CSV file must be like: email, fisrt_name last_name, 1/2, course_id, works_at
         1 is for early group_time
         2 is for late group_time
         
@@ -41,6 +41,7 @@ class Command(BaseCommand):
                 new_password = random_password()
                 group_time = row[2].strip()
                 course_id = row[3].strip()
+                works_at = row[4].strip()
 
                 current_course = Course.objects.filter(id=course_id).first()
                 if not current_course:  
@@ -49,6 +50,7 @@ class Command(BaseCommand):
                 new_user = User.objects.create_user(email, new_password)
                 new_user.first_name = full_name[0]
                 new_user.last_name = full_name[-1]
+                new_user.works_at = works_at
                 new_user.save()
 
                 assignment = CourseAssignment(user=new_user, course=current_course, group_time=group_time)
