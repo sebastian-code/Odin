@@ -6,7 +6,7 @@ from django.conf import settings
 import csv
 import string
 import random
-
+import time
 
 def random_password(size=9, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for x in range(size))
@@ -58,3 +58,5 @@ class Command(BaseCommand):
                 
                 email_text = template_text.format(full_name[0], email, new_password)
                 new_user.email_user("Registration in hackbulgaria.com", email_text)
+                print(full_name + " registered successfully")
+                time.sleep(2)     
