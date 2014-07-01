@@ -27,6 +27,7 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
+
 class User(AbstractUser):
     STUDENT = 1
     HR = 2
@@ -51,7 +52,7 @@ class User(AbstractUser):
     linkedin_account = models.URLField(null=True, blank=True)
     description = models.TextField(blank=True)
     courses = models.ManyToManyField(Course, through='CourseAssignment')
-    mac = models.CharField(max_length=17)
+    mac = models.CharField(max_length=17, null=True, blank=True)
     works_at = models.CharField(null=True, blank=True, max_length="40")
 
     AbstractUser._meta.get_field('email')._unique = True
