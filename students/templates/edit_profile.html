@@ -8,7 +8,7 @@
 <div class="row">
     <div class="large-12 columns">
         <h3>{{ user.get_full_name }} -  {{ user.id }}</h3>
-        <form  method="post" action="" enctype="multipart/form-data">
+        <form  method="post" action="" enctype="multipart/form-data" autocomplete="off">
             <fieldset>
                 <legend>Редактиране на профил</legend>
                 {% if form.errors %}
@@ -25,20 +25,20 @@
                 </div>
                 <div class="large-8 columns">
                     <label>GitHub Account:
-                        <input type="text" name="github_account" placeholder="https://github.com/" value="{{ form.github_account.value|default:"" }}" autocomplete="off"/>
+                        <input type="text" name="github_account" placeholder="https://github.com/" value="{{ form.github_account.value|default:"" }}" />
                     </label>
                 </div>
                 
                 <div class="large-8 columns">
                     <label>LinkedIn Account:
-                        <input type="text" name="linkedin_account" placeholder="https://linkedin.com/" value="{{ form.linkedin_account.value|default:"" }}" autocomplete="off"/>
+                        <input type="text" name="linkedin_account" placeholder="https://linkedin.com/" value="{{ form.linkedin_account.value|default:"" }}" />
                     </label>
                 </div>
                 
                 <div class="large-8 columns">
                     <label>Mac Address:
                         <input type="text" name="mac" placeholder="e0:2b:32:aa:02:a4
-" value="{{ form.mac.value|default:"" }}" autocomplete="off"/>
+" value="{{ form.mac.value|default:"" }}" />
                     </label>
                 </div>
 
