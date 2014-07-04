@@ -98,3 +98,10 @@ def api_students(request):
         })
 
     return HttpResponse(simplejson.dumps(needed_data, ensure_ascii=False), content_type = 'application/json; charset=utf8')
+
+
+@csrf_exempt
+def api_checkins(request):
+    checkins = CheckIn.objects.all()
+    print(checkins)
+    return HttpResponse(simplejson.dumps(checkins, ensure_ascii=False), content_type = 'application/json; charset=utf8')
