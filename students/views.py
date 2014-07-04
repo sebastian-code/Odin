@@ -103,5 +103,12 @@ def api_students(request):
 @csrf_exempt
 def api_checkins(request):
     checkins = CheckIn.objects.all()
-    print(checkins)
-    return HttpResponse(simplejson.dumps(checkins, ensure_ascii=False), content_type = 'application/json; charset=utf8')
+    needed_data = []
+
+    for checkin in checkins:
+        needed_data.append({
+            "student": checkin.student,
+            "date": checkin.date,
+        })
+
+    return HttpResponse(simplejson.dumps(needed_data, ensure_ascii=False), content_type = 'application/json; charset=utf8')
