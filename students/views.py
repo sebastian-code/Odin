@@ -107,7 +107,8 @@ def api_checkins(request):
 
     for checkin in checkins:
         needed_data.append({
-            "student": checkin.student,
+            "student_id": checkin.id,
+            "student_name": checkin.student.get_full_name(),
             "date": str(checkin.date),
         })
 
