@@ -108,7 +108,7 @@ def api_checkins(request):
     for checkin in checkins:
         needed_data.append({
             "student": checkin.student,
-            "date": checkin.date,
+            "date": str(checkin.date),
         })
 
     return HttpResponse(simplejson.dumps(needed_data, ensure_ascii=False), content_type = 'application/json; charset=utf8')
