@@ -5,6 +5,7 @@ from django.contrib.auth import views
 from django.http import HttpResponse
 from django.db import IntegrityError
 from django.utils import simplejson
+from django.conf import settings
 
 from .forms import UserEditForm, AddNote
 from .models import CourseAssignment, UserNote, User, CheckIn
@@ -67,7 +68,11 @@ def assignment(request, id):
 def set_check_in(request):
     if request.method == 'POST':
         mac = request.POST['mac']
-        
+        token = request.POST['token']
+
+        if settings.CHECKIN_TOKEN != token:
+            return HttpResponse(status=511)
+            
         student = get_object_or_404(User, mac__iexact=mac)
         try:
             checkin = CheckIn(mac=mac, student=student)
