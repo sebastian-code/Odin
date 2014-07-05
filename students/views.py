@@ -122,6 +122,7 @@ def api_checkins(request):
                 'name': assignment.course.name,
                 'group': assignment.group_time
             }
+        
         student_courses.append(course)
 
         needed_data.append({

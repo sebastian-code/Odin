@@ -1,3 +1,4 @@
+{% load markdown_deux_tags %}
 {% extends "base.html" %}
 
 {% block meta %}
@@ -32,7 +33,7 @@
                         <p class="large-12 columns">
                             <strong>{{ note.author.get_full_name }}</strong>:
                             <br><small>{{ note.post_time|date:"d-m-Y" }} </small>
-                            <br>{{ note.text }}
+                            <br>{{ note.text | markdown }}
                             <hr>
                         </p>
                     {% endfor %}
