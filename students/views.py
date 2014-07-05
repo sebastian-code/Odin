@@ -106,9 +106,19 @@ def api_checkins(request):
     needed_data = []
 
     for checkin in checkins:
+        student_courses = []
+
+        for assignment in checkin.student.courseassignment_set.all():
+            course = {
+                'name': assignment.course.name,
+                'group': assignment.group_time
+            }
+        student_courses.append(course)
+
         needed_data.append({
             "student_id": checkin.student.id,
             "student_name": checkin.student.get_full_name(),
+            "student_courses": student_courses,
             "date": str(checkin.date),
         })
 
