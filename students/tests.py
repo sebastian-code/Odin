@@ -28,3 +28,11 @@ class CheckInCase(unittest.TestCase):
         checkin = CheckIn.objects.get(student=self.new_user)
 
         assert checkin is not None
+
+    def test_double_checkin_same_day(self):
+        response_first = client.post('/set-check-in/', {'mac': self.new_user.mac})
+        response_second = client.post('/set-check-in/', {'mac': self.new_user.mac})
+
+        self.assertEqual(response_first.status_code, 200)
+        self.assertEqual(response_second.status_code, 418)
+

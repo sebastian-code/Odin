@@ -2,10 +2,12 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import views
+from django.http import HttpResponse
+from django.db import IntegrityError
+from django.utils import simplejson
+
 from .forms import UserEditForm, AddNote
 from .models import CourseAssignment, UserNote, User, CheckIn
-from django.http import HttpResponse
-from django.utils import simplejson
 
 import datetime
 
@@ -67,9 +69,11 @@ def set_check_in(request):
         mac = request.POST['mac']
         
         student = get_object_or_404(User, mac__iexact=mac)
-
-        checkin = CheckIn(mac=mac, student=student)
-        checkin.save()
+        try:
+            checkin = CheckIn(mac=mac, student=student)
+            checkin.save()
+        except IntegrityError:
+            return HttpResponse(status=418)
 
         return HttpResponse(status=200)
 
