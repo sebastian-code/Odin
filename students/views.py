@@ -15,7 +15,7 @@ import datetime
 
 def login(request):
     if request.user.is_authenticated():
-        return redirect('profile')
+        return redirect('user-profile')
     else:
         return views.login(request, template_name='login_form.html')
 
