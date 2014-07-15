@@ -27,6 +27,14 @@
                     <p>
                         <a href="{% url 'courses:course-students' assignment.course.id %}">Виж всички записали курса</a>
                     </p>
+                    <p>
+                        Всички коментари, които съм писал (по теми в форума):
+                        {% for comment in comments %}
+                        <ul>
+                            <li><a href="{% url 'forum:show-topic' comment.topic.id %}#{{ comment.id }}">{{ comment.topic }} #{{ comment.id }}</a></li>
+                        </ul>
+                        {% endfor %}
+                    </p>
                 </div>
                 {% if is_teacher or is_hr %}
                     {% for note in notes %}
