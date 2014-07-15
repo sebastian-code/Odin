@@ -4,6 +4,8 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager, Permission
 from django_resized import ResizedImageField
 from courses.models import Course
 from django.core.exceptions import ValidationError
+from django.contrib.auth.signals import user_logged_in
+
 import re
 
 class UserManager(BaseUserManager):
@@ -87,6 +89,18 @@ class User(AbstractUser):
             self.mac = self.mac.lower()
 
         super(AbstractUser, self).clean(*args, **kwargs)
+
+    def log_hr_login(sender, user, request, **kwargs):
+        if user.status == User.HR:
+            log = HrLoginLog(user=user)
+            log.save()        
+
+    user_logged_in.connect(log_hr_login)
+
+
+class HrLoginLog(models.Model):
+    user = models.ForeignKey(User)
+    date = models.DateField(auto_now=True)
 
 
 class CourseAssignment(models.Model):

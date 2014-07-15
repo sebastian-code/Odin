@@ -1,5 +1,5 @@
 from django.contrib import admin
-from models import User, CourseAssignment, UserNote, CheckIn
+from models import User, CourseAssignment, UserNote, CheckIn, HrLoginLog
 
 
 class UsersAdmin(admin.ModelAdmin):
@@ -50,3 +50,11 @@ class CheckInAdmin(admin.ModelAdmin):
     ]
 
 admin.site.register(CheckIn, CheckInAdmin)
+
+class HrLoginLogAdmin(admin.ModelAdmin):
+    list_display = [
+        'user',
+        'date',
+    ]
+
+admin.site.register(HrLoginLog, HrLoginLogAdmin)
