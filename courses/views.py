@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .models import Course
+from .models import Course, Partner
 from students.models import CourseAssignment, User
 from datetime import datetime
 
@@ -15,6 +15,12 @@ def show_all_courses(request):
     courses = Course.objects.all()
 
     return render(request, "show_all_courses.html", locals())
+
+
+def show_all_partners(request):
+    partners = Partner.objects.all()
+
+    return render(request, "show_all_partners.html", locals())
 
 
 def course_materials(request):
