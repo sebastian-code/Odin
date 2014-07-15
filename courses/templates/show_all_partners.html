@@ -18,9 +18,15 @@
                         <p>{{ partner.description }}</p>
                     {% endautoescape %}
                     <ul>
-                        <li><a href="{{ partner.website }}">Website</a></li>
-                        <li><a href="{{ partner.facebook }}">Facebook</a></li>
-                        <li><a href="{{ partner.twitter }}">Twitter</a></li>
+                        {% if partner.website %}
+                            <li><a href="{{ partner.website }}">Website</a></li>
+                        {% endif %}
+                        {% if partner.facebook %}
+                            <li><a href="{{ partner.facebook }}">Facebook</a></li>
+                        {% endif %}
+                        {% if partner.twitter %}
+                            <li><a href="{{ partner.twitter }}">Twitter</a></li>
+                        {% endif %}
                     </ul>
                 </div>
                 <hr>
