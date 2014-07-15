@@ -47,7 +47,7 @@ def assignment(request, id):
     assignment = get_object_or_404(CourseAssignment, pk=id)
     is_teacher = request.user.status == User.TEACHER
     is_hr = request.user.status == User.HR
-    comments = Comment.objects.filter(author=request.user).order_by('topic').all()
+    comments = Comment.objects.filter(author=assignment.user).order_by('topic').all()
 
     if is_teacher or is_hr:
         notes = UserNote.objects.filter(assignment=id)
