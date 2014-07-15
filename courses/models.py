@@ -29,6 +29,11 @@ class Partner(models.Model):
     facebook = models.URLField(null=True, blank=True)
     twitter = models.URLField(null=True, blank=True)
     website = models.URLField(null=True, blank=True)
+    ordering = models.PositiveSmallIntegerField(default=0, blank=False, null=False)
+
+
+    class Meta:
+        ordering = ('ordering',)
 
     def __unicode__(self):
         return self.name

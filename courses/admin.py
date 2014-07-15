@@ -1,6 +1,7 @@
 from django.contrib import admin
 from models import Course, Partner
 
+from adminsortable.admin import SortableAdminMixin
 
 # Register your models here.
 class CourseAdmin(admin.ModelAdmin):
@@ -13,7 +14,7 @@ class CourseAdmin(admin.ModelAdmin):
 
 admin.site.register(Course, CourseAdmin)
 
-class PartnerAdmin(admin.ModelAdmin):
+class PartnerAdmin(SortableAdminMixin, admin.ModelAdmin):
     list_display = [
         'id',
         'name',
