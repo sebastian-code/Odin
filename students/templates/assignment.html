@@ -9,6 +9,16 @@
 
 {% block content %}
 <div class="row">
+    <div id="vote-for-partner" class="reveal-modal" data-reveal>
+        <form method="POST">
+            {% csrf_token %}
+            <p>Моля посочете, към кой от партниорите на курса по {{ assignment.course }} ви заинтригува.</p>
+            {{ vote_form.favourite_partners }}
+            <button>Готово</button>
+        </form>
+        <a class="close-reveal-modal">&#215;</a>
+    </div>
+
     <div class="large-12 columns">
         <div class="panel">
             <div class="row" id="course-page">
@@ -27,6 +37,10 @@
                     <p>
                         <a href="{% url 'courses:course-students' assignment.course.id %}">Виж всички записали курса</a>
                     </p>
+                    {% if assignment.course.ask_for_favorite_partner %}
+                        <button data-reveal-id="vote-for-partner">Посочи, към кой компании проявяваш интерес</button>
+                    {% endif %}
+                    <hr>
                     <p>
                         Всички коментари, които съм писал (по теми в форума):
                         {% for comment in comments %}

@@ -2,7 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser, BaseUserManager, PermissionsMixin
 from django_resized import ResizedImageField
-from courses.models import Course
+from courses.models import Course, Partner
 from django.core.exceptions import ValidationError
 from django.contrib.auth.signals import user_logged_in
 
@@ -80,6 +80,12 @@ class User(AbstractUser):
             for courseassignment 
                 in self.courseassignment_set.all()])
 
+    def get_courses_list(self):
+        courses = []
+        for course in self.courseassignment_set.all():
+            courses.append(course)
+
+        return courses
 
     def clean(self, *args, **kwargs):
         if self.mac:
@@ -116,6 +122,7 @@ class CourseAssignment(models.Model):
     course = models.ForeignKey(Course)
     points = models.PositiveIntegerField(default='0')
     group_time = models.SmallIntegerField(choices=GROUP_TIME_CHOICES)
+    favourite_partners = models.ManyToManyField(Partner)
 
     class Meta:
         unique_together = ('user', 'course')

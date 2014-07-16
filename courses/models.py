@@ -19,6 +19,8 @@ class Course(models.Model):
     SEO_description = models.CharField(blank=False, max_length=255)
     url = models.SlugField(max_length=80, unique=True)
 
+    ask_for_favorite_partner = models.BooleanField(default=False)
+
     def __unicode__(self):
         return self.name
 

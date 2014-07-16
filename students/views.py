@@ -7,7 +7,7 @@ from django.db import IntegrityError
 from django.utils import simplejson
 from django.conf import settings
 
-from .forms import UserEditForm, AddNote
+from .forms import UserEditForm, AddNote, VoteForPartner
 from .models import CourseAssignment, UserNote, User, CheckIn
 from forum.models import Comment
 
@@ -47,6 +47,8 @@ def assignment(request, id):
     assignment = get_object_or_404(CourseAssignment, pk=id)
     is_teacher = request.user.status == User.TEACHER
     is_hr = request.user.status == User.HR
+    is_student = request.user.status == User.STUDENT
+
     comments = Comment.objects.filter(author=assignment.user).order_by('topic').all()
 
     if is_teacher or is_hr:
@@ -62,6 +64,14 @@ def assignment(request, id):
                 return redirect('students:assignment', id=id)
         else:
             form = AddNote()
+
+    if is_student and assignment.course.ask_for_favorite_partner:
+        vote_form = VoteForPartner(instance=assignment, assignment=assignment)
+        if request.method == 'POST':
+            vote_form = VoteForPartner(request.POST, instance=assignment, assignment=assignment)
+            if vote_form.is_valid():
+                vote_form.save()
+                return redirect('students:assignment', id=id)
 
     return render(request, "assignment.html", locals())
 
