@@ -3,6 +3,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Category, Topic, Comment
 from .forms import AddTopicForm, AddCommentForm
+from .helper import send_topic_subscribe_email
 
 
 def show_categories(request):
@@ -13,21 +14,22 @@ def show_categories(request):
 
 def show_category(request, category_id):
     category = get_object_or_404(Category, pk=category_id)
-    topics = reversed(Topic.objects.filter(category=category))
+    topics = reversed(Topic.objects.filter(category=category).prefetch_related('author', 'comment_set'))
     
     return render(request, "show_category.html", locals())
 
 
 def show_topic(request, topic_id):
     topic = get_object_or_404(Topic, pk=topic_id)
-    comments = Comment.objects.filter(topic=topic).order_by('id')
+    comments = Comment.objects.filter(topic=topic).order_by('id').prefetch_related('author')
 
     data = request.POST if request.POST else None
     form = AddCommentForm(data, author=request.user, topic=topic)
 
     if request.method == 'POST' and request.user.is_authenticated():
         if form.is_valid():
-            form.save()
+            comment = form.save()
+            send_topic_subscribe_email(topic, comment)
             return redirect('forum:show-topic', topic_id=topic_id)
 
     return render(request, "show_topic.html", locals())

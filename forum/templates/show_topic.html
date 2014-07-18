@@ -52,12 +52,18 @@
         </div>
         {% endfor %}
         {% if user.is_authenticated %}
-        <h3>Нов отговор:</h3>
-        <form action="" method="POST">
-            {% csrf_token %}
-            {{ form.text }}
-            <button>Пускай</button>
-        </form>
+            <h3>Нов отговор:</h3>
+            <form action="" method="POST">
+                <div>
+                    <label>
+                        Искам да получавам email когато някои напише коментар тук.
+                        {{ form.subscribe }}
+                    </label>
+                </div>
+                {% csrf_token %}
+                {{ form.text }}
+                <button>Пускай</button>
+            </form>
         {% endif %}
     </div>
 </div>

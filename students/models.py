@@ -56,6 +56,7 @@ class User(AbstractUser):
     courses = models.ManyToManyField(Course, through='CourseAssignment')
     mac = models.CharField(max_length=17, null=True, blank=True)
     works_at = models.CharField(null=True, blank=True, max_length="40")
+    subscribed_topics = models.ManyToManyField('forum.Topic', blank=True)
 
     AbstractUser._meta.get_field('email')._unique = True
     AbstractUser.REQUIRED_FIELDS.remove('email')
