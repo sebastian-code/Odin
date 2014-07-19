@@ -1,7 +1,7 @@
 from django.core.mail import send_mass_mail
 from django.conf import settings
 from students.models import User
-
+from .models import Comment
 
 def send_topic_subscribe_email(topic, comment):
     users = User.objects.filter(subscribed_topics=topic)
@@ -12,3 +12,10 @@ def send_topic_subscribe_email(topic, comment):
         emails.append(('Hack Bulgaria forum new comment', message, settings.DEFAULT_FROM_EMAIL, (user.email,)))
 
     print send_mass_mail(emails)
+
+
+def subscribe_to_topic(user, topic):
+    users_comments_for_topic = Comment.objects.filter(author=user, topic=topic)
+    if not users_comments_for_topic:
+        user.subscribed_topics.add(topic)
+        user.save()

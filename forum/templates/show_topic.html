@@ -54,14 +54,13 @@
         {% if user.is_authenticated %}
             <h3>Нов отговор:</h3>
             <form action="" method="POST">
-                {{form.errors}}
                 {% csrf_token %}
                 {{ form.text }}
                 <button>Пускай</button>
             </form>
         {% endif %}
-        <hr>
         {% if topic in request.user.subscribed_topics.all %}
+        <hr>
             <div id="unsubscribe-text">
                 <small>
                     Оставяйки коментар в темата, ще започнеш да получаваш email за всеки нов коментар. Ако не искаш - натисни този бутон. 

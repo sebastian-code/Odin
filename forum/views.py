@@ -6,7 +6,7 @@ from django.http import HttpResponse
 
 from .models import Category, Topic, Comment
 from .forms import AddTopicForm, AddCommentForm
-from .helper import send_topic_subscribe_email
+from .helper import send_topic_subscribe_email, subscribe_to_topic
 
 
 def show_categories(request):
@@ -32,8 +32,7 @@ def show_topic(request, topic_id):
     if request.method == 'POST' and request.user.is_authenticated():
         if form.is_valid():
             comment = form.save()
-            request.user.subscribed_topics.add(topic)
-            request.user.save()
+            subscribe_to_topic(request.user, topic)
             send_topic_subscribe_email(topic, comment)
             
             return redirect('forum:show-topic', topic_id=topic_id)
@@ -57,7 +56,8 @@ def add_topic(request, category_id):
     
     if request.method == 'POST':
         if form.is_valid():
-            form.save()
+            topic = form.save()
+            subscribe_to_topic(request.user, topic)
             return redirect('forum:show-category', category_id=category_id)
 
     return render(request, "add_topic.html", locals())
