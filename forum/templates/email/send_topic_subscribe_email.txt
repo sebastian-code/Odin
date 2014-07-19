@@ -2,5 +2,5 @@
 
 Нов коментар беше получен в пуснат в тема в форума на HackBulgaria.
 
-http://localhost:8000/topic/{}#{}
+https://{}/topic/{}#{}
 

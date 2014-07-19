@@ -8,4 +8,5 @@ urlpatterns = patterns('forum.views',
     url(r'^add-topic/(?P<category_id>[0-9]+)/$', 'add_topic', name='add-topic'),
     url(r'^edit-topic/(?P<topic_id>[0-9]+)/$', 'edit_topic', name='edit-topic'),
     url(r'^edit-comment/(?P<comment_id>[0-9]+)/$', 'edit_comment', name='edit-comment'),
+    url(r'^unsubscribe/(?P<topic_id>[0-9]+)/$', 'unsubscribe', name="unsubscribe")
 )

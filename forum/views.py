@@ -1,6 +1,9 @@
 from django.http import HttpResponseForbidden
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
+
+
 from .models import Category, Topic, Comment
 from .forms import AddTopicForm, AddCommentForm
 from .helper import send_topic_subscribe_email
@@ -29,10 +32,21 @@ def show_topic(request, topic_id):
     if request.method == 'POST' and request.user.is_authenticated():
         if form.is_valid():
             comment = form.save()
+            request.user.subscribed_topics.add(topic)
+            request.user.save()
             send_topic_subscribe_email(topic, comment)
+            
             return redirect('forum:show-topic', topic_id=topic_id)
 
     return render(request, "show_topic.html", locals())
+
+
+@login_required
+def unsubscribe(request, topic_id):
+    topic = get_object_or_404(Topic, pk=topic_id)
+    request.user.subscribed_topics.remove(topic)
+    request.user.save()
+    return HttpResponse(status=200)
 
 
 @login_required

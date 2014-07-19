@@ -54,18 +54,36 @@
         {% if user.is_authenticated %}
             <h3>Нов отговор:</h3>
             <form action="" method="POST">
-                <div>
-                    <label>
-                        Искам да получавам email когато някои напише коментар тук.
-                        {{ form.subscribe }}
-                    </label>
-                </div>
+                {{form.errors}}
                 {% csrf_token %}
                 {{ form.text }}
                 <button>Пускай</button>
             </form>
         {% endif %}
+        <hr>
+        {% if topic in request.user.subscribed_topics.all %}
+            <div id="unsubscribe-text">
+                <small>
+                    Оставяйки коментар в темата, ще започнеш да получаваш email за всеки нов коментар. Ако не искаш - натисни този бутон. 
+                </small>
+                <button class="button tiny" id="unsubscribe" data-topic-id="{{ topic.id }}">Unsubscribe</button>
+            </div>
+        {% endif %}
     </div>
 </div>
 
+{% endblock %}
+
+{% block jsfooter %}
+    <script>
+        $('#unsubscribe').on("click", function() {
+            var topicId = $(this).data("topic-id");
+
+            $.get( "/unsubscribe/" + topicId + "/", function(data) {
+
+            }).done(function() {
+                $("#unsubscribe-text").hide("slow");
+            });
+        });    
+    </script>
 {% endblock %}

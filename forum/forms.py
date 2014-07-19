@@ -26,7 +26,6 @@ class AddTopicForm(ModelForm):
 
 class AddCommentForm(ModelForm):
     text = forms.CharField(widget=PagedownWidget())
-    subscribe = forms.BooleanField(initial=True)
 
     def __init__(self, *args, **kwargs):
         self.author = kwargs.pop('author')
@@ -38,11 +37,6 @@ class AddCommentForm(ModelForm):
         instance.author = self.author
         instance.topic = self.topic
         instance.save(*args, **kwargs)
-        if self.cleaned_data['subscribe']:
-            self.author.subscribed_topics.add(instance.topic)
-        else:
-            self.author.subscribed_topics.remove(instance.topic) 
-        self.author.save()
         return instance
 
     class Meta:

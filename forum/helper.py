@@ -8,7 +8,7 @@ def send_topic_subscribe_email(topic, comment):
     emails = []
     for user in users:
         message = open(settings.BASE_DIR + '/forum/templates/email/send_topic_subscribe_email.txt').read()
-        message = message.format(user.get_full_name(), topic.id, comment.id)
+        message = message.format(user.get_full_name(), settings.DOMAIN, topic.id, comment.id)
         emails.append(('Hack Bulgaria forum new comment', message, settings.DEFAULT_FROM_EMAIL, (user.email,)))
 
     print send_mass_mail(emails)
