@@ -11,7 +11,9 @@
             {% for partner in partners %}
                 <h2 class="text-center">{{ partner.name }}</h2>
                 <div class="medium-3 columns">
-                    <img src="{{ MEDIA_URL }}{{ partner.logo }}" height="200">
+                    <a target="_blank" href="{{ partner.website }}">
+                        <img src="{{ MEDIA_URL }}{{ partner.logo }}" height="200">
+                    </a>
                 </div>
                 <div class="medium-9 columns">
                     {% autoescape off %}
@@ -19,13 +21,13 @@
                     {% endautoescape %}
                     <ul>
                         {% if partner.website %}
-                            <li><a href="{{ partner.website }}">Website</a></li>
+                            <li><a target="_blank" href="{{ partner.website }}">Website</a></li>
                         {% endif %}
                         {% if partner.facebook %}
-                            <li><a href="{{ partner.facebook }}">Facebook</a></li>
+                            <li><a target="_blank" href="{{ partner.facebook }}">Facebook</a></li>
                         {% endif %}
                         {% if partner.twitter %}
-                            <li><a href="{{ partner.twitter }}">Twitter</a></li>
+                            <li><a target="_blank" href="{{ partner.twitter }}">Twitter</a></li>
                         {% endif %}
                     </ul>
                 </div>
