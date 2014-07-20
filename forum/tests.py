@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.test import TestCase, client
 from django.core.urlresolvers import reverse
 
@@ -8,6 +9,7 @@ class CoursesTest(TestCase):
     def setUp(self):
         self.student_user = User.objects.create_user('ivo_student@gmail.com', '123')
         self.student_user.status = User.STUDENT
+        self.student_user.first_name = "Иван"
         self.student_user.save()
 
         self.hr_user = User.objects.create_user('ivo_hr@gmail.com', '123')
@@ -30,6 +32,13 @@ class CoursesTest(TestCase):
             author=self.student_user,
             topic=self.topic,
         )
+
+    def tearDown(self):
+        self.student_user.delete()
+        self.hr_user.delete()
+        self.category.delete()
+        self.topic.delete()
+        self.comment.delete()
 
     def test_show_categories_status(self):
         self.client = client.Client()
@@ -160,3 +169,128 @@ class CoursesTest(TestCase):
 
         after_add = Comment.objects.count()
         self.assertEqual(before_add, after_add)
+
+
+# Testing subscribitons
+    def test_unsubscribing(self):
+        self.client = client.Client()
+
+        self.client.login(
+            username=self.student_user.email, 
+            password='123',
+        )
+
+        self.student_user.subscribed_topics.add(self.topic)
+        self.student_user.save()
+
+        response = self.client.get(
+            reverse('forum:unsubscribe', kwargs={'topic_id':self.topic.id})
+        )
+
+        self.assertEqual(200, response.status_code)
+        self.assertTrue(self.topic not in self.student_user.subscribed_topics.all())
+
+
+    def test_subscribing_unlogged(self):
+        response = self.client.get(
+            reverse('forum:unsubscribe', kwargs={'topic_id':self.topic.id})
+        )
+
+        self.assertEqual(302, response.status_code)
+
+
+    def test_subscribing_afther_new_topic(self):
+        self.client = client.Client()
+        self.client.login(
+            username=self.student_user.email, 
+            password='123'
+        )
+        
+        response = self.client.post(
+            reverse('forum:add-topic',  kwargs={'category_id':self.category.id}), 
+            {
+                'title': 'test subscriging afther new topic',
+                'text': 'Lqlqlq',
+                'author': self.student_user,
+                'category': self.category,
+            }
+        )
+
+        new_topic = Topic.objects.filter(title="test subscriging afther new topic").first()
+        self.assertTrue(new_topic in self.student_user.subscribed_topics.all())
+
+
+    def test_subscribing_afther_new_topic(self):
+        self.client = client.Client()
+        self.client.login(
+            username=self.student_user.email, 
+            password='123'
+        )
+        
+        response = self.client.post(
+            reverse('forum:add-topic',  kwargs={'category_id':self.category.id}), 
+            {
+                'title': 'test subscriging afther new topic',
+                'text': 'Lqlqlq',
+                'author': self.student_user,
+                'category': self.category,
+            }
+        )
+
+        new_topic = Topic.objects.filter(title="test subscriging afther new topic").first()
+        self.assertTrue(new_topic in self.student_user.subscribed_topics.all())
+
+
+    def test_subscribing_afther_new_comment(self):
+        self.client = client.Client()
+        self.client.login(
+            username=self.student_user.email, 
+            password='123'
+        )
+
+        empty_topic = Topic.objects.create(
+            title='Test for new comment',
+            author=self.student_user,
+            category=self.category,
+        )
+
+        response = self.client.post(reverse('forum:show-topic', kwargs={'topic_id':empty_topic.id}), {
+            'text': 'Lqlqlq lqlqlql lqlqlql',
+            'author': self.student_user,
+            'topic': empty_topic,
+        })
+
+        self.assertTrue(empty_topic in self.student_user.subscribed_topics.all())
+
+
+    def test_subscribing_afther_unsubscribing(self):
+        self.client = client.Client()
+        self.client.login(
+            username=self.student_user.email,
+            password='123',
+        )
+
+        empty_topic = Topic.objects.create(
+            title='Test for new comment',
+            author=self.student_user,
+            category=self.category,
+        )
+
+        response = self.client.post(reverse('forum:show-topic', kwargs={'topic_id':empty_topic.id}), {
+            'text': 'Lqlqlq lqlqlql lqlqlql',
+            'author': self.student_user,
+            'topic': empty_topic,
+        })
+
+        response = self.client.get(
+            reverse('forum:unsubscribe', kwargs={'topic_id':empty_topic.id})
+        )
+
+
+        response = self.client.post(reverse('forum:show-topic', kwargs={'topic_id':empty_topic.id}), {
+            'text': 'Lqlqlq lqlqlql lqlqlql2',
+            'author': self.student_user,
+            'topic': empty_topic,
+        })
+
+        self.assertTrue(empty_topic not in self.student_user.subscribed_topics.all())

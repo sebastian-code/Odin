@@ -8,14 +8,16 @@ def send_topic_subscribe_email(topic, comment):
     emails = []
     for user in users:
         message = open(settings.BASE_DIR + '/forum/templates/email/send_topic_subscribe_email.txt').read()
-        message = message.format(user.get_full_name(), settings.DOMAIN, topic.id, comment.id)
+        message = message.format(user.get_full_name().encode('utf8'), settings.DOMAIN, topic.id, comment.id)
         emails.append(('Hack Bulgaria forum new comment', message, settings.DEFAULT_FROM_EMAIL, (user.email,)))
 
-    print send_mass_mail(emails)
+    send_mass_mail(emails)
 
 
 def subscribe_to_topic(user, topic):
-    users_comments_for_topic = Comment.objects.filter(author=user, topic=topic)
-    if not users_comments_for_topic:
+    users_comments_for_topic = Comment.objects.filter(author=user, topic=topic).count()
+
+    #Checking if this is the first comment
+    if users_comments_for_topic <= 1:
         user.subscribed_topics.add(topic)
         user.save()
