@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.test import TestCase, client
+from django.core import mail
 from django.core.urlresolvers import reverse
 
 from students.models import User
@@ -294,3 +295,37 @@ class CoursesTest(TestCase):
         })
 
         self.assertTrue(empty_topic not in self.student_user.subscribed_topics.all())
+
+
+    def test_sending_emails(self):
+        self.client = client.Client()
+        self.client.login(
+            username=self.student_user.email,
+            password='123',
+        )
+        
+        response = self.client.post(
+            reverse('forum:add-topic',  kwargs={'category_id':self.category.id}), 
+            {
+                'title': 'test sending emails',
+                'text': 'Lqlqlq',
+                'author': self.student_user,
+                'category': self.category,
+            }
+        )
+
+        new_topic = Topic.objects.filter(title="test sending emails").first()
+        
+        self.client.logout()
+        self.client.login(
+            username=self.hr_user.email,
+            password='123',
+        )
+
+        response = self.client.post(reverse('forum:show-topic', kwargs={'topic_id':new_topic.id}), {
+            'text': 'Lqlqlq lqlqlql lqlqlql23',
+            'author': self.hr_user,
+            'topic': new_topic,
+        })
+
+        self.assertEqual(1, len(mail.outbox))
