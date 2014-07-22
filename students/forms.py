@@ -82,4 +82,5 @@ class VoteForPartner(forms.ModelForm):
 
         fields = (
             "favourite_partners",
+            "cv",
         )

@@ -68,7 +68,7 @@ def assignment(request, id):
     if is_student and assignment.course.ask_for_favorite_partner:
         vote_form = VoteForPartner(instance=assignment, assignment=assignment)
         if request.method == 'POST':
-            vote_form = VoteForPartner(request.POST, instance=assignment, assignment=assignment)
+            vote_form = VoteForPartner(request.POST, request.FILES, instance=assignment, assignment=assignment)
             if vote_form.is_valid():
                 vote_form.save()
                 return redirect('students:assignment', id=id)

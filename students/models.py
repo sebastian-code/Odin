@@ -124,6 +124,7 @@ class CourseAssignment(models.Model):
     points = models.PositiveIntegerField(default='0')
     group_time = models.SmallIntegerField(choices=GROUP_TIME_CHOICES)
     favourite_partners = models.ManyToManyField(Partner)
+    cv = models.FileField(blank=True, null=True, upload_to='cvs')
 
     class Meta:
         unique_together = ('user', 'course')
