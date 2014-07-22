@@ -11,10 +11,11 @@ class UsersAdmin(admin.ModelAdmin):
         'mac',
         'get_courses',
         'works_at',
+        'status',
     ]
     list_display_links = ['email']
 
-    list_filter = ('works_at',)
+    list_filter = ('works_at', 'status')
 
 admin.site.register(User, UsersAdmin)
 
@@ -23,8 +24,12 @@ class CourseAssignmentAdmin(admin.ModelAdmin):
     list_display = [
         'user',
         'course',
-        'points',
+        'group_time',
+        'get_favourite_partners',
+        'cv',
     ]
+
+    list_filter = ('course', 'group_time')
 
     list_display_links = ['user']
 

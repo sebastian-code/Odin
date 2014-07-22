@@ -9,12 +9,17 @@
 
 {% block content %}
 <div class="row">
+
     <div id="vote-for-partner" class="reveal-modal" data-reveal>
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            <p>Моля посочете, към кои от партньорите на курса по {{ assignment.course }} ви заинтригува.</p>
+            <p>Моля посочи, към кои от партньорите на курса по {{ assignment.course }} ви заинтригува.</p>
             {{ vote_form.favourite_partners }}
-            Може да прикачите вашето CV, ако искате то по-бързо да стигне до нашите партниори.
+
+            <p>
+                Може да прикачите вашето CV, ако искате то по-бързо да стигне до нашите партниори.
+            </p>
+
             {{ vote_form.cv }}
             <button>Готово</button>
         </form>
@@ -39,8 +44,8 @@
                     <p>
                         <a href="{% url 'courses:course-students' assignment.course.id %}">Виж всички записали курса</a>
                     </p>
-                    {% if assignment.course.ask_for_favorite_partner %}
-                        <button data-reveal-id="vote-for-partner">Посочи, към кой компании проявяваш интерес</button>
+                    {% if assignment.course.ask_for_favorite_partner and is_student %}
+                        <button data-reveal-id="vote-for-partner">Посочи, към кои от партниорите ни проявяваш интерес</button>
                     {% endif %}
                     <hr>
                     <p>

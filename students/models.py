@@ -67,7 +67,7 @@ class User(AbstractUser):
     REQUIRED_FIELDS = []
     
     def __unicode__(self):
-        return unicode(self.username)
+        return unicode(self.get_full_name())
 
 
     def getAvatarUrl(self):
@@ -76,7 +76,7 @@ class User(AbstractUser):
         return self.avatar.url
 
 
-    def  get_courses(self):
+    def get_courses(self):
         return "; ".join([courseassignment.course.name + ' - ' + str(courseassignment.group_time) 
             for courseassignment 
                 in self.courseassignment_set.all()])
@@ -131,6 +131,11 @@ class CourseAssignment(models.Model):
 
     def __str__(self):
         return unicode('{} - {}'.format(self.course, self.group_time))
+
+    def get_favourite_partners(self):
+        return "; ".join([partner.name 
+            for partner 
+                in self.favourite_partners.all()])
 
 
 class UserNote(models.Model):
