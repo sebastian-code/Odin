@@ -12,8 +12,9 @@
     <div id="vote-for-partner" class="reveal-modal" data-reveal>
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            <p>Моля посочете, към кой от партниорите на курса по {{ assignment.course }} ви заинтригува.</p>
+            <p>Моля посочете, към кои от партньорите на курса по {{ assignment.course }} ви заинтригува.</p>
             {{ vote_form.favourite_partners }}
+            Може да прикачите вашето CV, ако искате то по-бързо да стигне до нашите партниори.
             {{ vote_form.cv }}
             <button>Готово</button>
         </form>
