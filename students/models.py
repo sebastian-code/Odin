@@ -57,7 +57,8 @@ class User(AbstractUser):
     mac = models.CharField(max_length=17, null=True, blank=True)
     works_at = models.CharField(null=True, blank=True, max_length="40")
     subscribed_topics = models.ManyToManyField('forum.Topic', blank=True)
-
+    hr_of = models.ForeignKey(Partner, blank=True, null=True)
+    
     AbstractUser._meta.get_field('email')._unique = True
     AbstractUser.REQUIRED_FIELDS.remove('email')
     AbstractUser._meta.get_field('username').max_length=75
