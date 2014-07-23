@@ -24,7 +24,7 @@
     {% endif%}
 
     {% for assignment in assignments %}
-        {% if assignment not in interested_in_me%}
+        {% if assignment not in interested_in_me or not interested_in_me %}
         <div class="medium-4 columns">
             <div class="panel text-center">
                 <h5>{{ assignment.user.get_full_name }}</h5>
