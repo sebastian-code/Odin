@@ -2,17 +2,42 @@
 
 {% block content %}
 <div class="row">
+    {% if interested_in_me %}
+        <h3>
+            Хора, които проявяват интерес към {{ request.user.hr_of }}
+        </h3>
+            {% for assignment in interested_in_me %}
+            <div class="medium-4 columns">
+                <div class="panel text-center">
+                    <h5>{{ assignment.user.get_full_name }}</h5>
+                    <a href="{% url 'students:assignment' assignment.id  %}">
+                        <img style="height: 200px; width: 200px;" src="{{ assignment.user.getAvatarUrl }}" class="th">
+                    </a>
+                    {% if is_teacher_or_hr %}
+                        <hr>
+                        <a href="{% url 'students:assignment' assignment.id  %}" class="button tiny">Notes: {{ assignment.usernote_set.count }}</a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        <hr>
+    {% endif%}
+
     {% for assignment in assignments %}
+        {% if assignment not in interested_in_me%}
         <div class="medium-4 columns">
             <div class="panel text-center">
                 <h5>{{ assignment.user.get_full_name }}</h5>
-                <a href="{% url 'students:assignment' assignment.id  %}"><img style="height: 200px; width: 200px;" src="{{ assignment.user.getAvatarUrl }}" class="th"></a>
+                <a href="{% url 'students:assignment' assignment.id  %}">
+                    <img style="height: 200px; width: 200px;" src="{{ assignment.user.getAvatarUrl }}" class="th">
+                </a>
                 {% if is_teacher_or_hr %}
                     <hr>
                     <a href="{% url 'students:assignment' assignment.id  %}" class="button tiny">Notes: {{ assignment.usernote_set.count }}</a>
                 {% endif %}
             </div>
         </div>
+        {% endif %}
     {% endfor %}
 </div>
 {% endblock %}

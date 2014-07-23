@@ -32,5 +32,10 @@ def course_materials(request):
 def course_students(request, course_id):
     assignments = CourseAssignment.objects.filter(course=course_id, user__status=User.STUDENT)
     is_teacher_or_hr = request.user.status == User.HR or request.user.status == User.TEACHER
-    
+    if request.user.hr_of:
+        interested_in_me = CourseAssignment.objects.filter(
+            course=course_id, 
+            favourite_partners=request.user.hr_of, 
+            user__status=User.STUDENT
+        )
     return render(request, "course_students.html", locals())
