@@ -10,7 +10,7 @@ class CoursesTest(TestCase):
     def setUp(self):
         self.student_user = User.objects.create_user('ivo_student@gmail.com', '123')
         self.student_user.status = User.STUDENT
-        self.student_user.first_name = "Иван"
+        # self.student_user.first_name = "Иван"
         self.student_user.save()
 
         self.hr_user = User.objects.create_user('ivo_hr@gmail.com', '123')
@@ -73,7 +73,6 @@ class CoursesTest(TestCase):
         response = self.client.post(reverse('forum:add-topic',  kwargs={'category_id':self.category.id}), {
             'title': 'My Topic',
             'text': 'Lqlqlq',
-            'author': self.student_user,
             'category': self.category,
         })
 
@@ -87,7 +86,6 @@ class CoursesTest(TestCase):
         response = self.client.post(reverse('forum:add-topic',  kwargs={'category_id':self.category.id}), {
             'title': 'My Topic',
             'text': 'Lqlqlq',
-            'author': self.student_user,
             'category': self.category,
         })
         after_add = Topic.objects.count()
@@ -130,7 +128,6 @@ class CoursesTest(TestCase):
         before_add = Comment.objects.count()
         response = self.client.post(reverse('forum:show-topic', kwargs={'topic_id':self.topic.id}), {
             'text': 'Lqlqlq',
-            'author': self.student_user,
             'topic': self.topic,
         })
 
@@ -164,7 +161,6 @@ class CoursesTest(TestCase):
         before_add = Comment.objects.count()
         response = self.client.post(reverse('forum:show-topic', kwargs={'topic_id':self.topic.id}), {
             'text': 'Lqlqlq',
-            'author': self.student_user,
             'topic': self.topic,
         })
 
@@ -212,7 +208,6 @@ class CoursesTest(TestCase):
             {
                 'title': 'test subscriging afther new topic',
                 'text': 'Lqlqlq',
-                'author': self.student_user,
                 'category': self.category,
             }
         )
@@ -233,7 +228,6 @@ class CoursesTest(TestCase):
             {
                 'title': 'test subscriging afther new topic',
                 'text': 'Lqlqlq',
-                'author': self.student_user,
                 'category': self.category,
             }
         )
@@ -257,7 +251,6 @@ class CoursesTest(TestCase):
 
         response = self.client.post(reverse('forum:show-topic', kwargs={'topic_id':empty_topic.id}), {
             'text': 'Lqlqlq lqlqlql lqlqlql',
-            'author': self.student_user,
             'topic': empty_topic,
         })
 
@@ -279,7 +272,6 @@ class CoursesTest(TestCase):
 
         response = self.client.post(reverse('forum:show-topic', kwargs={'topic_id':empty_topic.id}), {
             'text': 'Lqlqlq lqlqlql lqlqlql',
-            'author': self.student_user,
             'topic': empty_topic,
         })
 
@@ -290,7 +282,6 @@ class CoursesTest(TestCase):
 
         response = self.client.post(reverse('forum:show-topic', kwargs={'topic_id':empty_topic.id}), {
             'text': 'Lqlqlq lqlqlql lqlqlql2',
-            'author': self.student_user,
             'topic': empty_topic,
         })
 
@@ -309,7 +300,6 @@ class CoursesTest(TestCase):
             {
                 'title': 'test sending emails',
                 'text': 'Lqlqlq',
-                'author': self.student_user,
                 'category': self.category,
             }
         )
@@ -324,7 +314,6 @@ class CoursesTest(TestCase):
 
         response = self.client.post(reverse('forum:show-topic', kwargs={'topic_id':new_topic.id}), {
             'text': 'Lqlqlq lqlqlql lqlqlql23',
-            'author': self.hr_user,
             'topic': new_topic,
         })
 
