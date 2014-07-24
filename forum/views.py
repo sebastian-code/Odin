@@ -49,6 +49,14 @@ def unsubscribe(request, topic_id):
 
 
 @login_required
+def subscribe(request, topic_id):
+    topic = get_object_or_404(Topic, pk=topic_id)
+    request.user.subscribed_topics.add(topic)
+    request.user.save()
+    return HttpResponse(status=200)
+
+
+@login_required
 def add_topic(request, category_id):
     category = get_object_or_404(Category, pk=category_id)
     data = request.POST if request.POST else None

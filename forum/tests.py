@@ -187,6 +187,21 @@ class CoursesTest(TestCase):
         self.assertEqual(200, response.status_code)
         self.assertTrue(self.topic not in self.student_user.subscribed_topics.all())
 
+    def test_subscribing(self):
+        self.client = client.Client()
+
+        self.client.login(
+            username=self.student_user.email, 
+            password='123',
+        )
+
+        response = self.client.get(
+            reverse('forum:subscribe', kwargs={'topic_id':self.topic.id})
+        )
+
+        self.assertEqual(200, response.status_code)
+        self.assertTrue(self.topic in self.student_user.subscribed_topics.all())
+
 
     def test_subscribing_unlogged(self):
         response = self.client.get(

@@ -59,14 +59,23 @@
                 <button>Пускай</button>
             </form>
         {% endif %}
-        {% if topic in request.user.subscribed_topics.all %}
-        <hr>
+        
+        {% if user.is_authenticated %}
+            {% if topic in request.user.subscribed_topics.all %}
             <div id="unsubscribe-text">
-                <small>
-                    Оставяйки коментар в темата, ще започнеш да получаваш email за всеки нов коментар. Ако не искаш - натисни този бутон. 
-                </small>
-                <button class="button tiny" id="unsubscribe" data-topic-id="{{ topic.id }}">Unsubscribe</button>
-            </div>
+                    <small>
+                        Оставяйки коментар в темата, ще започнеш да получаваш email за всеки нов коментар. Ако не искаш - натисни този бутон. 
+                    </small>
+                    <button class="button tiny" id="unsubscribe" data-topic-id="{{ topic.id }}">Unsubscribe</button>
+                </div>
+            {% else %}
+                <div id="subscribe-text">
+                    <small>
+                        Абонирай се към тази тема, за да получаваш email за всеки коментар. 
+                    </small>
+                    <button class="button tiny" id="subscribe" data-topic-id="{{ topic.id }}">Subscribe</button>
+                </div>
+            {% endif %}
         {% endif %}
     </div>
 </div>
@@ -82,6 +91,16 @@
 
             }).done(function() {
                 $("#unsubscribe-text").hide("slow");
+            });
+        });
+
+        $('#subscribe').on("click", function() {
+            var topicId = $(this).data("topic-id");
+
+            $.get( "/subscribe/" + topicId + "/", function(data) {
+
+            }).done(function() {
+                $("#subscribe-text").hide("slow");
             });
         });    
     </script>
