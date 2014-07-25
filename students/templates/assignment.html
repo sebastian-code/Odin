@@ -36,16 +36,19 @@
 
                 <div>
                     <p>
-                    <a href="{{ assignment.user.github_account }}" target="_blank">GitHub акаунт: {{ assignment.user.github_account }}</a>
+                        <a href="{{ assignment.user.github_account }}" target="_blank">GitHub акаунт: {{ assignment.user.github_account }}</a>
+                        </p>
+                        <p>
+                            <a href="{{ assignment.course.git_repository }}" target="_blank">Материали в GitHub за курса</a>
+                        </p>
+                        <p>
+                            <a href="{% url 'courses:course-students' assignment.course.id %}">Виж всички записали курса</a>
+                        </p>
                     </p>
-                    <p>
-                        <a href="{{ assignment.course.git_repository }}" target="_blank">Материали в GitHub за курса</a>
-                    </p>
-                    <p>
-                        <a href="{% url 'courses:course-students' assignment.course.id %}">Виж всички записали курса</a>
-                    </p>
+                    <hr>
                     {% if assignment.course.ask_for_favorite_partner and is_student %}
-                        <button data-reveal-id="vote-for-partner">Посочи, към кои от партниорите ни проявяваш интерес</button>
+                        <p class="text-center"><button data-reveal-id="vote-for-partner">Посочи, към кои от партниорите ни проявяваш интерес</button>
+                        </p>
                     {% endif %}
                     <hr>
                     <p>
