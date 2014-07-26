@@ -345,13 +345,13 @@ class CoursesTest(TestCase):
         response = self.client.post(
             reverse('forum:add-topic',  kwargs={'category_id':self.category.id}), 
             {
-                'title': 'test sending emails',
+                'title': 'Нова тема тряляля',
                 'text': 'Lqlqlq',
                 'category': self.category,
             }
         )
 
-        new_topic = Topic.objects.filter(title="test sending emails").first()
+        new_topic = Topic.objects.filter(title="Нова тема тряляля").first()
 
         self.client.logout()
         self.client.login(
@@ -364,4 +364,4 @@ class CoursesTest(TestCase):
             'topic': new_topic,
         })
 
-        self.assertTrue(new_topic.title in mail.outbox[0].subject)
+        self.assertTrue(mail.outbox[0].subject.find(new_topic.title.encode("utf-8")))
