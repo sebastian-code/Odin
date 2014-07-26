@@ -18,7 +18,7 @@ def send_topic_subscribe_email(topic, comment):
             )
             
             emails.append((
-                'Hack Bulgaria forum new comment', 
+                'Hack Bulgaria new comment in "{}"'.format(topic.title), 
                 message, 
                 settings.DEFAULT_FROM_EMAIL, 
                 (user.email,)
