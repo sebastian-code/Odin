@@ -309,7 +309,7 @@ class CoursesTest(TestCase):
             username=self.student_user.email,
             password='123',
         )
-        
+
         response = self.client.post(
             reverse('forum:add-topic',  kwargs={'category_id':self.category.id}), 
             {
@@ -320,7 +320,7 @@ class CoursesTest(TestCase):
         )
 
         new_topic = Topic.objects.filter(title="test sending emails").first()
-        
+
         self.client.logout()
         self.client.login(
             username=self.hr_user.email,
@@ -333,3 +333,35 @@ class CoursesTest(TestCase):
         })
 
         self.assertEqual(1, len(mail.outbox))
+
+
+    def test_new_comment_email_title(self):
+        self.client = client.Client()
+        self.client.login(
+            username=self.student_user.email,
+            password='123',
+        )
+
+        response = self.client.post(
+            reverse('forum:add-topic',  kwargs={'category_id':self.category.id}), 
+            {
+                'title': 'test sending emails',
+                'text': 'Lqlqlq',
+                'category': self.category,
+            }
+        )
+
+        new_topic = Topic.objects.filter(title="test sending emails").first()
+
+        self.client.logout()
+        self.client.login(
+            username=self.hr_user.email,
+            password='123',
+        )
+
+        response = self.client.post(reverse('forum:show-topic', kwargs={'topic_id':new_topic.id}), {
+            'text': 'Lqlqlq lqlqlql lqlqlql23',
+            'topic': new_topic,
+        })
+
+        self.assertTrue(new_topic.title in mail.outbox[0].subject)
