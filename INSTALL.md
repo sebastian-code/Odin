@@ -59,6 +59,8 @@ CREATE DATABASE <dbname> CHARACTER SET utf8;
 If you want to use a PostgreSQL DB. Install the server, install psycopg2 (django PostgreSQL connector), create a database.
 ```
 sudo apt-get install postgresql
+# server should be started automatically, but just in case restart it
+sudo service postgresql restart
 pip install psycopg2
 sudo -u postgres createdb <dbname>
 ```
