@@ -70,6 +70,7 @@ Rename the `odin/example_local_settings.py` to `odin/local_settings.py`. This wi
 Adjust your database settings in `local_settings.py`.
 For more information about the diferent databases read https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
+Now try populating the database
 ```
 python manage.py syncdb --all
 python manage.py migrate --fake
