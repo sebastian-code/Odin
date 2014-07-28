@@ -65,7 +65,7 @@ def assignment(request, id):
         else:
             form = AddNote()
 
-    if is_student and assignment.course.ask_for_favorite_partner:
+    if is_student and assignment.course.ask_for_favorite_partner and request.user == assignment.user:
         vote_form = VoteForPartner(instance=assignment, assignment=assignment)
         if request.method == 'POST':
             vote_form = VoteForPartner(request.POST, request.FILES, instance=assignment, assignment=assignment)

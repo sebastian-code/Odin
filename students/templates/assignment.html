@@ -46,7 +46,7 @@
                         </p>
                     </p>
                     <hr>
-                    {% if assignment.course.ask_for_favorite_partner and is_student %}
+                    {% if assignment.course.ask_for_favorite_partner and is_student and user == assignment.user %}
                         <p class="text-center"><button data-reveal-id="vote-for-partner">Посочете към кои от партньорите ни проявявате интерес</button>
                         </p>
                     {% endif %}
