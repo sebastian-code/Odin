@@ -13,11 +13,11 @@
     <div id="vote-for-partner" class="reveal-modal" data-reveal>
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            <p>Моля посочи, към кои от партньорите на курса по {{ assignment.course }} ви заинтригува.</p>
+            <p>Моля посочeте към кои от партньорите на курса по {{ assignment.course }} проявявате интерес.</p>
             {{ vote_form.favourite_partners }}
 
             <p>
-                Може да прикачите вашето CV, ако искате то по-бързо да стигне до нашите партниори.
+                Може да прикачите вашето CV ако искате то по-бързо да стигне до нашите партньори.
             </p>
 
             {{ vote_form.cv }}
@@ -42,17 +42,17 @@
                             <a href="{{ assignment.course.git_repository }}" target="_blank">Материали в GitHub за курса</a>
                         </p>
                         <p>
-                            <a href="{% url 'courses:course-students' assignment.course.id %}">Виж всички записали курса</a>
+                            <a href="{% url 'courses:course-students' assignment.course.id %}">Вижте всички записали курса</a>
                         </p>
                     </p>
                     <hr>
                     {% if assignment.course.ask_for_favorite_partner and is_student %}
-                        <p class="text-center"><button data-reveal-id="vote-for-partner">Посочи, към кои от партниорите ни проявяваш интерес</button>
+                        <p class="text-center"><button data-reveal-id="vote-for-partner">Посочете към кои от партньорите ни проявявате интерес</button>
                         </p>
                     {% endif %}
                     <hr>
                     <p>
-                        Всички коментари, които съм писал (по теми в форума):
+                        Всички ваши коментари (по теми в форума):
                         {% for comment in comments %}
                         <ul>
                             <li><a href="{% url 'forum:show-topic' comment.topic.id %}#{{ comment.id }}">{{ comment.topic }} #{{ comment.id }}</a></li>
@@ -77,7 +77,7 @@
                     {% csrf_token %}
                         {{form.text}}
                         <input type="hidden" name="assignment" value="{{ assignment.id }}">
-                        <button>Дай коментар!</button>
+                        <button>Дайте коментар!</button>
                     </form>
                 {% endif %}
             </div>
