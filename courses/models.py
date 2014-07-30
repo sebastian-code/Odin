@@ -1,4 +1,5 @@
 from django.db import models
+
 from tinymce import models as tinymce_models
 
 
@@ -24,6 +25,7 @@ class Course(models.Model):
     def __unicode__(self):
         return self.name
 
+
 class Partner(models.Model):
     name = models.CharField(max_length=128)
     logo = models.ImageField(upload_to="partner_logoes", null=True, blank=True)
@@ -33,9 +35,15 @@ class Partner(models.Model):
     website = models.URLField(null=True, blank=True)
     ordering = models.PositiveSmallIntegerField(default=0, blank=False, null=False)
 
-
     class Meta:
         ordering = ('ordering',)
 
     def __unicode__(self):
         return self.name
+
+
+class Task(models.Model):
+    name = models.CharField(max_length=128)
+    description = models.URLField()
+    course = models.ForeignKey('Course')
+    deadline = models.DateTimeField(null=True, blank=True)
