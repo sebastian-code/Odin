@@ -63,3 +63,4 @@ class HrLoginLogAdmin(admin.ModelAdmin):
     ]
 
 admin.site.register(HrLoginLog, HrLoginLogAdmin)
+admin.site.register(Solution)

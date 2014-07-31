@@ -2,9 +2,11 @@ from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser, BaseUserManager, PermissionsMixin
 from django_resized import ResizedImageField
-from courses.models import Course, Partner
+
 from django.core.exceptions import ValidationError
 from django.contrib.auth.signals import user_logged_in
+
+from courses.models import Course, Partner, Task
 
 import re
 
@@ -58,7 +60,7 @@ class User(AbstractUser):
     works_at = models.CharField(null=True, blank=True, max_length="40")
     subscribed_topics = models.ManyToManyField('forum.Topic', blank=True)
     hr_of = models.ForeignKey(Partner, blank=True, null=True)
-    
+
     AbstractUser._meta.get_field('email')._unique = True
     AbstractUser.REQUIRED_FIELDS.remove('email')
     AbstractUser._meta.get_field('username').max_length=75
@@ -66,20 +68,20 @@ class User(AbstractUser):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
-    
+
     def __unicode__(self):
         return unicode(self.get_full_name())
 
 
     def getAvatarUrl(self):
         if not self.avatar:
-            return settings.STATIC_URL + settings.NO_AVATAR_IMG 
+            return settings.STATIC_URL + settings.NO_AVATAR_IMG
         return self.avatar.url
 
 
     def get_courses(self):
-        return "; ".join([courseassignment.course.name + ' - ' + str(courseassignment.group_time) 
-            for courseassignment 
+        return "; ".join([courseassignment.course.name + ' - ' + str(courseassignment.group_time)
+            for courseassignment
                 in self.courseassignment_set.all()])
 
     def get_courses_list(self):
@@ -101,7 +103,7 @@ class User(AbstractUser):
     def log_hr_login(sender, user, request, **kwargs):
         if user.status == User.HR:
             log = HrLoginLog(user=user)
-            log.save()        
+            log.save()
 
     user_logged_in.connect(log_hr_login)
 
@@ -134,8 +136,8 @@ class CourseAssignment(models.Model):
         return unicode('{} - {}'.format(self.course, self.group_time))
 
     def get_favourite_partners(self):
-        return "; ".join([partner.name 
-            for partner 
+        return "; ".join([partner.name
+            for partner
                 in self.favourite_partners.all()])
 
 
@@ -153,3 +155,8 @@ class CheckIn(models.Model):
 
     class Meta:
         unique_together = ('student', 'date')
+
+class Solution(models.Model):
+    task = models.ForeignKey(Task)
+    user = models.ForeignKey(User)
+    repo = models.URLField()
