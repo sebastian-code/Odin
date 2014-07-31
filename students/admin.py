@@ -1,5 +1,5 @@
 from django.contrib import admin
-from models import User, CourseAssignment, UserNote, CheckIn, HrLoginLog
+from models import User, CourseAssignment, UserNote, CheckIn, HrLoginLog, Solution
 
 
 class UsersAdmin(admin.ModelAdmin):

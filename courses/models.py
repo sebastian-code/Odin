@@ -45,5 +45,5 @@ class Partner(models.Model):
 class Task(models.Model):
     name = models.CharField(max_length=128)
     description = models.URLField()
-    course = models.ForeignKey('Course')
+    course = models.ForeignKey(Course)
     deadline = models.DateTimeField(null=True, blank=True)
