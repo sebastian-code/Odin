@@ -5,10 +5,10 @@ from django_resized import ResizedImageField
 
 from django.core.exceptions import ValidationError
 from django.contrib.auth.signals import user_logged_in
-
 from courses.models import Course, Partner, Task
 
 import re
+
 
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None):
@@ -57,11 +57,12 @@ class User(AbstractUser):
     description = models.TextField(blank=True)
     courses = models.ManyToManyField(Course, through='CourseAssignment')
     mac = models.CharField(max_length=17, null=True, blank=True)
-    works_at = models.CharField(null=True, blank=True, max_length="40")
+    works_at = models.CharField(null=True, blank=True, max_length='40')
     subscribed_topics = models.ManyToManyField('forum.Topic', blank=True)
     hr_of = models.ForeignKey(Partner, blank=True, null=True)
 
     AbstractUser._meta.get_field('email')._unique = True
+
     AbstractUser.REQUIRED_FIELDS.remove('email')
     AbstractUser._meta.get_field('username').max_length=75
     objects = UserManager()
@@ -155,6 +156,7 @@ class CheckIn(models.Model):
 
     class Meta:
         unique_together = ('student', 'date')
+
 
 class Solution(models.Model):
     task = models.ForeignKey(Task)

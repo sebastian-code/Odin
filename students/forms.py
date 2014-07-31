@@ -1,8 +1,9 @@
 from django import forms
-from .models import User, UserNote, CheckIn, CourseAssignment
+from .models import User, UserNote, CheckIn, CourseAssignment, Solution
 from courses.models import Partner
 from pagedown.widgets import PagedownWidget
 from django.utils.translation import ugettext as _
+
 
 
 class UserEditForm(forms.ModelForm):
@@ -86,7 +87,6 @@ class VoteForPartner(forms.ModelForm):
         )
 
 class AddSolutionForm(forms.ModelForm):
-
     class Meta:
         model = Solution
         fields = ['task', 'repo']
