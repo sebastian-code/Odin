@@ -17,7 +17,7 @@ class UserEditForm(forms.ModelForm):
         instance = super(UserEditForm, self).save(commit=False)
         avatar_clear = self.cleaned_data.get('avatar_clear')
         new_password = self.cleaned_data.get('new_password1')
-        
+
         if new_password:
             instance.set_password(new_password)
 
@@ -61,7 +61,7 @@ class AddNote(forms.ModelForm):
         exclude = (
             'author',
         )
-        
+
         fields = (
             "assignment",
             'text',
@@ -84,3 +84,9 @@ class VoteForPartner(forms.ModelForm):
             "favourite_partners",
             "cv",
         )
+
+class AddSolutionForm(forms.ModelForm):
+
+    class Meta:
+        model = Solution
+        fields = ['task', 'repo']
