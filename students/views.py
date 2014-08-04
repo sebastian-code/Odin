@@ -85,7 +85,7 @@ def set_check_in(request):
 
         if settings.CHECKIN_TOKEN != token:
             return HttpResponse(status=511)
-            
+
         student = get_object_or_404(User, mac__iexact=mac)
         try:
             checkin = CheckIn(mac=mac, student=student)
@@ -135,7 +135,7 @@ def api_checkins(request):
                 'name': assignment.course.name,
                 'group': assignment.group_time
             }
-        
+
         student_courses.append(course)
 
         needed_data.append({
