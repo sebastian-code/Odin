@@ -29,7 +29,7 @@
                 <div>
                     <p>
                         {% if is_teacher or is_hr %}
-                        <a href="mailto:{{ assignment.user.email }}" target="_blank">Email акаунт: {{ assignment.user.email }}</a>
+                        <a href="mailto:{{ assignment.user.email }}" target="_blank" id="email">Email акаунт: {{ assignment.user.email }}</a>
                         {% endif %}
                     </p>
                     <p>

@@ -40,3 +40,4 @@ class CoursesTest(TestCase):
         self.client.login(username='ivo_student@gmail.com', password='123')
         response = self.client.get(reverse('courses:course-students',  kwargs={'course_id':self.course.id}))
         self.assertEqual(200, response.status_code)
+
