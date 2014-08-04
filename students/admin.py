@@ -56,6 +56,7 @@ class CheckInAdmin(admin.ModelAdmin):
 
 admin.site.register(CheckIn, CheckInAdmin)
 
+
 class HrLoginLogAdmin(admin.ModelAdmin):
     list_display = [
         'user',

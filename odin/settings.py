@@ -28,7 +28,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'django.contrib.flatpages',
-    
+
     'south',
     'tinymce',
     'adminsortable',
@@ -96,8 +96,8 @@ DJANGO_WYSIWYG_FLAVOR = "tinymce_advanced"
 
 TINYMCE_DEFAULT_CONFIG = {
     'plugins': "table,spellchecker,paste,searchreplace",
-    'width' : 900,
-    'height' : 400,
+    'width': 900,
+    'height': 400,
 }
 
 AWESOME_AVATAR = {

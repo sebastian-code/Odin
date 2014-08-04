@@ -69,7 +69,8 @@ def assignment(request, id):
     if is_student and assignment.course.ask_for_favorite_partner and request.user == assignment.user:
         vote_form = VoteForPartner(instance=assignment, assignment=assignment)
         if request.method == 'POST':
-            vote_form = VoteForPartner(request.POST, request.FILES, instance=assignment, assignment=assignment)
+            vote_form = VoteForPartner(
+                request.POST, request.FILES, instance=assignment, assignment=assignment)
             if vote_form.is_valid():
                 vote_form.save()
                 return redirect('students:assignment', id=id)
@@ -119,7 +120,7 @@ def api_students(request):
             'available': available,
         })
 
-    return HttpResponse(simplejson.dumps(needed_data, ensure_ascii=False), content_type = 'application/json; charset=utf8')
+    return HttpResponse(simplejson.dumps(needed_data, ensure_ascii=False), content_type='application/json; charset=utf8')
 
 
 @csrf_exempt
@@ -145,13 +146,13 @@ def api_checkins(request):
             "date": str(checkin.date),
         })
 
-    return HttpResponse(simplejson.dumps(needed_data, ensure_ascii=False), content_type = 'application/json; charset=utf8')
+    return HttpResponse(simplejson.dumps(needed_data, ensure_ascii=False), content_type='application/json; charset=utf8')
 
 
 @login_required
 def solutions(request, course_id):
-    course = get_object_or_404(Course, pk=course_id)    
+    course = get_object_or_404(Course, pk=course_id)
     tasks = Task.objects.filter(course=course).order_by('name')
-    weeks = set(map(lambda task:task.week, tasks))
+    weeks = set(map(lambda task: task.week, tasks))
 
     return render(request, "solutions.html", locals())

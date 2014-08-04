@@ -15,6 +15,7 @@ class CourseAdmin(admin.ModelAdmin):
 
 admin.site.register(Course, CourseAdmin)
 
+
 class PartnerAdmin(SortableAdminMixin, admin.ModelAdmin):
     list_display = [
         'id',
@@ -28,6 +29,7 @@ class PartnerAdmin(SortableAdminMixin, admin.ModelAdmin):
     list_display_links = ['name']
 
 admin.site.register(Partner, PartnerAdmin)
+
 
 class TaskAdmin(admin.ModelAdmin):
     list_display = [

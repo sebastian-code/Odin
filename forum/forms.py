@@ -32,6 +32,7 @@ class AddCommentForm(ModelForm):
         self.topic = kwargs.pop('topic')
         super(AddCommentForm, self).__init__(*args, **kwargs)\
 
+
     def save(self, *args, **kwargs):
         instance = super(AddCommentForm, self).save(commit=False)
         instance.author = self.author

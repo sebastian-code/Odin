@@ -7,7 +7,7 @@ class FaqAdmin(admin.ModelAdmin):
         'id',
         'title',
     ]
-    
+
     list_display_links = ['title']
 
 admin.site.register(Faq, FaqAdmin)

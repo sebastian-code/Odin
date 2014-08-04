@@ -1,9 +1,8 @@
 from django import forms
-from .models import User, UserNote, CheckIn, CourseAssignment, Solution
+from .models import User, UserNote, CourseAssignment, Solution
 from courses.models import Partner
 from pagedown.widgets import PagedownWidget
 from django.utils.translation import ugettext as _
-
 
 
 class UserEditForm(forms.ModelForm):
@@ -70,13 +69,15 @@ class AddNote(forms.ModelForm):
 
 
 class VoteForPartner(forms.ModelForm):
+
     def __init__(self, *args, **kwargs):
         self.assignment = kwargs.pop('assignment')
         super(VoteForPartner, self).__init__(*args, **kwargs)
 
         self.fields['favourite_partners'].widget = forms.CheckboxSelectMultiple()
         if self.assignment:
-            self.fields['favourite_partners'].queryset = Partner.objects.filter(course=self.assignment.course)
+            self.fields['favourite_partners'].queryset = Partner.objects.filter(
+                course=self.assignment.course)
 
     class Meta:
         model = CourseAssignment
@@ -88,6 +89,7 @@ class VoteForPartner(forms.ModelForm):
 
 
 class AddSolutionForm(forms.ModelForm):
+
     class Meta:
         model = Solution
         fields = ['task', 'repo']

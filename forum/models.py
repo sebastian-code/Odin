@@ -1,11 +1,12 @@
 from django.db import models
 from students.models import User
 
+
 class Category(models.Model):
     title = models.CharField(blank=False, max_length=128)
     text = models.CharField(blank=False, max_length=512)
     ordering = models.PositiveSmallIntegerField(default=0, blank=False, null=False)
-    
+
     def __unicode__(self):
         return self.title
 

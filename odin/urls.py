@@ -11,7 +11,7 @@ urlpatterns = patterns('',
     url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {
         'document_root': settings.MEDIA_ROOT}),
     url(r'^tinymce/', include('tinymce.urls')),
-    
+
 
     url(r'', include('website.urls')),
     url(r'', include('courses.urls', namespace='courses')),

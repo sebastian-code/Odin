@@ -1,6 +1,6 @@
 from django.db import models
 from django.conf import settings
-from django.contrib.auth.models import AbstractUser, BaseUserManager, PermissionsMixin
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django_resized import ResizedImageField
 
 from django.core.exceptions import ValidationError
@@ -11,6 +11,7 @@ import re
 
 
 class UserManager(BaseUserManager):
+
     def create_user(self, email, password=None):
         if not email:
             raise ValueError('Users must have an email address')
@@ -64,7 +65,7 @@ class User(AbstractUser):
     AbstractUser._meta.get_field('email')._unique = True
 
     AbstractUser.REQUIRED_FIELDS.remove('email')
-    AbstractUser._meta.get_field('username').max_length=75
+    AbstractUser._meta.get_field('username').max_length = 75
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
@@ -73,17 +74,15 @@ class User(AbstractUser):
     def __unicode__(self):
         return unicode(self.get_full_name())
 
-
     def getAvatarUrl(self):
         if not self.avatar:
             return settings.STATIC_URL + settings.NO_AVATAR_IMG
         return self.avatar.url
 
-
     def get_courses(self):
         return "; ".join([courseassignment.course.name + ' - ' + str(courseassignment.group_time)
-            for courseassignment
-                in self.courseassignment_set.all()])
+                          for courseassignment
+                          in self.courseassignment_set.all()])
 
     def get_courses_list(self):
         courses = []
@@ -138,8 +137,8 @@ class CourseAssignment(models.Model):
 
     def get_favourite_partners(self):
         return "; ".join([partner.name
-            for partner
-                in self.favourite_partners.all()])
+                          for partner
+                          in self.favourite_partners.all()])
 
 
 class UserNote(models.Model):

@@ -10,5 +10,4 @@ urlpatterns = patterns('forum.views',
     url(r'^edit-comment/(?P<comment_id>[0-9]+)/$', 'edit_comment', name='edit-comment'),
     url(r'^unsubscribe/(?P<topic_id>[0-9]+)/$', 'unsubscribe', name="unsubscribe"),
     url(r'^subscribe/(?P<topic_id>[0-9]+)/$', 'subscribe', name="subscribe"),
-
 )
