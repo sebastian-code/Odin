@@ -1,15 +1,19 @@
 from django.utils import unittest
+from django.test import TestCase
 from django.test.client import Client
-from .models import CheckIn, User, HrLoginLog
+from .models import CheckIn, User, HrLoginLog, CourseAssignment
+from courses.models import Partner, Course
 from django.conf import settings
+from django.core.urlresolvers import reverse
 
+import datetime
 client = Client()
 
 class CheckInCase(unittest.TestCase):
     def setUp(self):
         self.checkin_settings = '123'
-        settings.CHECKIN_TOKEN = self.checkin_settings 
-        
+        settings.CHECKIN_TOKEN = self.checkin_settings
+
         self.student_user = User.objects.create_user('ivo_student@gmail.com', '123')
         self.student_user.status = User.STUDENT
         self.student_user.mac = '4c:80:93:1f:a4:50'
@@ -26,7 +30,7 @@ class CheckInCase(unittest.TestCase):
 
     def test_new_check_in_status(self):
         response = client.post('/set-check-in/', {
-            'mac': self.student_user.mac, 
+            'mac': self.student_user.mac,
             'token': self.checkin_settings,
         })
 
@@ -34,7 +38,7 @@ class CheckInCase(unittest.TestCase):
 
     def test_new_check_in_result(self):
         response = client.post('/set-check-in/', {
-            'mac': self.student_user.mac, 
+            'mac': self.student_user.mac,
             'token': self.checkin_settings,
         })
 
@@ -44,7 +48,7 @@ class CheckInCase(unittest.TestCase):
 
     def test_new_check_in_case_insensitive(self):
         response = client.post('/set-check-in/', {
-            'mac': self.student_user.mac, 
+            'mac': self.student_user.mac,
             'token': self.checkin_settings,
         })
 
@@ -53,11 +57,11 @@ class CheckInCase(unittest.TestCase):
         assert checkin is not None
 
     def test_double_checkin_same_day(self):
-        response_first = client.post('/set-check-in/', {'mac': self.student_user.mac, 
+        response_first = client.post('/set-check-in/', {'mac': self.student_user.mac,
             'token': self.checkin_settings,
         })
 
-        response_second = client.post('/set-check-in/', {'mac': self.student_user.mac, 
+        response_second = client.post('/set-check-in/', {'mac': self.student_user.mac,
             'token': self.checkin_settings,
         })
 
@@ -70,3 +74,55 @@ class CheckInCase(unittest.TestCase):
         after_log = HrLoginLog.objects.count()
 
         self.assertEqual(before_log + 1, after_log)
+
+
+class CourseAssignmentTest(TestCase):
+        def setUp(self):
+            self.course = Course.objects.create(
+            name='Test Course',
+            url='test-course',
+            application_until=datetime.datetime.now(),
+            )
+
+            self.student_user = User.objects.create_user('ivo_student@gmail.com', '123')
+            self.student_user.status = User.STUDENT
+            self.student_user.save()
+
+            self.partner_potato = Partner.objects.create(name='Potato Company', description='Potato company')
+            self.partner_salad = Partner.objects.create(name='Salad Company', description='Salad Company')
+
+            self.hr_user = User.objects.create_user('ivan_hr@gmail.com', '1234')
+            self.hr_user.status = User.HR
+            self.hr_user.hr_of = self.partner_potato
+            self.hr_user.save()
+
+            self.assignment = CourseAssignment.objects.create(user=self.student_user, course=self.course, group_time=CourseAssignment.EARLY)
+            self.assignment.favourite_partners.add(self.partner_potato)
+            self.third_wheel = User.objects.create_user('third_wheel@gmail.com', '456')
+
+        def tearDown(self):
+            self.course.delete()
+            self.student_user.delete()
+            self.partner_potato.delete()
+            self.partner_salad.delete()
+            self.hr_user.delete()
+            self.assignment.delete()
+            self.third_wheel.delete()
+
+        def test_create_a_new_assignment(self):
+            self.client = Client();
+            self.client.login(username='ivo_student@gmail.com', password='123')
+            response = self.client.get(reverse('students:assignment', kwargs={'id':self.assignment.id}))
+            self.assertEqual(200, response.status_code)
+
+        def test_email_field_visibility_when_partner_hr(self):
+            self.client = Client();
+            self.client.login(username='ivan_hr@gmail.com', password='1234')
+            response = self.client.get(reverse('students:assignment', kwargs={'id':self.assignment.id}))
+            self.assertContains(response, self.assignment.user.email)
+
+        def test_email_field_visibility_when_non_partner_hr(self):
+            self.client = Client();
+            self.client.login(username='third_wheel@gmail.com', password='456')
+            response = self.client.get(reverse('students:assignment', kwargs={'id':self.assignment.id}))
+            self.assertNotContains(response, self.assignment.user.email)
