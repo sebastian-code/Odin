@@ -1,13 +1,5 @@
-{% extends "base.html" %}
-{% load markdown_deux_tags %}
-
-{% block meta %}
-    {{ form.media }}
-    <link rel="stylesheet" href="{{ STATIC_URL }}css/assignment.css" />
-{% endblock %}
-
-
-{% block content %}
+{% extends "base.html" %} {% load markdown_deux_tags %} {% block meta %} {{ form.media }}
+<link rel="stylesheet" href="{{ STATIC_URL }}css/assignment.css" />{% endblock %} {% block content %}
 <div class="row">
 
     <div id="vote-for-partner" class="reveal-modal" data-reveal>
@@ -29,56 +21,54 @@
     <div class="large-12 columns">
         <div class="panel">
             <div class="row" id="course-page">
-                <div class="medium-3 columns"  style="padding-bottom: 20px;">
+                <div class="medium-3 columns" style="padding-bottom: 20px;">
                     <img src="{{ assignment.user.getAvatarUrl }}" class="th">
                 </div>
                 <h2>{{ assignment.course }} и {{ assignment.user.get_full_name }}</h2>
 
                 <div>
                     <p>
-                        <a href="{{ assignment.user.github_account }}" target="_blank">GitHub акаунт: {{ assignment.user.github_account }}</a>
-                        </p>
-                        <p>
-                            <a href="{{ assignment.course.git_repository }}" target="_blank">Материали в GitHub за курса</a>
-                        </p>
-                        <p>
-                            <a href="{% url 'courses:course-students' assignment.course.id %}">Вижте всички записали курса</a>
-                        </p>
+                        <a href="mailto:{{ assignment.user.email }}" target="_blank">Email акаунт: {{ assignment.user.email }}</a>
                     </p>
-                    <hr>
-                    {% if assignment.course.ask_for_favorite_partner and is_student and user == assignment.user %}
-                        <p class="text-center"><button data-reveal-id="vote-for-partner">Посочете към кои от партньорите ни проявявате интерес</button>
-                        </p>
+                    <p>
+                        <a href="{{ assignment.user.github_account }}" target="_blank">GitHub акаунт: {{ assignment.user.github_account }}</a>
+                    </p>
+                    <p>
+                        <a href="{{ assignment.course.git_repository }}" target="_blank">Материали в GitHub за курса</a>
+                    </p>
+                    <p>
+                        <a href="{% url 'courses:course-students' assignment.course.id %}">Вижте всички записали курса</a>
+                    </p>
+                    </p>
+                    <hr>{% if assignment.course.ask_for_favorite_partner and is_student and user == assignment.user %}
+                    <p class="text-center">
+                        <button data-reveal-id="vote-for-partner">Посочете към кои от партньорите ни проявявате интерес</button>
+                    </p>
                     {% endif %}
                     <hr>
                     <p>
-                        Всички ваши коментари (по теми в форума):
-                        {% for comment in comments %}
+                        Всички ваши коментари (по теми в форума): {% for comment in comments %}
                         <ul>
-                            <li><a href="{% url 'forum:show-topic' comment.topic.id %}#{{ comment.id }}">{{ comment.topic }} #{{ comment.id }}</a></li>
+                            <li><a href="{% url 'forum:show-topic' comment.topic.id %}#{{ comment.id }}">{{ comment.topic }} #{{ comment.id }}</a>
+                            </li>
                         </ul>
                         {% endfor %}
                     </p>
                 </div>
-                {% if is_teacher or is_hr %}
-                    {% for note in notes %}
-                        <p class="large-12 columns">
-                            <strong>{{ note.author.get_full_name }}</strong>:
-                            <br><small>{{ note.post_time|date:"d-m-Y" }} </small>
-                            <br>{{ note.text | markdown }}
-                            <hr>
-                        </p>
-                    {% endfor %}
-                {% endif %}
-
-                {% if is_teacher %}
-                    {{ form.errors }}
-                    <form method="POST">
-                    {% csrf_token %}
-                        {{form.text}}
-                        <input type="hidden" name="assignment" value="{{ assignment.id }}">
-                        <button>Дайте коментар!</button>
-                    </form>
+                {% if is_teacher or is_hr %} {% for note in notes %}
+                <p class="large-12 columns">
+                    <strong>{{ note.author.get_full_name }}</strong>:
+                    <br>
+                    <small>{{ note.post_time|date:"d-m-Y" }}</small>
+                    <br>{{ note.text | markdown }}
+                    <hr>
+                </p>
+                {% endfor %} {% endif %} {% if is_teacher %} {{ form.errors }}
+                <form method="POST">
+                    {% csrf_token %} {{form.text}}
+                    <input type="hidden" name="assignment" value="{{ assignment.id }}">
+                    <button>Дайте коментар!</button>
+                </form>
                 {% endif %}
             </div>
         </div>
