@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render, get_object_or_404
+from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import views
 from django.http import HttpResponse
@@ -7,7 +8,7 @@ from django.db import IntegrityError
 from django.utils import simplejson
 from django.conf import settings
 
-from .forms import UserEditForm, AddNote, VoteForPartner
+from .forms import UserEditForm, AddNote, VoteForPartner, AddSolutionForm
 from .models import CourseAssignment, UserNote, User, CheckIn, Task
 from courses.models import Course
 from forum.models import Comment
@@ -155,3 +156,15 @@ def solutions(request, course_id):
     weeks = set(map(lambda task:task.week, tasks))
 
     return render(request, "solutions.html", locals())
+
+
+@login_required
+@require_http_methods(["POST"])
+def add_solution(request):
+    form = AddSolutionForm(request.POST, user=request.user)
+
+    if form.is_valid():
+        form.save()
+        return HttpResponse(status=200)
+
+    return HttpResponse(status=422)

@@ -88,6 +88,20 @@ class VoteForPartner(forms.ModelForm):
 
 
 class AddSolutionForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user')
+        super(AddSolutionForm, self).__init__(*args, **kwargs)
+
+    def save(self, *args, **kwargs):
+        instance = super(AddSolutionForm, self).save(commit=False)
+        instance.user = self.user
+        instance.save()
+        return instance
+
     class Meta:
         model = Solution
-        fields = ['task', 'repo']
+
+        fields = (
+            'task', 
+            'repo',
+        )
