@@ -86,6 +86,7 @@ class VoteForPartner(forms.ModelForm):
             "cv",
         )
 
+
 class AddSolutionForm(forms.ModelForm):
     class Meta:
         model = Solution

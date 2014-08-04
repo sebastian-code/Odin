@@ -8,7 +8,8 @@ from django.utils import simplejson
 from django.conf import settings
 
 from .forms import UserEditForm, AddNote, VoteForPartner
-from .models import CourseAssignment, UserNote, User, CheckIn
+from .models import CourseAssignment, UserNote, User, CheckIn, Task
+from courses.models import Course
 from forum.models import Comment
 
 import datetime
@@ -53,7 +54,7 @@ def assignment(request, id):
 
     if is_teacher or is_hr:
         notes = UserNote.objects.filter(assignment=id)
-    
+
     if is_teacher:
         if request.method == 'POST':
             form = AddNote(request.POST)
@@ -145,3 +146,12 @@ def api_checkins(request):
         })
 
     return HttpResponse(simplejson.dumps(needed_data, ensure_ascii=False), content_type = 'application/json; charset=utf8')
+
+
+@login_required
+def solutions(request, course_id):
+    course = get_object_or_404(Course, pk=course_id)    
+    tasks = Task.objects.filter(course=course).order_by('week')
+    weeks = set(map(lambda task:task.week, tasks))
+
+    return render(request, "solutions.html", locals())

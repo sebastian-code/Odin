@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h3>{{ course }}</h3>
+    <dl class="accordion" data-accordion>
+        {% for week in weeks %}
+            <dd class="accordion-navigation">
+                <a href="#panel{{ week }}">Week {{ week }}</a>
+                <div id="panel{{ week }}" class="content">
+                    <div class="tabs-content">
+                        {% for task in tasks %}
+                            {% if task.week == week %}
+                                <p>
+                                    <a href="{{ task.description }}" target="_blank"><h4>{{ task }}</h4></a>
+                                    <p>
+                                        Deadline: {{ task.deadline}}
+                                    </p>
+                                    <hr>
+                                </p>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </dd>     
+        {% endfor %}
+    </dl>
+{% endblock %}
