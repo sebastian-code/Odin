@@ -28,4 +28,14 @@ class PartnerAdmin(SortableAdminMixin, admin.ModelAdmin):
     list_display_links = ['name']
 
 admin.site.register(Partner, PartnerAdmin)
-admin.site.register(Task)
+
+class TaskAdmin(admin.ModelAdmin):
+    list_display = [
+        'id',
+        'name',
+        'week',
+    ]
+
+    list_display_links = ['name']
+
+admin.site.register(Task, TaskAdmin)
