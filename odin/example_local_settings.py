@@ -30,4 +30,4 @@ DOMAIN = 'hackbulgaria.com'
 # Ask the system for token and place it here
 CHECKIN_TOKEN = 'TOKEN FROM CHECKIN SYSTEM HERE'
 # https://help.github.com/articles/creating-an-access-token-for-command-line-use
-GITHUB_OATH_TOKEN = 'YOUR_TOKEN'
+GITHUB_OATH_TOKEN = '0945a7da8d5b44e35bc1ec943aba49a876118377'

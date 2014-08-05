@@ -109,6 +109,9 @@ AWESOME_AVATAR = {
 }
 
 try:
-    from local_settings import *
+    if 'TRAVIS' in os.environ:
+        from travis_settings import *
+    else:
+        from local_settings import *
 except ImportError:
-    exit("local_settings.py not found!")
+    exit("{}_settings.py not found!".format("travis" if 'TRAVIS' in os.environ else "local"))
