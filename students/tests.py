@@ -8,12 +8,12 @@ from .models import CheckIn, User, HrLoginLog, CourseAssignment, Solution
 from courses.models import Partner, Course, Task
 
 import datetime
-client = Client()
 
 
-class CheckInCase(TestCase):
+class CheckInCaseTest(TestCase):
 
     def setUp(self):
+        self.client = Client()
         self.checkin_settings = '123'
         settings.CHECKIN_TOKEN = self.checkin_settings
 
@@ -28,7 +28,7 @@ class CheckInCase(TestCase):
         self.hr_user.save()
 
     def test_new_check_in_status(self):
-        response = client.post('/set-check-in/', {
+        response = self.client.post('/set-check-in/', {
             'mac': self.student_user.mac,
             'token': self.checkin_settings,
         })
@@ -36,7 +36,7 @@ class CheckInCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_new_check_in_result(self):
-        response = client.post('/set-check-in/', {
+        response = self.client.post('/set-check-in/', {
             'mac': self.student_user.mac,
             'token': self.checkin_settings,
         })
@@ -46,7 +46,7 @@ class CheckInCase(TestCase):
         assert checkin is not None
 
     def test_new_check_in_case_insensitive(self):
-        response = client.post('/set-check-in/', {
+        response = self.client.post('/set-check-in/', {
             'mac': self.student_user.mac,
             'token': self.checkin_settings,
         })
@@ -56,20 +56,20 @@ class CheckInCase(TestCase):
         assert checkin is not None
 
     def test_double_checkin_same_day(self):
-        response_first = client.post('/set-check-in/', {'mac': self.student_user.mac,
-                                                        'token': self.checkin_settings,
-                                                        })
+        response_first = self.client.post('/set-check-in/', {'mac': self.student_user.mac,
+                                                             'token': self.checkin_settings,
+                                                             })
 
-        response_second = client.post('/set-check-in/', {'mac': self.student_user.mac,
-                                                         'token': self.checkin_settings,
-                                                         })
+        response_second = self.client.post('/set-check-in/', {'mac': self.student_user.mac,
+                                                              'token': self.checkin_settings,
+                                                              })
 
         self.assertEqual(response_first.status_code, 200)
         self.assertEqual(response_second.status_code, 418)
 
     def test_hr_login_log(self):
         before_log = HrLoginLog.objects.count()
-        client.login(username='ivan_hr@gmail.com', password='1234')
+        self.client.login(username='ivan_hr@gmail.com', password='1234')
         after_log = HrLoginLog.objects.count()
 
         self.assertEqual(before_log + 1, after_log)
