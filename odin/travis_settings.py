@@ -2,9 +2,9 @@ import sys
 
 DATABASES = {
     'default': {
-        'ENGINE':   'django.db.backends.postgresql_psycopg2',
+        'ENGINE':   'django.db.backends.mysql',
         'NAME':     'odintest',
-        'USER':     'postgres',
+        'USER':     'travis',
         'PASSWORD': '',
         'HOST':     'localhost',
         'PORT':     '',
