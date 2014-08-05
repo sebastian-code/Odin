@@ -11,6 +11,7 @@ class Category(models.Model):
         return self.title
 
     class Meta:
+        verbose_name_plural = 'categories'
         ordering = ('ordering',)
 
 
