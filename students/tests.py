@@ -193,3 +193,25 @@ class SolutionTest(TestCase):
 
         self.assertEqual(before_adding + 1, after_adding)
         self.assertEqual(200, response.status_code)
+
+    def test_edit_solution(self):
+        self.client = Client();
+        self.client.login(username='ivo_student@gmail.com', password='123')
+        
+        before_adding = Solution.objects.count()
+        response = self.client.post(reverse('students:add-solution'), 
+            {
+                'task': self.green_task.id,
+                'repo': 'https://github.com/HackBulgaria/Odin',
+            })
+
+        response = self.client.post(reverse('students:add-solution'), 
+            {
+                'task': self.green_task.id,
+                'repo': 'https://github.com/HackBulgaria/Odin2',
+            })
+
+        after_adding = Solution.objects.count()
+
+        self.assertEqual(before_adding + 1, after_adding)
+        self.assertEqual(200, response.status_code)

@@ -9,7 +9,7 @@ from django.utils import simplejson
 from django.conf import settings
 
 from .forms import UserEditForm, AddNote, VoteForPartner, AddSolutionForm
-from .models import CourseAssignment, UserNote, User, CheckIn, Task
+from .models import CourseAssignment, UserNote, User, CheckIn, Task, Solution
 from courses.models import Course
 from forum.models import Comment
 
@@ -151,17 +151,37 @@ def api_checkins(request):
 
 @login_required
 def solutions(request, course_id):
-    course = get_object_or_404(Course, pk=course_id)    
+    course = get_object_or_404(Course, pk=course_id)
     tasks = Task.objects.filter(course=course).order_by('name')
     weeks = set(map(lambda task:task.week, tasks))
+    solutions = Solution.objects.filter(task__in=tasks, user=request.user).prefetch_related('task')
+    
+    #Zips user's solutions with tasks
+    solutions_by_task = {}
+    for solution in solutions:
+        solutions_by_task[solution.task] = solution
+
+    for task in tasks:
+        if task in solutions_by_task:
+            task.solution = solutions_by_task[task]
+        
 
     return render(request, "solutions.html", locals())
 
 
 @login_required
 @require_http_methods(["POST"])
+@csrf_exempt
 def add_solution(request):
-    form = AddSolutionForm(request.POST, user=request.user)
+    solution = Solution.objects.filter(
+        user=request.user,
+        task=request.POST['task'],
+    ).first()
+
+    if solution:
+        form = AddSolutionForm(request.POST, instance=solution, user=request.user)
+    else:
+        form = AddSolutionForm(request.POST, user=request.user)
 
     if form.is_valid():
         form.save()
