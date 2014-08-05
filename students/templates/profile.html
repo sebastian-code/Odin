@@ -26,7 +26,10 @@
 
                     <ol>
                         {% for assignment in user.courseassignment_set.all %}
-                            <li><a href="{% url 'students:assignment' assignment.pk %}">{{ assignment.course }}</a></li>
+                            <li>
+                                <a href="{% url 'students:assignment' assignment.pk %}">{{ assignment.course }}</a>- 
+                                <a href="">Предадени задачи</a>
+                            </li>
                         {% endfor %}
                     </ol>
 
