@@ -41,4 +41,16 @@ class TaskAdmin(admin.ModelAdmin):
     list_display_links = ['name']
 
 admin.site.register(Task, TaskAdmin)
-admin.site.register(Certificate)
+
+
+class CertificateAdmin(admin.ModelAdmin):
+    list_display = [
+        'id',
+        'assignment',
+        'issues_closed',
+        'issues_opened',
+        'total_commits'
+    ]
+    list_display_links = ['assignment']
+
+admin.site.register(Certificate, CertificateAdmin)
