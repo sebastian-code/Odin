@@ -2,7 +2,9 @@ Django==1.6.2
 Markdown==2.4
 MySQL-python==1.2.5
 Pillow==2.4.0
+PyGithub==1.25.0
 South==0.8.4
+argparse==1.2.1
 django-admin-sortable2==0.2.7
 django-adminfiles==1.0.1
 django-cors-headers==0.12
