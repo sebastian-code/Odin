@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 
+
+{% block meta %}
+    <title>Предаване на задачи</title>
+{% endblock %}
+
 {% block content %}
     <h3>{{ course }}</h3>
     <dl class="accordion" data-accordion>
@@ -14,6 +19,23 @@
                                     <a href="{{ task.description }}" target="_blank"><h4>{{ task }}</h4></a>
                                     <p>
                                         Deadline: {{ task.deadline}}
+                                        <div class="row collapse">
+                                            <div class="small-10 columns">
+                                                <input type="url" name="repo" data-task="{{ task.id }}" data-send-to="{% url 'students:add-solution' %}" placeholder="Линк към Github repo или файл." class="task-sender" value="{{ task.solution.repo }}">
+                                            </div>
+                                            <div class="small-1 columns">
+                                                <button type="button" class="button postfix">Send</button>
+                                            </div>
+                                            <div class="small-1 columns">
+                                                <span class="postfix radius status-info">
+                                                    {% if task.solution.repo %}
+                                                        <i class='foundicon-checkmark'></i>
+                                                    {% else %}
+                                                        <i class='foundicon-remove'></i>
+                                                    {% endif %}
+                                                </span>
+                                            </div>
+                                        </div>
                                     </p>
                                     <hr>
                                 </p>
@@ -25,3 +47,31 @@
         {% endfor %}
     </dl>
 {% endblock %}
+
+{% block jsfooter %}
+    <script>
+        $(document).ready(function() {
+            $(".task-sender").change(function(ev) {
+                var $current = $(this),
+                    repo = $current.val()
+                    task = $current.data("task"),
+                    sendTo = $current.data("send-to");
+
+                $.ajax({
+                    type: 'POST',
+                    url: sendTo,
+                    data: {
+                        task: task,
+                        repo: repo
+                    }
+                })
+                .done(function(data) {
+                    $current.parents("div.collapse").find("span").html("<i class='foundicon-checkmark'></i>")
+                })
+                .fail(function() {
+                    $current.parents("div.collapse").find("span").html("<i class='foundicon-remove'></i>")
+                })
+            });
+        });
+    </script>
+{% endblock  %}

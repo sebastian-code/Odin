@@ -160,3 +160,6 @@ class Solution(models.Model):
     task = models.ForeignKey(Task)
     user = models.ForeignKey(User)
     repo = models.URLField()
+
+    class Meta:
+        unique_together = ('user', 'task')
