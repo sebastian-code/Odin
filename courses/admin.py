@@ -1,7 +1,7 @@
 from django.contrib import admin
 from adminsortable.admin import SortableAdminMixin
 
-from models import Course, Partner, Task
+from models import Certificate, Course, Partner, Task
 
 
 # Register your models here.
@@ -41,3 +41,4 @@ class TaskAdmin(admin.ModelAdmin):
     list_display_links = ['name']
 
 admin.site.register(Task, TaskAdmin)
+admin.site.register(Certificate)

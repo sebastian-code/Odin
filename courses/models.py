@@ -52,3 +52,15 @@ class Task(models.Model):
 
     def __unicode__(self):
         return unicode(self.name)
+
+
+class WeeklyCommit(models.Model):
+    commits_count = models.IntegerField(default=0)
+
+
+class Certificate(models.Model):
+    assignment = models.ForeignKey('students.CourseAssignment')
+    weekly_commits = models.ManyToManyField(WeeklyCommit)
+    issues_closed = models.IntegerField(default=0)
+    issues_opened = models.IntegerField(default=0)
+    total_commits = models.IntegerField(default=0)
