@@ -85,7 +85,7 @@ class CoursesTest(TestCase):
         after_add = Topic.objects.count()
 
         self.assertEqual(before_add, after_add)
-        self.assertRedirects(response, 'login/?next=/add-topic/1/')
+        self.assertRedirects(response, 'login/?next=/add-topic/{}/'.format(self.category.id))
 
     def test_edit_topic(self):
         self.client = client.Client()
@@ -95,15 +95,17 @@ class CoursesTest(TestCase):
             'text': 'Lqlqlq lqlql',
         })
 
-        self.assertRedirects(response, 'topic/1/')
+        edited_topic = Topic.objects.filter(title='My Topic 2')
+        self.assertEqual(1, edited_topic.count())
 
-    def test_edit_not_logged(self):
+    def test_edit_topic_not_logged(self):
         self.client = client.Client()
         response = self.client.post(reverse('forum:edit-topic',  kwargs={'topic_id': self.topic.id}), {
             'title': 'My Topic 2',
             'text': 'Lqlqlq lqlql',
         })
 
+        new_comment = Topic.objects.filter(title="My Topic 2")
         self.assertRedirects(response, 'login/?next=/edit-topic/1/')
 
     def test_edit_not_owned(self):
@@ -136,9 +138,9 @@ class CoursesTest(TestCase):
             'text': new_text,
         })
 
-        self.assertRedirects(response, 'topic/1/')
-        edited_comment = Comment.objects.filter(text=new_text).count()
-        self.assertEqual(edited_comment, 1)
+        edited_comment = Comment.objects.filter(text=new_text)
+        self.assertRedirects(response, 'topic/{}/'.format(edited_comment.first().id))
+        self.assertEqual(1, edited_comment.count())
 
     def test_edit_comment_not_owned(self):
         self.client = client.Client()
