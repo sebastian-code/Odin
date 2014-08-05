@@ -80,9 +80,6 @@ class CheckInCase(unittest.TestCase):
 
 
 class CourseAssignmentTest(TestCase):
-<<<<<<< HEAD
-
-=======
         def setUp(self):
             self.course = Course.objects.create(
                 name='Test Course',
@@ -160,11 +157,6 @@ class SolutionTest(TestCase):
             user=self.student_user, course=self.course, group_time=CourseAssignment.EARLY)
         self.assignment.favourite_partners.add(self.partner_potato)
         self.third_wheel = User.objects.create_user('third_wheel@gmail.com', '456')
-        self.assignment = CourseAssignment.objects.create(
-            user=self.student_user,
-            course=self.course,
-            group_time=CourseAssignment.EARLY
-        )
 
         self.green_task = Task.objects.create(
             name="Green task",
@@ -179,7 +171,8 @@ class SolutionTest(TestCase):
         self.hr_user.delete()
         self.assignment.delete()
         self.third_wheel.delete()
-
+        self.green_task.delete()
+        
     def test_create_a_new_assignment(self):
         self.client = Client()
         self.client.login(username='ivo_student@gmail.com', password='123')
@@ -200,8 +193,6 @@ class SolutionTest(TestCase):
         response = self.client.get(
             reverse('students:assignment', kwargs={'id': self.assignment.id}))
         self.assertNotContains(response, self.assignment.user.email)
-        self.assignment.delete()
-        self.green_task.delete()
 
     def test_add_solution_get_status(self):
         self.client = Client();
