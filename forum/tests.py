@@ -105,8 +105,7 @@ class CoursesTest(TestCase):
             'text': 'Lqlqlq lqlql',
         })
 
-        new_comment = Topic.objects.filter(title="My Topic 2")
-        self.assertRedirects(response, 'login/?next=/edit-topic/1/')
+        self.assertRedirects(response, 'login/?next=/edit-topic/{}/'.format(self.topic.id))
 
     def test_edit_not_owned(self):
         self.client = client.Client()
