@@ -34,13 +34,6 @@ class CoursesTest(TestCase):
             topic=self.topic,
         )
 
-    def tearDown(self):
-        self.student_user.delete()
-        self.hr_user.delete()
-        self.category.delete()
-        self.topic.delete()
-        self.comment.delete()
-
     def test_show_categories_status(self):
         self.client = client.Client()
         response = self.client.get(reverse('forum:forum'))

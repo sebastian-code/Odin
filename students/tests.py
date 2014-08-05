@@ -1,4 +1,3 @@
-from django.utils import unittest
 from django.test import TestCase
 from django.test.client import Client
 from .models import CheckIn, User, HrLoginLog, CourseAssignment, Solution
@@ -11,7 +10,7 @@ import datetime
 client = Client()
 
 
-class CheckInCase(unittest.TestCase):
+class CheckInCase(TestCase):
 
     def setUp(self):
         self.checkin_settings = '123'
@@ -26,10 +25,6 @@ class CheckInCase(unittest.TestCase):
         self.hr_user.status = User.HR
         self.hr_user.mac = '4c:80:93:1f:a4:51'
         self.hr_user.save()
-
-    def tearDown(self):
-        self.student_user.delete()
-        self.hr_user.delete()
 
     def test_new_check_in_status(self):
         response = client.post('/set-check-in/', {
@@ -102,15 +97,6 @@ class CourseAssignmentTest(TestCase):
             self.assignment = CourseAssignment.objects.create(user=self.student_user, course=self.course, group_time=CourseAssignment.EARLY)
             self.assignment.favourite_partners.add(self.partner_potato)
             self.third_wheel = User.objects.create_user('third_wheel@gmail.com', '456')
-
-        def tearDown(self):
-            self.course.delete()
-            self.student_user.delete()
-            self.partner_potato.delete()
-            self.partner_salad.delete()
-            self.hr_user.delete()
-            self.assignment.delete()
-            self.third_wheel.delete()
 
         def test_create_a_new_assignment(self):
             self.client = Client();
@@ -229,7 +215,6 @@ class SolutionTest(TestCase):
 
         self.assertEqual(before_adding + 1, after_adding)
         self.assertEqual(200, response.status_code)
-
 
     def test_edit_solution(self):
         self.client = Client();
