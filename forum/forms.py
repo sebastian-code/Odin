@@ -1,7 +1,9 @@
 from django.forms import ModelForm
 from django import forms
-from pagedown.widgets import PagedownWidget
+
 from .models import Topic, Comment
+
+from pagedown.widgets import PagedownWidget
 
 
 class AddTopicForm(ModelForm):

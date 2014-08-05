@@ -1,5 +1,6 @@
 from django.core.mail import send_mass_mail
 from django.conf import settings
+
 from students.models import User
 from .models import Comment
 

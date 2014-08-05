@@ -1,7 +1,8 @@
 from django.contrib import admin
-from adminsortable.admin import SortableAdminMixin
 
 from models import Certificate, Course, Partner, Task
+
+from adminsortable.admin import SortableAdminMixin
 
 
 # Register your models here.

@@ -1,7 +1,9 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
+
 from .models import Course, Partner
 from students.models import CourseAssignment, User
+
 from datetime import datetime
 
 

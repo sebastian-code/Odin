@@ -1,16 +1,17 @@
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser, BaseUserManager
-from django_resized import ResizedImageField
-
 from django.core.exceptions import ValidationError
 from django.contrib.auth.signals import user_logged_in
+
 from courses.models import Course, Partner, Task
 
+from django_resized import ResizedImageField
 import re
 
 
 class UserManager(BaseUserManager):
+
     def create_user(self, email, password=None):
         if not email:
             raise ValueError('Users must have an email address')
@@ -131,13 +132,14 @@ class CourseAssignment(models.Model):
     class Meta:
         unique_together = ('user', 'course')
 
-    def __str__(self):
-        return unicode('{} - {}'.format(self.course, self.group_time))
+    def __unicode__(self):
+        return '{} - {}'.format(self.course, self.group_time)
+
+    # def __str__(self):
+        # return unicode('{} - {}'.format(self.course, self.group_time))
 
     def get_favourite_partners(self):
-        return "; ".join([partner.name
-                          for partner
-                          in self.favourite_partners.all()])
+        return "; ".join([partner.name for partner in self.favourite_partners.all()])
 
 
 class UserNote(models.Model):

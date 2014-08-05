@@ -156,7 +156,7 @@ def solutions(request, course_id):
     tasks = Task.objects.filter(course=course).order_by('name')
     weeks = set(map(lambda task:task.week, tasks))
     solutions = Solution.objects.filter(task__in=tasks, user=request.user).prefetch_related('task')
-    
+
     #Zips user's solutions with tasks
     solutions_by_task = {}
     for solution in solutions:
@@ -165,7 +165,7 @@ def solutions(request, course_id):
     for task in tasks:
         if task in solutions_by_task:
             task.solution = solutions_by_task[task]
-        
+
     return render(request, "solutions.html", locals())
 
 

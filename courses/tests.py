@@ -1,11 +1,14 @@
+from django.core.urlresolvers import reverse
 from django.test import TestCase, client
+
 from students.models import User
 from .models import Course
-from django.core.urlresolvers import reverse
+
 import datetime
 
 
 class CoursesTest(TestCase):
+
     def setUp(self):
         self.student_user = User.objects.create_user('ivo_student@gmail.com', '123')
         self.student_user.status = User.STUDENT

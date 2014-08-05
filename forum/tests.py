@@ -8,6 +8,7 @@ from .models import Category, Topic, Comment
 
 
 class CoursesTest(TestCase):
+
     def setUp(self):
         self.student_user = User.objects.create_user('ivo_student@gmail.com', '123')
         self.student_user.status = User.STUDENT

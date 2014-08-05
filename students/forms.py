@@ -1,8 +1,10 @@
 from django import forms
+from django.utils.translation import ugettext as _
+
 from .models import User, UserNote, CourseAssignment, Solution
 from courses.models import Partner
+
 from pagedown.widgets import PagedownWidget
-from django.utils.translation import ugettext as _
 
 
 class UserEditForm(forms.ModelForm):
@@ -89,6 +91,7 @@ class VoteForPartner(forms.ModelForm):
 
 
 class AddSolutionForm(forms.ModelForm):
+
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user')
         super(AddSolutionForm, self).__init__(*args, **kwargs)
