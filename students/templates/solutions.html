@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 
+
+{% block meta %}
+    <title>Предаване на задачи</title>
+{% endblock %}
+
 {% block content %}
     <h3>{{ course }}</h3>
     <dl class="accordion" data-accordion>
@@ -25,6 +30,8 @@
                                                 <span class="postfix radius status-info">
                                                     {% if task.solution.repo %}
                                                         <i class='foundicon-checkmark'></i>
+                                                    {% else %}
+                                                        <i class='foundicon-remove'></i>
                                                     {% endif %}
                                                 </span>
                                             </div>
