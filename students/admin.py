@@ -65,4 +65,15 @@ class HrLoginLogAdmin(admin.ModelAdmin):
     ]
 
 admin.site.register(HrLoginLog, HrLoginLogAdmin)
-admin.site.register(Solution)
+
+
+class SolutionAdmin(admin.ModelAdmin):
+    list_display = [
+        'task',
+        'user',
+        'repo'
+    ]
+    list_display_links = ['repo']
+    list_filter = ('task__course',)
+
+admin.site.register(Solution, SolutionAdmin)
