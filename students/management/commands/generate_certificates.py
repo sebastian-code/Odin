@@ -43,7 +43,7 @@ def generate_certificate(assignment, solutions):
 
     if is_cheater:
         log_cheating(cheated_solutions)
-    elif len(temp_certificate.weekly_commits) > 0:
+    elif temp_certificate.weekly_commits:
         create_db_certificate(assignment, temp_certificate)
 
 
@@ -66,7 +66,7 @@ def log_cheating(cheated_solutions):
     user = cheated_solutions[0].user
     filename = 'Cheater[{}] {} - {}'.format(task.course, user.get_full_name(), user.email)
     f = open(filename, 'w+')
-    for i, solution in enumerate(cheated_solutions):
+    for i, solution in enumerate(cheated_solutions, start=1):
         f.write('{}) Cheated on task {} - {}. Given solution - {}'.format(i,
                                                                           task.name, task.description, solution.repo) + '\n')
     f.close()
