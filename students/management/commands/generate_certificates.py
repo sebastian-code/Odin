@@ -9,7 +9,6 @@ from github import Github
 
 
 class TempCertificate:
-
     def __init__(self):
         self.weekly_commits = []
         self.closed_issues = 0
@@ -17,9 +16,7 @@ class TempCertificate:
         self.total_commits = 0
 
     def get_total_commits(self):
-        total_commits = reduce(
-            lambda x, y: x + y, map(lambda x: x.commits_count, self.weekly_commits))
-        return total_commits
+        return reduce(lambda x, y: x + y, map(lambda x: x.commits_count, self.weekly_commits))
 
 
 def generate_certificate(assignment, solutions):
@@ -43,7 +40,7 @@ def generate_certificate(assignment, solutions):
 
     if is_cheater:
         log_cheating(cheated_solutions)
-    elif temp_certificate.weekly_commits:
+    else:
         create_db_certificate(assignment, temp_certificate)
 
 
