@@ -70,11 +70,20 @@ Rename the `odin/example_local_settings.py` to `odin/local_settings.py`. This wi
 Adjust your database settings in `local_settings.py`.
 For more information about the diferent databases read https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
-Now try populating the database
+# Now try populating the database
+If you want to import data from a previous Django set up database:
+```
+python manage.py dumpdata --exclude=contenttypes --exclude=auth.Permission > <dump_name>.json
+python manage.py loaddata <dump_name>.json
+```
+
+If you want to start with a clean database:
 ```
 python manage.py syncdb --all
 python manage.py migrate --fake
 ```
+
+
 # Run the project
 ```
 python manage.py runserver
