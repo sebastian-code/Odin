@@ -1,6 +1,6 @@
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from django.db.models import Q
-from students.models import CourseAssignment
+from students.models import User
 
 
 class Command(BaseCommand):
@@ -12,8 +12,9 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         filename = args[0]
         file_write = open(filename, 'w+')
-        assignments = CourseAssignment.objects.exclude(Q(user__github_account__contains='https://github.com/') | Q(user__github_account__contains='http://github.com'))
-        for i, obj in enumerate(assignments, start=1):
-            student = obj.user
+        no_git_students = User.objects.exclude(Q(github_account__contains='//github.com/'))
+        
+        for i, student in enumerate(no_git_students, start=1):
             file_write.write('[{}] {} - {}'.format(i, student.get_full_name().encode('utf-8'), student.email) + '\n')
+
         file_write.close()

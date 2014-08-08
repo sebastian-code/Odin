@@ -42,6 +42,7 @@ def course_students(request, course_id):
         )
     return render(request, "course_students.html", locals())
 
+
 def show_certificate(request, certificate_id):
     certificate = get_object_or_404(Certificate, id=certificate_id)
 
