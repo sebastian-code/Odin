@@ -48,7 +48,7 @@ class Task(models.Model):
     course = models.ForeignKey(Course)
     is_exam = models.BooleanField(default=False)
     deadline = models.DateTimeField(null=True, blank=True)
-    week = models.PositiveSmallIntegerField(default=0, blank=False, null=False)
+    week = models.CharField(max_length=10, blank=False, null=False)
 
     def __unicode__(self):
         return unicode(self.name)
