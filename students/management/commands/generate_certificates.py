@@ -9,6 +9,7 @@ from github import Github
 
 
 class TempCertificate:
+
     def __init__(self):
         self.weekly_commits = []
         self.closed_issues = 0
@@ -129,7 +130,7 @@ def get_user_and_repo_names(github_url):
 
 def is_valid_assignment(assignment, solutions):
     github_account = assignment.user.github_account
-    return github_account is not None and '://github.com/' in github_account and len(solutions) > 0
+    return github_account is not None and '://github.com/' in github_account
 
 
 class Command(BaseCommand):
@@ -145,5 +146,6 @@ class Command(BaseCommand):
             solutions = Solution.objects.filter(
                 user=assignment.user, task__course__id=arg_course_id)
 
-            if is_valid_assignment(assignment, solutions):
+            if is_valid_assignment(assignment) and solutions:
+                Certificate.objects.filter(assignment=assignment).delete()
                 generate_certificate(assignment, solutions)
