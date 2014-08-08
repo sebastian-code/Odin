@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 
-from .models import Course, Partner
+from .models import Course, Partner, Certificate
 from students.models import CourseAssignment, User
 
 from datetime import datetime
@@ -41,3 +41,8 @@ def course_students(request, course_id):
             user__status=User.STUDENT
         )
     return render(request, "course_students.html", locals())
+
+def show_certificate(request, certificate_id):
+    certificate = get_object_or_404(Certificate, id=certificate_id)
+
+    return render(request, "show_certificate.html", locals())

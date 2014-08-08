@@ -59,7 +59,7 @@ class WeeklyCommit(models.Model):
 
 
 class Certificate(models.Model):
-    assignment = models.ForeignKey('students.CourseAssignment')
+    assignment = models.ForeignKey('students.CourseAssignment', unique=True)
     weekly_commits = models.ManyToManyField(WeeklyCommit)
     issues_closed = models.IntegerField(default=0)
     issues_opened = models.IntegerField(default=0)
