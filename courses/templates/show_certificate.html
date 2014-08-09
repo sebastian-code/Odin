@@ -1,3 +1,23 @@
-{% for task in tasks %}
-    <p>{{ task.solution }}</p>
-{% endfor %}
+<html>
+    <head>
+        <title></title>
+        <link rel="stylesheet" href="{{ STATIC_URL }}css/certificate.css">
+    </head>
+    <body>
+        <img id="logo" src="{{ STATIC_URL }}img/HackBG-certificates-logo.png" alt="HackBulgaria Logo">
+        <h2 id="title">Certificate of participation in {{ course.name }}</h2>
+        <div>
+            <p id="name">{{ user }}</p>
+        </div>
+        
+        <fieldset id='projects'>
+            <legend>Projects:</legend>
+            {% for task in tasks %}
+                <div>
+                    <a href="{{ task.description }}">{{ task }}</a> - 
+                    <a href="{{ task.solution.repo }}">Code</a>
+                </div>
+            {% endfor %}
+         </fieldset>
+    </body>
+</html>

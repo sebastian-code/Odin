@@ -7,6 +7,7 @@ from django.contrib.auth.signals import user_logged_in
 from courses.models import Course, Partner, Task
 
 from django_resized import ResizedImageField
+
 import re
 
 
