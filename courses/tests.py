@@ -1,8 +1,8 @@
 from django.core.urlresolvers import reverse
 from django.test import TestCase, client
 
-from students.models import User
-from .models import Course
+from students.models import User, CourseAssignment, Solution
+from .models import Course, Task, Certificate
 
 import datetime
 
@@ -46,3 +46,53 @@ class CoursesTest(TestCase):
         response = self.client.get(
             reverse('courses:course-students',  kwargs={'course_id': self.course.id}))
         self.assertEqual(200, response.status_code)
+
+
+class CertificateTest(TestCase):
+    def setUp(self):
+        self.student_user = User.objects.create_user('ivo_student@gmail.com', '123')
+        self.student_user.status = User.STUDENT
+        self.student_user.save()
+
+        self.course = Course.objects.create(
+            name='JavaScript',
+            url='JavaScript',
+            application_until=datetime.datetime.now(),
+        )
+
+        self.assignment = CourseAssignment.objects.create(
+            user=self.student_user, 
+            course=self.course, 
+            group_time=CourseAssignment.EARLY
+        )
+
+        self.task1 = Task.objects.create(
+            name="task1",
+            course=self.course,
+        )
+
+        self.task2 = Task.objects.create(
+            name="task2",
+            course=self.course,
+        )
+
+        self.solution1 = Solution.objects.create(
+            task=self.task1,
+            user=self.student_user
+        )
+
+        self.certificate = Certificate.objects.create(
+            assignment=self.assignment,
+            issues_closed=5,
+            issues_opened=10,
+            total_commits=15
+        )
+
+
+    def test_certificate_status_code(self):
+        self.client = client.Client()
+        response = self.client.get(
+            reverse('courses:show-certificate',  kwargs={'certificate_id': self.certificate.id}))
+        self.assertEqual(200, response.status_code)
+
+    #TODO: More tests when the template is done!

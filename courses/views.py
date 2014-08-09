@@ -1,8 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 
-from .models import Course, Partner, Certificate
-from students.models import CourseAssignment, User
+from .models import Course, Partner, Certificate, Task
+from students.models import CourseAssignment, User, Solution
 
 from datetime import datetime
 
@@ -45,5 +45,18 @@ def course_students(request, course_id):
 
 def show_certificate(request, certificate_id):
     certificate = get_object_or_404(Certificate, id=certificate_id)
+    user = certificate.assignment.user
+    course = certificate.assignment.course
+    tasks = Task.objects.filter(course=course)
+    solutions = Solution.objects.filter(task__in=tasks, user=user)
+    
+    ## Zips solutions with tasks
+    solutions_by_task = {}
+    for solution in solutions:
+        solutions_by_task[solution.task.id] = solution
+
+    for task in tasks:
+        if task.id in solutions_by_task:
+            task.solution = solutions_by_task[task.id]
 
     return render(request, "show_certificate.html", locals())
