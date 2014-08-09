@@ -37,15 +37,33 @@ a {
     color: #FFF;
 }
 
+a:hover {
+    color: #FFD222;
+}
+
 #title {
     padding-bottom: 15px;
 }
 
-#projects {
+#projects, #github-statistics {
     margin-top: 50px;
     display: inline;
+    color: #FFF;
 }
 
 #logo {
     width: 70%;
+}
+
+legend {
+    font-size: 120%;
+}
+
+#fb-holder {
+    height: 35px;
+}
+
+.fb-share-button {
+    padding: 10px;
+    float: left;
 }

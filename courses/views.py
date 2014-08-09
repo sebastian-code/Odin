@@ -49,7 +49,7 @@ def show_certificate(request, certificate_id):
     course = certificate.assignment.course
     tasks = Task.objects.filter(course=course)
     solutions = Solution.objects.filter(task__in=tasks, user=user)
-    
+
     ## Zips solutions with tasks
     solutions_by_task = {}
     for solution in solutions:
