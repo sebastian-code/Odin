@@ -5,7 +5,7 @@ from students.models import CourseAssignment, Solution
 from courses.models import WeeklyCommit, Certificate
 
 from datetime import datetime
-from github import Github
+from github import Github, GithubException
 
 
 class TempCertificate:
@@ -107,16 +107,19 @@ def get_api_repo(github_parameters):
 def generate_api_stats(repo):
     closed_issues = get_closed_issues_count(repo)
     stats = {'open_issues': repo.open_issues_count, 'closed_issues': closed_issues}
-    print stats
     return stats
 
 
 # no API functionality for that
 def get_closed_issues_count(repo):
     count = 0
-    for issue in repo.get_issues(state='closed'):
-        if issue.closed_at:  # GithubObject.NotSet
-            count += 1
+    try:
+        for issue in repo.get_issues(state='closed'):
+            if issue.closed_at:  # GithubObject.NotSet
+                count += 1
+    # if opening/closing issues is disabled
+    except GithubException:
+        count = 0
     return count
 
 
