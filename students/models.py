@@ -138,6 +138,10 @@ class CourseAssignment(models.Model):
     def get_favourite_partners(self):
         return "; ".join([partner.name for partner in self.favourite_partners.all()])
 
+    def has_valid_github_account(self):
+        github_account = self.user.github_account
+        return github_account is not None and '://github.com/' in github_account
+
 
 class UserNote(models.Model):
     text = models.TextField(blank=True)
@@ -159,6 +163,19 @@ class Solution(models.Model):
     task = models.ForeignKey(Task)
     user = models.ForeignKey(User)
     repo = models.URLField()
+
+    def __parse_github_url(self, github_url):
+        github_url_split = github_url.split('/')[3:]
+        # Ex: https://github.com/syndbg/HackBulgaria/tree/master/Core-Java-1
+        # Becomes  [u'https:', u'', u'github.com', u'syndbg', u'HackBulgaria', u'tree', u'master', u'Core-Java-1']
+        # Only 4th and 5th elements are relevant
+        return {'user': github_url_split[0], 'repo_name': github_url_split[1]} if len(github_url_split) >= 2 else {'user': github_url_split[0]}
+
+    def get_user_github_username(self):
+        return self.__parse_github_url(self.user.github_account)['user']
+
+    def get_github_user_and_repo_names(self):
+        return self.__parse_github_url(self.repo)
 
     class Meta:
         unique_together = (('user', 'task'),)
