@@ -46,14 +46,15 @@ def get_deadline():
     return deadline.replace(day=deadline.day + 7, hour=23, minute=56, second=56)
 
 
-def get_formatted_task_url(raw_task_url, dir_task_names):
+def get_formatted_task_url(raw_task_url, dir_task_names, is_exam):
     raw_task_url = raw_task_url if raw_task_url[-1] != '/' else raw_task_url[:-1]
-    return "{}/tree/master/{}{}".format(raw_task_url, dir_task_names['dir'], dir_task_names['raw_task'])
+    dir_name = 'exams/{}'.format(dir_task_names['dir']) if is_exam else dir_task_names['dir']
+    return '{}/tree/master/{}{}'.format(raw_task_url, dir_name, dir_task_names['raw_task'])
 
 
 def get_formatted_task_name(raw_task_name):
     raw_task_name = raw_task_name[1:-1].replace('-', ' ').split(' ')
-    output = "<{}>".format(raw_task_name[0])
+    output = '<{}>'.format(raw_task_name[0])
     for i in range(1, len(raw_task_name)):
         output += ' {}'.format(raw_task_name[i])
     return output
@@ -61,10 +62,13 @@ def get_formatted_task_name(raw_task_name):
 
 def create_db_task(course, tree_element, is_exam):
     dir_task_names = get_dir_and_task_names(tree_element.path)
-    task_github_url = get_formatted_task_url(course.git_repository, dir_task_names)
+    task_github_url = get_formatted_task_url(course.git_repository, dir_task_names, is_exam)
     task_name = get_formatted_task_name(dir_task_names['raw_task'])
     deadline = get_deadline()
-    Task.objects.create(name=task_name, description=task_github_url, course=course, is_exam=is_exam, deadline=deadline, week=dir_task_names['dir'])
+
+    obj, created = Task.objects.get_or_create(name=task_name, description=task_github_url, course=course, is_exam=is_exam, week=dir_task_names['dir'], defaults={'deadline': deadline})
+    if created:
+        print 'Created task {} - {}'.format(task_name, task_github_url)
 
 
 class Command(BaseCommand):
