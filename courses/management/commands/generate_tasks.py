@@ -64,7 +64,10 @@ def create_db_task(course, tree_element, is_exam):
     task_github_url = get_formatted_task_url(course.git_repository, dir_task_names)
     task_name = get_formatted_task_name(dir_task_names['raw_task'])
     deadline = get_deadline()
-    Task.objects.create(name=task_name, description=task_github_url, course=course, is_exam=is_exam, deadline=deadline, week=dir_task_names['dir'])
+
+    obj, created = Task.objects.get_or_create(name=task_name, description=task_github_url, course=course, is_exam=is_exam, week=dir_task_names['dir'], defaults={'deadline': deadline})
+    if created:
+        print 'Created task {} - {}'.format(task_name, task_github_url)
 
 
 class Command(BaseCommand):

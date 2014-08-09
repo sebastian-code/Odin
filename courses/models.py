@@ -53,6 +53,9 @@ class Task(models.Model):
     def __unicode__(self):
         return unicode(self.name)
 
+    class Meta:
+        unique_together = (('name', 'description', 'course', 'is_exam', 'week'),)
+
 
 class WeeklyCommit(models.Model):
     commits_count = models.IntegerField(default=0)
