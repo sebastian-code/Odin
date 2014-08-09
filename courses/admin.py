@@ -5,7 +5,6 @@ from models import Certificate, Course, Partner, Task
 from adminsortable.admin import SortableAdminMixin
 
 
-# Register your models here.
 class CourseAdmin(admin.ModelAdmin):
     list_display = [
         'id',
@@ -37,9 +36,12 @@ class TaskAdmin(admin.ModelAdmin):
         'id',
         'name',
         'week',
+        'description',
     ]
-
-    list_display_links = ['name']
+    list_filter = ('course', 'week',)
+    list_display_links = ['description']
+    search_fields = ('name',)
+    ordering = ('week', 'name')
 
 admin.site.register(Task, TaskAdmin)
 
