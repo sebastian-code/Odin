@@ -9,6 +9,7 @@ from github import Github
 
 
 class TempCertificate:
+
     def __init__(self):
         self.weekly_commits = []
         self.closed_issues = 0
@@ -146,4 +147,5 @@ class Command(BaseCommand):
                 user=assignment.user, task__course__id=arg_course_id)
 
             if is_valid_assignment(assignment) and solutions:
+                Certificate.objects.filter(assignment=assignment).delete()
                 generate_certificate(assignment, solutions)
