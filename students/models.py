@@ -72,7 +72,7 @@ class User(AbstractUser):
     REQUIRED_FIELDS = []
 
     def __unicode__(self):
-        return unicode(self.get_full_name())
+        return self.get_full_name()
 
     def getAvatarUrl(self):
         if not self.avatar:
@@ -134,9 +134,6 @@ class CourseAssignment(models.Model):
 
     def __unicode__(self):
         return '{} - {}'.format(self.course, self.group_time)
-
-    # def __str__(self):
-        # return unicode('{} - {}'.format(self.course, self.group_time))
 
     def get_favourite_partners(self):
         return "; ".join([partner.name for partner in self.favourite_partners.all()])
