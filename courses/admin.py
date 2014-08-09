@@ -39,7 +39,7 @@ class TaskAdmin(admin.ModelAdmin):
         'description',
     ]
     list_filter = ('course', 'week',)
-    list_display_links = ['description']
+    list_display_links = ['name']
     search_fields = ('name',)
     ordering = ('week', 'name')
 
