@@ -130,7 +130,7 @@ class CourseAssignment(models.Model):
     cv = models.FileField(blank=True, null=True, upload_to='cvs')
 
     class Meta:
-        unique_together = ('user', 'course')
+        unique_together = (('user', 'course'),)
 
     def __unicode__(self):
         return '{} - {}'.format(self.course, self.group_time)
@@ -161,4 +161,4 @@ class Solution(models.Model):
     repo = models.URLField()
 
     class Meta:
-        unique_together = ('user', 'task')
+        unique_together = (('user', 'task'),)
