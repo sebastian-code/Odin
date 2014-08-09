@@ -35,7 +35,7 @@ def generate_certificate(assignment, solutions):
 
 
 def is_new_valid_github_account(github_parameters, visited_repos):
-    return len(github_parameters) == 2 and not github_parameters in visited_repos
+    return 'user' in github_parameters and 'repo_name' in github_parameters and not github_parameters in visited_repos
 
 
 def is_cheating(github_parameters, solution, solution_github_repo):
