@@ -51,6 +51,10 @@ a:hover {
     color: #FFF;
 }
 
+#projects > div, #github-statistics > div {
+    margin: 5px;
+}
+
 #logo {
     width: 70%;
 }
