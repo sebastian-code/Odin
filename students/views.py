@@ -10,7 +10,7 @@ from django.conf import settings
 
 from .forms import UserEditForm, AddNote, VoteForPartner, AddSolutionForm
 from .models import CourseAssignment, UserNote, User, CheckIn, Task, Solution
-from courses.models import Course
+from courses.models import Course, Certificate
 from forum.models import Comment
 
 import datetime
@@ -50,7 +50,8 @@ def assignment(request, id):
     is_teacher = request.user.status == User.TEACHER
     is_hr = request.user.status == User.HR
     is_student = request.user.status == User.STUDENT
-
+    certificate = Certificate.objects.filter(assignment=assignment).first()
+    print certificate
     comments = Comment.objects.filter(author=assignment.user).order_by('topic').all()
 
     if is_teacher or is_hr:

@@ -35,6 +35,13 @@
                     <p>
                         <a href="{{ assignment.user.github_account }}" target="_blank">GitHub акаунт: {{ assignment.user.github_account }}</a>
                     </p>
+                    
+                    {% if certificate %}
+                    <p>
+                        <a href="{{ certificate.get_absolute_url }}" target="_blank">Сертификат от курса</a>
+                    </p>
+                    {% endif %}
+
                     <p>
                         <a href="{{ assignment.course.git_repository }}" target="_blank">Материали в GitHub за курса</a>
                     </p>
