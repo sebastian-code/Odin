@@ -1,10 +1,11 @@
+from datetime import datetime
+
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 
-from .models import Course, Partner, Certificate, Task
 from students.models import CourseAssignment, User, Solution
+from .models import Course, Partner, Certificate, Task
 
-from datetime import datetime
 
 
 def show_course(request, course_url):

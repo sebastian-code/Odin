@@ -12,7 +12,7 @@
         <div id="fb-holder">
             <div class="fb-share-button" data-href="" data-width="50"></div>
         </div>
-        <a href="http://{{ request.get_host }}/">
+        <a href="http   ://{{ request.get_host }}/">
             <img id="logo" src="{{ STATIC_URL }}img/HackBG-certificates-logo.png" alt="HackBulgaria Logo">
         </a>
         <h2 id="title">Certificate for being awesome in {{ course.name }}</h2>
@@ -33,7 +33,11 @@
                 {% for task in tasks %}
                     <div>
                         <a href="{{ task.description }}">{{ task }}</a> - 
-                        <a href="{{ task.solution.repo }}">Code Link</a>
+                        {% if task.solution %}
+                            <a class="code-sent" href="{{ task.solution.repo }}">Source Link</a>
+                        {% else %}
+                            <span class="code-not-sent">Source not sent</span>
+                        {% endif %}
                     </div>
                 {% endfor %}
             </fieldset>

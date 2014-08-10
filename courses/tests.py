@@ -1,10 +1,11 @@
+import datetime
+
 from django.core.urlresolvers import reverse
 from django.test import TestCase, client
 
 from students.models import User, CourseAssignment, Solution
 from .models import Course, Task, Certificate
 
-import datetime
 
 
 class CoursesTest(TestCase):

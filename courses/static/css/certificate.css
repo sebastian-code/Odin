@@ -67,3 +67,11 @@ legend {
     padding: 10px;
     float: left;
 }
+
+.code-sent {
+    color: #477649;
+}
+
+.code-not-sent {
+    color: #AD1E17;
+}
