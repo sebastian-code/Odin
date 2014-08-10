@@ -55,7 +55,7 @@ class Task(models.Model):
     week = models.CharField(max_length=10, blank=False, null=False)
 
     def __unicode__(self):
-        return unicode(self.name)
+        return self.name
 
     class Meta:
         unique_together = (('name', 'description', 'course', 'is_exam', 'week'),)
