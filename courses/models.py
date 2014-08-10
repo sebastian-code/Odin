@@ -16,6 +16,9 @@ class Course(models.Model):
     application_until = models.DateField()
     next_season_mail_list = models.URLField(null=True, blank=True)
 
+    start_time = models.DateField(null=False, blank=False)
+    end_time = models.DateField(null=False, blank=False)
+
     SEO_title = models.CharField(blank=False, max_length=255)
     SEO_description = models.CharField(blank=False, max_length=255)
     url = models.SlugField(max_length=80, unique=True)
