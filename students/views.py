@@ -154,10 +154,10 @@ def api_checkins(request):
 def solutions(request, course_id):
     course = get_object_or_404(Course, pk=course_id)
     tasks = Task.objects.filter(course=course).order_by('name')
-    weeks = sorted(set(map(lambda task:task.week, tasks)))
+    weeks = sorted(set(map(lambda task: task.week, tasks)))
     solutions = Solution.objects.filter(task__in=tasks, user=request.user).prefetch_related('task')
 
-    #Zips user's solutions with tasks
+    # Zips user's solutions with tasks
     solutions_by_task = {}
     for solution in solutions:
         solutions_by_task[solution.task] = solution
