@@ -1,3 +1,4 @@
+from django.core.urlresolvers import reverse
 from django.db import models
 
 from tinymce import models as tinymce_models
@@ -67,3 +68,6 @@ class Certificate(models.Model):
     issues_closed = models.IntegerField(default=0)
     issues_opened = models.IntegerField(default=0)
     total_commits = models.IntegerField(default=0)
+
+    def get_absolute_url(self):
+        return reverse('courses:show-certificate', args=[str(self.assignment.id)])

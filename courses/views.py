@@ -44,8 +44,8 @@ def course_students(request, course_id):
     return render(request, "course_students.html", locals())
 
 
-def show_certificate(request, certificate_id):
-    certificate = get_object_or_404(Certificate, id=certificate_id)
+def show_certificate(request, assignment_id):
+    certificate = get_object_or_404(Certificate, assignment=assignment_id)
     user = certificate.assignment.user
     course = certificate.assignment.course
     tasks = Task.objects.filter(course=course)

@@ -92,8 +92,18 @@ class CertificateTest(TestCase):
 
     def test_certificate_status_code(self):
         self.client = client.Client()
-        response = self.client.get(
-            reverse('courses:show-certificate',  kwargs={'certificate_id': self.certificate.id}))
+        response = self.client.get(self.certificate.get_absolute_url())
         self.assertEqual(200, response.status_code)
 
-    #TODO: More tests when the template is done!
+
+    def test_certificate_show_solution(self):
+        self.client = client.Client()
+        response = self.client.get(self.certificate.get_absolute_url())
+        self.assertContains(response, 'class="code-sent"')
+
+
+    def test_certificate_show_not_sended_solution_alert(self):
+        self.client = client.Client()
+        response = self.client.get(self.certificate.get_absolute_url())
+        self.assertContains(response, 'class="code-not-sent"')
+
