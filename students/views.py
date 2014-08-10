@@ -51,7 +51,6 @@ def assignment(request, id):
     is_hr = request.user.status == User.HR
     is_student = request.user.status == User.STUDENT
     certificate = Certificate.objects.filter(assignment=assignment).first()
-    print certificate
     comments = Comment.objects.filter(author=assignment.user).order_by('topic').all()
 
     if is_teacher or is_hr:
