@@ -29,7 +29,7 @@ def logout(request):
 
 
 def user_profile(request):
-    return render(request, "profile.html", locals())
+    return render(request, 'profile.html', locals())
 
 
 @login_required
@@ -75,7 +75,7 @@ def assignment(request, id):
                 vote_form.save()
                 return redirect('students:assignment', id=id)
 
-    return render(request, "assignment.html", locals())
+    return render(request, 'assignment.html', locals())
 
 
 @csrf_exempt
@@ -140,10 +140,10 @@ def api_checkins(request):
         student_courses.append(course)
 
         needed_data.append({
-            "student_id": checkin.student.id,
-            "student_name": checkin.student.get_full_name(),
-            "student_courses": student_courses,
-            "date": str(checkin.date),
+            'student_id': checkin.student.id,
+            'student_name': checkin.student.get_full_name(),
+            'student_courses': student_courses,
+            'date': str(checkin.date),
         })
 
     return HttpResponse(simplejson.dumps(needed_data, ensure_ascii=False), content_type='application/json; charset=utf8')
@@ -165,11 +165,11 @@ def solutions(request, course_id):
         if task in solutions_by_task:
             task.solution = solutions_by_task[task]
 
-    return render(request, "solutions.html", locals())
+    return render(request, 'solutions.html', locals())
 
 
 @login_required
-@require_http_methods(["POST"])
+@require_http_methods(['POST'])
 @csrf_exempt
 def add_solution(request):
     solution = Solution.objects.filter(
