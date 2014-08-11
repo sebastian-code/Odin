@@ -5,8 +5,8 @@
         <meta property="og:title" content="Hack Bulgaria Certificate"/>
         <meta property="og:image" content="{{ STATIC_URL }}img/certificate-screen.png"/>
         <meta property="og:site_name" content="Hack Bulgaria"/>
-        <meta property="og:description" content="Certificate for being awesome in {{ course.name }} course in HackBulgaria"/>
-    
+        <meta property="og:description" content="Certificate for being awesome in the {{ course.name }} course in HackBulgaria"/>
+
     </head>
     <body>
         <div id="fb-holder">
@@ -15,11 +15,11 @@
         <a href="http://{{ request.get_host }}/">
             <img id="logo" src="{{ STATIC_URL }}img/HackBG-certificates-logo.png" alt="HackBulgaria Logo">
         </a>
-        <h2 id="title">Certificate for being awesome in {{ course.name }}</h2>
+        <h2 id="title">Certificate for being awesome in <a href="{% url 'courses:show-course' course.url %}">{{ course.name }}</a></h2>
         <div>
-            <p id="name">{{ user }}</p>
+            <p id="name"><a href="{% url 'students:assignment' assignment_id  %}">{{ user }}</a></p>
         </div>
-        
+
         <fieldset id='github-statistics'>
             <legend>Github Statistics:</legend>
                 <div>Closed Issues: {{ certificate.issues_closed }}</div>
@@ -32,7 +32,7 @@
                 <legend>Projects:</legend>
                 {% for task in tasks %}
                     <div>
-                        <a href="{{ task.description }}">{{ task }}</a> - 
+                        <a href="{{ task.description }}">Week <{{ task.week | capfirst }}> Task {{ task }}</a> -
                         {% if task.solution %}
                             <a class="code-sent" href="{{ task.solution.repo }}">Source Link</a>
                         {% else %}
