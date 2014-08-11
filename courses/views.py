@@ -7,7 +7,6 @@ from students.models import CourseAssignment, User, Solution
 from .models import Course, Partner, Certificate, Task
 
 
-
 def show_course(request, course_url):
     course = get_object_or_404(Course, url=course_url)
     enable_applications = datetime.today().date() <= course.application_until
@@ -51,7 +50,7 @@ def show_certificate(request, assignment_id):
     tasks = Task.objects.filter(course=course)
     solutions = Solution.objects.filter(task__in=tasks, user=user)
 
-    ## Zips solutions with tasks
+    # Zips solutions with tasks
     solutions_by_task = {}
     for solution in solutions:
         solutions_by_task[solution.task.id] = solution
