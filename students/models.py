@@ -1,14 +1,12 @@
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser, BaseUserManager
-from django.core.exceptions import ValidationError
 from django.contrib.auth.signals import user_logged_in
 
 from courses.models import Course, Partner, Task
 
 from django_resized import ResizedImageField
-
-import re
+from validators import validate_mac
 
 
 class UserManager(BaseUserManager):
@@ -58,7 +56,7 @@ class User(AbstractUser):
     linkedin_account = models.URLField(null=True, blank=True)
     description = models.TextField(blank=True)
     courses = models.ManyToManyField(Course, through='CourseAssignment')
-    mac = models.CharField(max_length=17, null=True, blank=True)
+    mac = models.CharField(validators=[validate_mac], max_length=17, null=True, blank=True)
     works_at = models.CharField(null=True, blank=True, max_length='40')
     subscribed_topics = models.ManyToManyField('forum.Topic', blank=True)
     hr_of = models.ForeignKey(Partner, blank=True, null=True)
@@ -91,15 +89,6 @@ class User(AbstractUser):
             courses.append(course)
 
         return courses
-
-    def clean(self, *args, **kwargs):
-        if self.mac:
-            mac_pattern = re.compile(r'^([0-9A-F]{2}[:]){5}([0-9A-F]{2})$', re.IGNORECASE)
-            if not re.match(mac_pattern, self.mac):
-                raise ValidationError(u'%s is not a valid mac address' % self.mac)
-            self.mac = self.mac.lower()
-
-        super(AbstractUser, self).clean(*args, **kwargs)
 
     def log_hr_login(sender, user, request, **kwargs):
         if user.status == User.HR:
@@ -137,7 +126,7 @@ class CourseAssignment(models.Model):
         return u'<{}> {} - {}'.format(self.user.get_full_name(), self.course, self.group_time)
 
     def get_favourite_partners(self):
-        return '; '.join([partner.name for partner in self.favourite_partners.all()])
+        return "; ".join([partner.name for partner in self.favourite_partners.all()])
 
     def has_valid_github_account(self):
         github_account = self.user.github_account
