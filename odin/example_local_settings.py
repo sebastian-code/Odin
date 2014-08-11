@@ -1,12 +1,12 @@
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '*18ji*lhdl*-z7smqprw8g1r!ez0&n78s1kjue#g3@s(^hx%z('
+SECRET_KEY = '*18ji*lhdl*-z7smqprw8g1r!ez0&n78s1kjue#g3@s(^hx%z('  # This is just an example key, change it!
 
 
 DATABASES = {
     'default': {
-        # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        # Add 'postgresql_psycopg2', 'django_mongodb_engine', 'mysql', 'sqlite3' or 'oracle'.
         'ENGINE': 'django.db.backends.mysql',
         'NAME': '',  # Or path to database file if using sqlite3
         # Remove the following if using sqlite3
@@ -36,4 +36,4 @@ DOMAIN = 'hackbulgaria.com'
 # Ask the system for token and place it here
 CHECKIN_TOKEN = 'TOKEN FROM CHECKIN SYSTEM HERE'
 # https://help.github.com/articles/creating-an-access-token-for-command-line-use
-GITHUB_OATH_TOKEN = ''
+GITHUB_OATH_TOKEN = 'YOUR GITHUB TOKEN'

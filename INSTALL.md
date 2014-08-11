@@ -65,6 +65,10 @@ pip install psycopg2
 sudo -u postgres createdb <dbname>
 ```
 
+If you want to use MongoDB. Follow [this great presentation](http://staltz.github.io/djangoconfi-mongoengine/).
+It's important to note that many of the models need to be refactored to work.
+
+
 # Do some configs
 Rename the `odin/example_local_settings.py` to `odin/local_settings.py`. This will be your settings file.
 Adjust your database settings in `local_settings.py`.
