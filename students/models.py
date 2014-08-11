@@ -4,9 +4,9 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.contrib.auth.signals import user_logged_in
 
 from courses.models import Course, Partner, Task
+from validators import validate_mac, validate_github, validate_linkedin
 
 from django_resized import ResizedImageField
-from validators import validate_mac
 
 
 class UserManager(BaseUserManager):
@@ -52,8 +52,8 @@ class User(AbstractUser):
         blank=True,
     )
 
-    github_account = models.URLField(null=True, blank=True)
-    linkedin_account = models.URLField(null=True, blank=True)
+    github_account = models.URLField(validators=[validate_github], null=True, blank=True)
+    linkedin_account = models.URLField(validators=[validate_linkedin], null=True, blank=True)
     description = models.TextField(blank=True)
     courses = models.ManyToManyField(Course, through='CourseAssignment')
     mac = models.CharField(validators=[validate_mac], max_length=17, null=True, blank=True)
