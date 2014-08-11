@@ -79,7 +79,7 @@ class User(AbstractUser):
         return self.avatar.url
 
     def get_courses(self):
-        return "; ".join([courseassignment.course.name + ' - ' + str(courseassignment.group_time)
+        return '; '.join([courseassignment.course.name + ' - ' + str(courseassignment.group_time)
                           for courseassignment
                           in self.courseassignment_set.all()])
 
