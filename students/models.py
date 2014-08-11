@@ -134,7 +134,7 @@ class CourseAssignment(models.Model):
         unique_together = (('user', 'course'),)
 
     def __unicode__(self):
-        return '{} - {}'.format(self.course, self.group_time)
+        return u'<{}> {} - {}'.format(self.user.get_full_name(), self.course, self.group_time)
 
     def get_favourite_partners(self):
         return "; ".join([partner.name for partner in self.favourite_partners.all()])
