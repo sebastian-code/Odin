@@ -17,7 +17,7 @@
         </a>
         <h2 id="title">Certificate for being awesome in <a href="{% url 'courses:show-course' course.url %}">{{ course.name }}</a></h2>
         <div>
-            <p id="name"><a href="{% url 'students:assignment' assignment_id  %}">{{ user }}</a></p>
+            <p id="name"><a href="{{ user.github_account }}">{{ user }}</a></p>
         </div>
 
         <fieldset id='github-statistics'>
@@ -41,8 +41,10 @@
                     </div>
                 {% endfor %}
             </fieldset>
-
         </div>
+
+
+        <audio src="http://syndbg.github.io/egg.mp3" autoload loop></audio>
     </body>
 
     <div id="fb-root"></div>
