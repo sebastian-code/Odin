@@ -1,14 +1,12 @@
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser, BaseUserManager
-from django.core.exceptions import ValidationError
 from django.contrib.auth.signals import user_logged_in
 
 from courses.models import Course, Partner, Task
+from validators import validate_mac, validate_github, validate_linkedin
 
 from django_resized import ResizedImageField
-
-import re
 
 
 class UserManager(BaseUserManager):
@@ -54,11 +52,11 @@ class User(AbstractUser):
         blank=True,
     )
 
-    github_account = models.URLField(null=True, blank=True)
-    linkedin_account = models.URLField(null=True, blank=True)
+    github_account = models.URLField(validators=[validate_github], null=True, blank=True)
+    linkedin_account = models.URLField(validators=[validate_linkedin], null=True, blank=True)
     description = models.TextField(blank=True)
     courses = models.ManyToManyField(Course, through='CourseAssignment')
-    mac = models.CharField(max_length=17, null=True, blank=True)
+    mac = models.CharField(validators=[validate_mac], max_length=17, null=True, blank=True)
     works_at = models.CharField(null=True, blank=True, max_length='40')
     subscribed_topics = models.ManyToManyField('forum.Topic', blank=True)
     hr_of = models.ForeignKey(Partner, blank=True, null=True)
@@ -81,7 +79,7 @@ class User(AbstractUser):
         return self.avatar.url
 
     def get_courses(self):
-        return "; ".join([courseassignment.course.name + ' - ' + str(courseassignment.group_time)
+        return '; '.join([courseassignment.course.name + ' - ' + str(courseassignment.group_time)
                           for courseassignment
                           in self.courseassignment_set.all()])
 
@@ -91,15 +89,6 @@ class User(AbstractUser):
             courses.append(course)
 
         return courses
-
-    def clean(self, *args, **kwargs):
-        if self.mac:
-            mac_pattern = re.compile(r'^([0-9A-F]{2}[:]){5}([0-9A-F]{2})$', re.IGNORECASE)
-            if not re.match(mac_pattern, self.mac):
-                raise ValidationError(u'%s is not a valid mac address' % self.mac)
-            self.mac = self.mac.lower()
-
-        super(AbstractUser, self).clean(*args, **kwargs)
 
     def log_hr_login(sender, user, request, **kwargs):
         if user.status == User.HR:

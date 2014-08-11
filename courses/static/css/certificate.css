@@ -17,7 +17,7 @@ body {
 }
 
 
-#name {
+p#name {
     border-color:orange;
     border-style:double;
     background-color: #E8AA19;
@@ -30,6 +30,10 @@ body {
     font-weight: bolder;
     display: inline;
     padding: 3px 5% 0px 5%;
+}
+
+a#name {
+    text-decoration: none;
 }
 
 a {
@@ -60,7 +64,10 @@ a:hover {
 }
 
 legend {
+    color: black;
+    font-weight: bold;
     font-size: 120%;
+    letter-spacing: 2.2px;
 }
 
 #fb-holder {

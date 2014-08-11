@@ -5,7 +5,6 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import views as auth_views
 from django.http import HttpResponse
 from django.db import IntegrityError
-from django.utils import simplejson
 from django.conf import settings
 
 from .forms import UserEditForm, AddNote, VoteForPartner, AddSolutionForm
@@ -14,6 +13,7 @@ from courses.models import Course, Certificate
 from forum.models import Comment
 
 import datetime
+import json
 
 
 def login(request):
@@ -120,7 +120,7 @@ def api_students(request):
             'available': available,
         })
 
-    return HttpResponse(simplejson.dumps(needed_data, ensure_ascii=False), content_type='application/json; charset=utf8')
+    return HttpResponse(json.dumps(needed_data, ensure_ascii=False), content_type='application/json; charset=utf8')
 
 
 @csrf_exempt
@@ -146,7 +146,7 @@ def api_checkins(request):
             'date': str(checkin.date),
         })
 
-    return HttpResponse(simplejson.dumps(needed_data, ensure_ascii=False), content_type='application/json; charset=utf8')
+    return HttpResponse(json.dumps(needed_data, ensure_ascii=False), content_type='application/json; charset=utf8')
 
 
 @login_required
