@@ -137,7 +137,7 @@ class CourseAssignment(models.Model):
         return u'<{}> {} - {}'.format(self.user.get_full_name(), self.course, self.group_time)
 
     def get_favourite_partners(self):
-        return "; ".join([partner.name for partner in self.favourite_partners.all()])
+        return '; '.join([partner.name for partner in self.favourite_partners.all()])
 
     def has_valid_github_account(self):
         github_account = self.user.github_account
