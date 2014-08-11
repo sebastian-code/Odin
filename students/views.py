@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render, get_object_or_404
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth import views
+from django.contrib.auth import views as auth_views
 from django.http import HttpResponse
 from django.db import IntegrityError
 from django.utils import simplejson
@@ -20,11 +20,11 @@ def login(request):
     if request.user.is_authenticated():
         return redirect('students:user-profile')
     else:
-        return views.login(request, template_name='login_form.html')
+        return auth_views.login(request, template_name='login_form.html')
 
 
 def logout(request):
-    views.logout(request)
+    auth_views.logout(request)
     return redirect('/')
 
 
@@ -70,8 +70,7 @@ def assignment(request, id):
     if is_student and assignment.course.ask_for_favorite_partner and request.user == assignment.user:
         vote_form = VoteForPartner(instance=assignment, assignment=assignment)
         if request.method == 'POST':
-            vote_form = VoteForPartner(
-                request.POST, request.FILES, instance=assignment, assignment=assignment)
+            vote_form = VoteForPartner(request.POST, request.FILES, instance=assignment, assignment=assignment)
             if vote_form.is_valid():
                 vote_form.save()
                 return redirect('students:assignment', id=id)
