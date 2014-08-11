@@ -58,7 +58,7 @@ class Task(models.Model):
         return self.name
 
     class Meta:
-        unique_together = (('name', 'description', 'course', 'is_exam', 'week'),)
+        unique_together = (('name', 'description'),)
 
 
 class WeeklyCommit(models.Model):
