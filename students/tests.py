@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.test.client import Client
 from django.conf import settings
 from django.core.urlresolvers import reverse
-from django.core.validators import  ValidationError
+from django.core.validators import ValidationError
 
 from .models import CheckIn, User, HrLoginLog, CourseAssignment, Solution
 from courses.models import Partner, Course, Task
@@ -272,5 +272,5 @@ class ValidatorsTest(unittest.TestCase):
     def test_validate_linkedin(self):
         invalid_url = 'http://facebook.com'
         self.assertRaises(ValidationError, validate_linkedin, invalid_url)
-        valid_url = 'https://www.linkedin.com/in/jeffweiner08' # Linkedin CEO
+        valid_url = 'https://www.linkedin.com/in/jeffweiner08gst' # Linkedin CEO
         self.assertIsNone(validate_linkedin(valid_url))
