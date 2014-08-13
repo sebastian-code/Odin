@@ -266,8 +266,7 @@ class ValidatorsTest(TestCase):
         valid_url = 'https://www.linkedin.com/in/jeffweiner08gst' # Linkedin CEO
         self.assertIsNone(validate_linkedin(valid_url))
 
-    def test_validate_students_link(self):
-        # Test that validation is called on full_clean
+    def test_validate_students_error_on_full_clean(self):
         self.student_user = User.objects.create_user('ivo_student@gmail.com', '123')
         self.student_user.status = User.STUDENT
         self.student_user.mac = "00:00:00:00:00:0"
