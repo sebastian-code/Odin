@@ -1,15 +1,15 @@
+import datetime
+
 from django.test import TestCase
 from django.test.client import Client
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.core.validators import ValidationError
 
-from .models import CheckIn, User, HrLoginLog, CourseAssignment, Solution
 from courses.models import Partner, Course, Task
 from validators import validate_mac, validate_url, validate_github, validate_linkedin
+from .models import CheckIn, User, HrLoginLog, CourseAssignment, Solution
 
-import datetime
-import unittest
 
 
 class CheckInCaseTest(TestCase):
@@ -160,16 +160,6 @@ class SolutionTest(TestCase):
             course=self.course,
         )
 
-    def tearDown(self):
-        self.course.delete()
-        self.student_user.delete()
-        self.partner_potato.delete()
-        self.partner_salad.delete()
-        self.hr_user.delete()
-        self.assignment.delete()
-        self.third_wheel.delete()
-        self.green_task.delete()
-
     def test_create_a_new_assignment(self):
         self.client = Client()
         self.client.login(username='ivo_student@gmail.com', password='123')
@@ -250,7 +240,8 @@ class SolutionTest(TestCase):
         self.assertEqual(200, response.status_code)
 
 
-class ValidatorsTest(unittest.TestCase):
+class ValidatorsTest(TestCase):
+
     def test_validate_mac(self):
         invalid_mac = ':ez:77:b4:14:66:b'
         self.assertRaises(ValidationError, validate_mac, invalid_mac)
@@ -274,3 +265,10 @@ class ValidatorsTest(unittest.TestCase):
         self.assertRaises(ValidationError, validate_linkedin, invalid_url)
         valid_url = 'https://www.linkedin.com/in/jeffweiner08gst' # Linkedin CEO
         self.assertIsNone(validate_linkedin(valid_url))
+
+    def test_validate_students_link(self):
+        # Test that validation is called on full_clean
+        self.student_user = User.objects.create_user('ivo_student@gmail.com', '123')
+        self.student_user.status = User.STUDENT
+        self.student_user.mac = "00:00:00:00:00:0"
+        self.assertRaises(ValidationError, self.student_user.full_clean)
