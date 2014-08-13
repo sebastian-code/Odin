@@ -30,7 +30,7 @@ def generate_certificate(assignment, solutions):
         log_cheating(cheated_solutions)
     else:
         Certificate.objects.filter(assignment=assignment).delete()
-        print 'Created certificate'
+        print 'Created certificate for <{}>'.format(assignment.user)
         create_db_certificate(assignment, temp_certificate)
 
 
