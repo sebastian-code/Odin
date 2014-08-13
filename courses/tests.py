@@ -7,7 +7,6 @@ from students.models import User, CourseAssignment, Solution
 from .models import Course, Task, Certificate
 
 
-
 class CoursesTest(TestCase):
 
     def setUp(self):
@@ -32,24 +31,25 @@ class CoursesTest(TestCase):
     def test_show_course(self):
         self.client = client.Client()
         response = self.client.get(
-            reverse('courses:show-course',  kwargs={'course_url': self.course.url}))
+            reverse('courses:show-course', kwargs={'course_url': self.course.url}))
         self.assertEqual(200, response.status_code)
 
     def test_show_nonexistent_course(self):
         self.client = client.Client()
         response = self.client.get(
-            reverse('courses:show-course',  kwargs={'course_url': 'some_url'}))
+            reverse('courses:show-course', kwargs={'course_url': 'some_url'}))
         self.assertEqual(404, response.status_code)
 
     def test_show_course_students(self):
         self.client = client.Client()
         self.client.login(username='ivo_student@gmail.com', password='123')
         response = self.client.get(
-            reverse('courses:course-students',  kwargs={'course_id': self.course.id}))
+            reverse('courses:course-students', kwargs={'course_id': self.course.id}))
         self.assertEqual(200, response.status_code)
 
 
 class CertificateTest(TestCase):
+
     def setUp(self):
         self.student_user = User.objects.create_user('ivo_student@gmail.com', '123')
         self.student_user.status = User.STUDENT
@@ -62,8 +62,8 @@ class CertificateTest(TestCase):
         )
 
         self.assignment = CourseAssignment.objects.create(
-            user=self.student_user, 
-            course=self.course, 
+            user=self.student_user,
+            course=self.course,
             group_time=CourseAssignment.EARLY
         )
 
@@ -89,21 +89,17 @@ class CertificateTest(TestCase):
             total_commits=15
         )
 
-
     def test_certificate_status_code(self):
         self.client = client.Client()
         response = self.client.get(self.certificate.get_absolute_url())
         self.assertEqual(200, response.status_code)
-
 
     def test_certificate_show_solution(self):
         self.client = client.Client()
         response = self.client.get(self.certificate.get_absolute_url())
         self.assertContains(response, 'class="code-sent"')
 
-
     def test_certificate_show_not_sended_solution_alert(self):
         self.client = client.Client()
         response = self.client.get(self.certificate.get_absolute_url())
         self.assertContains(response, 'class="code-not-sent"')
-

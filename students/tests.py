@@ -251,6 +251,7 @@ class SolutionTest(TestCase):
 
 
 class ValidatorsTest(unittest.TestCase):
+
     def test_validate_mac(self):
         invalid_mac = ':ez:77:b4:14:66:b'
         self.assertRaises(ValidationError, validate_mac, invalid_mac)
@@ -272,5 +273,5 @@ class ValidatorsTest(unittest.TestCase):
     def test_validate_linkedin(self):
         invalid_url = 'http://facebook.com'
         self.assertRaises(ValidationError, validate_linkedin, invalid_url)
-        valid_url = 'https://www.linkedin.com/in/jeffweiner08gst' # Linkedin CEO
+        valid_url = 'https://www.linkedin.com/in/jeffweiner08gst'  # Linkedin CEO
         self.assertIsNone(validate_linkedin(valid_url))
