@@ -1,3 +1,6 @@
+import datetime
+import unittest
+
 from django.test import TestCase
 from django.test.client import Client
 from django.conf import settings
@@ -7,9 +10,6 @@ from django.core.validators import ValidationError
 from .models import CheckIn, User, HrLoginLog, CourseAssignment, Solution
 from courses.models import Partner, Course, Task
 from validators import validate_mac, validate_url, validate_github, validate_linkedin
-
-import datetime
-import unittest
 
 
 class CheckInCaseTest(TestCase):
@@ -159,16 +159,6 @@ class SolutionTest(TestCase):
             name="Green task",
             course=self.course,
         )
-
-    def tearDown(self):
-        self.course.delete()
-        self.student_user.delete()
-        self.partner_potato.delete()
-        self.partner_salad.delete()
-        self.hr_user.delete()
-        self.assignment.delete()
-        self.third_wheel.delete()
-        self.green_task.delete()
 
     def test_create_a_new_assignment(self):
         self.client = Client()
