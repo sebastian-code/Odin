@@ -23,15 +23,15 @@ class TempCertificate:
         self.open_issues += api_stats_dictionary['open_issues']
         self.closed_issues += api_stats_dictionary['closed_issues']
 
-    def add_cheated_solution(self, db_solution):
-        self.cheated_solutions.append(db_solution)
+    def add_cheated_solution(self, solution):
+        self.cheated_solutions.append(solution)
         self.has_cheated = True
 
-    def create_db_weekly_commit(self, db_solution, solution_github_repo):
-        model_startime = db_solution.task.course.application_until
+    def create_db_weekly_commit(self, solution, solution_github_repo):
+        model_startime = solution.task.course.application_until
         start_time = datetime(year=model_startime.year, month=model_startime.month, day=model_startime.day)
 
-        model_endtime = db_solution.task.deadline
+        model_endtime = solution.task.deadline
         end_time = datetime(year=model_endtime.year, month=model_endtime.month, day=model_endtime.day)
 
         commits_count = solution_github_repo.get_commits_count(start_time, end_time)
@@ -64,8 +64,8 @@ class TempCertificate:
 
 class SolutionGithubRepo:
 
-    def __init__(self, user, repo_name, db_solution):
-        self.db_solution = db_solution
+    def __init__(self, user, repo_name, solution):
+        self.solution = solution
         self.api_repo = self.__set_api_repo(user, repo_name)
 
     def __set_api_repo(self, user, repo_name):
@@ -79,11 +79,11 @@ class SolutionGithubRepo:
         return self.api_repo is None
 
     def is_cheating(self):
-        profile_github_account = self.db_solution.get_user_github_username()
+        profile_github_account = self.solution.get_user_github_username()
         return self.api_repo.has_in_collaborators(profile_github_account) is False
 
     def get_commits_count(self, start, end):
-        author = self.db_solution.get_user_github_username()
+        author = self.solution.get_user_github_username()
         commits = self.api_repo.get_commits(since=start, until=end, author=author)
         count = self.__count_commits(commits)
         return count if count > 0 else self.__count_commits(self.api_repo.get_commits(since=start, until=end))
