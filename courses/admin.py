@@ -55,5 +55,6 @@ class CertificateAdmin(admin.ModelAdmin):
         'total_commits'
     ]
     list_display_links = ['assignment']
+    list_filter = ['assignment__course']
 
 admin.site.register(Certificate, CertificateAdmin)
