@@ -74,6 +74,6 @@ class SolutionAdmin(admin.ModelAdmin):
         'repo'
     ]
     list_display_links = ['repo']
-    list_filter = ('task__course',)
+    list_filter = ('task__course', 'user')
 
 admin.site.register(Solution, SolutionAdmin)
