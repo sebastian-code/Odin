@@ -57,7 +57,6 @@ class TempCertificate:
         if self.has_cheated and self.cheated_solutions:
             self.log_cheating()
         else:
-            print self.weekly_commits
             Certificate.objects.filter(assignment=self.assignment).delete()
             self.create_db_certificate()
             print 'Created certificate for {}'.format(self.assignment.user)
@@ -71,7 +70,13 @@ class SolutionGithubRepo:
 
     def __set_api_repo(self, user, repo_name):
         github_client = Github(settings.GITHUB_OATH_TOKEN)
-        return github_client.get_user(user).get_repo(repo_name)
+        try:
+            return github_client.get_user(user).get_repo(repo_name)
+        except GithubException:
+            return None
+
+    def is_invalid_repo(self):
+        return self.api_repo is None
 
     def is_cheating(self):
         profile_github_account = self.db_solution.get_user_github_username()
@@ -79,8 +84,11 @@ class SolutionGithubRepo:
 
     def get_commits_count(self, start, end):
         author = self.db_solution.get_user_github_username()
-        print author
         commits = self.api_repo.get_commits(since=start, until=end, author=author)
+        count = self.__count_commits(commits)
+        return count if count > 0 else self.__count_commits(self.api_repo.get_commits(since=start, until=end))
+
+    def __count_commits(self, commits):
         count = 0
         for c in commits:
             count += 1

@@ -14,7 +14,8 @@ def generate_certificate(assignment, solutions):
 
         if is_new_valid_github_account(github_parameters, visited_repos):
             solution_github_repo = SolutionGithubRepo(github_parameters['user'], github_parameters['repo_name'], solution)
-
+            if solution_github_repo.is_invalid_repo():
+                return
             if solution_github_repo.is_cheating():
                 temp_certificate.add_cheated_solution(solution)
                 continue
