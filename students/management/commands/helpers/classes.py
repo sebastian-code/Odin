@@ -27,7 +27,7 @@ class TempCertificate:
         self.cheated_solutions.append(solution)
         self.has_cheated = True
 
-    def create_db_weekly_commit(self, solution, solution_github_repo):
+    def save_weekly_commit_in_db(self, solution, solution_github_repo):
         model_startime = solution.task.course.application_until
         start_time = datetime(year=model_startime.year, month=model_startime.month, day=model_startime.day)
 
@@ -47,18 +47,18 @@ class TempCertificate:
             f.write('{}) Cheated on task {} - {}. Given solution - {}\n'.format(i, solution.task.name, solution.task.description, solution.repo))
         f.close()
 
-    def create_db_certificate(self):
+    def save_certificate_in_db(self):
         db_certificate = Certificate.objects.create(assignment=self.assignment, issues_closed=self.closed_issues, issues_opened=self.open_issues, total_commits=self.get_total_commits())
         # can't reference a list as a ManyToManyField argument
         for w in self.weekly_commits:
             db_certificate.weekly_commits.add(w)
 
-    def log_or_add_in_db(self):
+    def log_or_save_in_db(self):
         if self.has_cheated and self.cheated_solutions:
             self.log_cheating()
         else:
             Certificate.objects.filter(assignment=self.assignment).delete()
-            self.create_db_certificate()
+            self.save_certificate_in_db()
             print 'Created certificate for {}'.format(self.assignment.user)
 
 

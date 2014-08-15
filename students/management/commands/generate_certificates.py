@@ -21,9 +21,9 @@ def generate_certificate(assignment, solutions):
                 continue
             api_stats = solution_github_repo.get_stats()
             temp_certificate.update_stats(api_stats)
-            temp_certificate.create_db_weekly_commit(solution, solution_github_repo)
+            temp_certificate.save_weekly_commit_in_db(solution, solution_github_repo)
             visited_repos.append(github_parameters)
-    temp_certificate.log_or_add_in_db()
+    temp_certificate.log_or_save_in_db()
 
 
 def is_new_valid_github_account(github_parameters, visited_repos):
