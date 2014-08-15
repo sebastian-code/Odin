@@ -265,5 +265,3 @@ class ValidatorsTest(unittest.TestCase):
         self.assertRaises(ValidationError, validate_linkedin, invalid_url)
         valid_url = 'https://www.linkedin.com/in/jeffweiner08gst'  # Linkedin CEO
         self.assertIsNone(validate_linkedin(valid_url))
-        valid_url = 'https://www.linkedin.com/in/jeffweiner08gst'  # Linkedin CEO
-        self.assertIsNone(validate_linkedin(valid_url))
