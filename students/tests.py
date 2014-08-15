@@ -1,5 +1,8 @@
 import datetime
+<<<<<<< HEAD
 import unittest
+=======
+>>>>>>> 399e6401c0e7f3de1711560fc7fc2bfcdb3e680f
 
 from django.test import TestCase
 from django.test.client import Client
@@ -7,10 +10,14 @@ from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.core.validators import ValidationError
 
-from .models import CheckIn, User, HrLoginLog, CourseAssignment, Solution
 from courses.models import Partner, Course, Task
 from validators import validate_mac, validate_url, validate_github, validate_linkedin
+from .models import CheckIn, User, HrLoginLog, CourseAssignment, Solution
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 399e6401c0e7f3de1711560fc7fc2bfcdb3e680f
 
 class CheckInCaseTest(TestCase):
 
@@ -240,7 +247,11 @@ class SolutionTest(TestCase):
         self.assertEqual(200, response.status_code)
 
 
+<<<<<<< HEAD
 class ValidatorsTest(unittest.TestCase):
+=======
+class ValidatorsTest(TestCase):
+>>>>>>> 399e6401c0e7f3de1711560fc7fc2bfcdb3e680f
 
     def test_validate_mac(self):
         invalid_mac = ':ez:77:b4:14:66:b'
@@ -263,5 +274,16 @@ class ValidatorsTest(unittest.TestCase):
     def test_validate_linkedin(self):
         invalid_url = 'http://facebook.com'
         self.assertRaises(ValidationError, validate_linkedin, invalid_url)
+<<<<<<< HEAD
         valid_url = 'https://www.linkedin.com/in/jeffweiner08gst'  # Linkedin CEO
         self.assertIsNone(validate_linkedin(valid_url))
+=======
+        valid_url = 'https://www.linkedin.com/in/jeffweiner08gst' # Linkedin CEO
+        self.assertIsNone(validate_linkedin(valid_url))
+
+    def test_validate_students_error_on_full_clean(self):
+        self.student_user = User.objects.create_user('ivo_student@gmail.com', '123')
+        self.student_user.status = User.STUDENT
+        self.student_user.mac = "00:00:00:00:00:0"
+        self.assertRaises(ValidationError, self.student_user.full_clean)
+>>>>>>> 399e6401c0e7f3de1711560fc7fc2bfcdb3e680f
