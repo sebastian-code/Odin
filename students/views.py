@@ -28,6 +28,7 @@ def logout(request):
     return redirect('/')
 
 
+@login_required
 def user_profile(request):
     return render(request, 'profile.html', locals())
 
