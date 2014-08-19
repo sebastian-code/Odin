@@ -1,14 +1,12 @@
-import sys
-
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '*18ji*lhdl*-z7smqprw8g1r!ez0&n78s1kjue#g3@s(^hx%z('
 
 DATABASES = {
     'default': {
-        'ENGINE':   'django.db.backends.mysql',
-        'NAME':     'odintest',
-        'USER':     'travis',
+        'ENGINE':   'django.db.backends.postgresql_psycopg2',
+        'NAME':     'testdb',
+        'USER':     'postgres',
         'PASSWORD': '',
         'HOST':     'localhost',
         'PORT':     '',
