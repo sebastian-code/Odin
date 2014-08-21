@@ -5,14 +5,17 @@ python:
 
 services : postgresql
 # command to install dependencies
-install: 
-  - pip install -r requirements.txt --use-mirrors
+install:
+  - pip install -r requirements/travis.pip --use-mirrors
 
 before_script:
   - psql -c "CREATE DATABASE testdb;" -U postgres
 
 # command to run tests
-script: 
+script:
   - python manage.py syncdb --all --noinput
   - python manage.py migrate --fake
-  - python manage.py test
+  - coverage run --source='.' manage.py test
+
+after_success:
+  - coveralls --rcfile=requirements/travis_coverage.rc
