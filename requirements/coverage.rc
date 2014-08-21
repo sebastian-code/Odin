@@ -1,6 +1,7 @@
 [report]
 omit = */migrations/*,odin/*,*/admin.py,*/tests.py,*/__init__.py,manage.py
 exclude_lines =
+    class Command
     pragma: no cover
     def __repr__
     raise AssertionError
