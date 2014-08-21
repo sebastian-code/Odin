@@ -1,11 +1,11 @@
+import re
+from github import Github
+
 from django.core.management.base import BaseCommand
 from django.conf import settings
 from django.utils import timezone
 
 from courses.models import Course, Task
-
-import re
-from github import Github
 
 
 def get_api_repo(github_parameters):
