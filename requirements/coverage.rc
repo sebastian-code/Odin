@@ -1,5 +1,5 @@
 [report]
-omit = */migrations/*
+omit = "*/migrations/*", "odin/*", "*/admin.py"
 exclude_lines =
     pragma: no cover
     def __repr__
