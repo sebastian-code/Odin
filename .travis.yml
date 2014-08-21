@@ -18,4 +18,4 @@ script:
   - coverage run --source='.' manage.py test
 
 after_success:
-  - coveralls --rcfile=requirements/travis_coverage.rc
+  - coveralls --rcfile=requirements/coverage.rc
