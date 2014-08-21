@@ -1,3 +1,4 @@
+
 from django.core.urlresolvers import reverse
 from django.db import models
 
@@ -16,7 +17,6 @@ class Course(models.Model):
     applications_url = models.URLField(null=True, blank=True)
     application_until = models.DateField()
     next_season_mail_list = models.URLField(null=True, blank=True)
-
     start_time = models.DateField(blank=True, null=True)
     end_time = models.DateField(blank=True, null=True)
 
@@ -66,7 +66,7 @@ class WeeklyCommit(models.Model):
 
 
 class Certificate(models.Model):
-    assignment = models.ForeignKey('students.CourseAssignment', unique=True)
+    assignment = models.OneToOneField('students.CourseAssignment')
     weekly_commits = models.ManyToManyField(WeeklyCommit)
     issues_closed = models.IntegerField(default=0)
     issues_opened = models.IntegerField(default=0)
