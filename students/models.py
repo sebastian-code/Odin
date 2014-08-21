@@ -116,8 +116,8 @@ class CourseAssignment(models.Model):
     course = models.ForeignKey(Course)
     points = models.PositiveIntegerField(default='0')
     group_time = models.SmallIntegerField(choices=GROUP_TIME_CHOICES)
-    favourite_partners = models.ManyToManyField(Partner)
     cv = models.FileField(blank=True, null=True, upload_to='cvs')
+    favourite_partners = models.ManyToManyField(Partner)
 
     class Meta:
         unique_together = (('user', 'course'),)
@@ -159,10 +159,10 @@ class Solution(models.Model):
         # Ex: https://github.com/syndbg/HackBulgaria/tree/master/Core-Java-1
         # Becomes  [u'https:', u'', u'github.com', u'syndbg', u'HackBulgaria', u'tree', u'master', u'Core-Java-1']
         # Only 4th and 5th elements are relevant
-        return {'user': github_url_split[0], 'repo_name': github_url_split[1]} if len(github_url_split) >= 2 else {'user': github_url_split[0]}
+        return {'user_name': github_url_split[0], 'repo_name': github_url_split[1]} if len(github_url_split) >= 2 else {'user_name': github_url_split[0]}
 
     def get_user_github_username(self):
-        return self.__parse_github_url(self.user.github_account)['user']
+        return self.__parse_github_url(self.user.github_account)['user_name']
 
     def get_github_user_and_repo_names(self):
         return self.__parse_github_url(self.repo)
