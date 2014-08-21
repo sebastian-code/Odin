@@ -41,7 +41,7 @@ git clone https://github.com/HackBulgaria/Odin.git
 ```
 sudo apt-get install python-dev
 sudo apt-get install libmysqlclient-dev
-pip install -r requirements.txt
+pip install -r requirements/stable.pip
 ```
 
 # Setup a database
