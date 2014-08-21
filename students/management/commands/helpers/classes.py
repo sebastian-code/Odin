@@ -2,7 +2,7 @@ from django.conf import settings
 from courses.models import WeeklyCommit, Certificate
 
 from github import Github, GithubException
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 class TempCertificate:
@@ -15,6 +15,16 @@ class TempCertificate:
         self.total_commits = 0
         self.has_cheated = True
         self.cheated_solutions = []
+        self.start_time = self.__set_start_time()
+        self.end_time = self.__set_end_time()
+
+    def __set_start_time(self):
+        start_time = self.assignment.course.start_time
+        return datetime(year=start_time.year, month=start_time.month, day=start_time.day)
+
+    def __set_end_time(self):
+        end_time = self.assignment.course.end_time + timedelta(days=31)
+        return datetime(year=end_time.year, month=end_time.month, day=end_time.day)
 
     def get_total_commits(self):
         return reduce(lambda x, y: x + y, map(lambda x: x.commits_count, self.weekly_commits))
@@ -27,14 +37,8 @@ class TempCertificate:
         self.cheated_solutions.append(solution)
         self.has_cheated = True
 
-    def save_weekly_commit_in_db(self, solution, solution_github_repo):
-        model_startime = solution.task.course.application_until
-        start_time = datetime(year=model_startime.year, month=model_startime.month, day=model_startime.day)
-
-        model_endtime = solution.task.deadline
-        end_time = datetime(year=model_endtime.year, month=model_endtime.month, day=model_endtime.day)
-
-        commits_count = solution_github_repo.get_commits_count(start_time, end_time)
+    def save_weekly_commit_in_db(self, solution_github_repo):
+        commits_count = solution_github_repo.get_commits_count()
         weekly_commit = WeeklyCommit.objects.create(commits_count=commits_count)
         self.weekly_commits.append(weekly_commit)
 
@@ -44,7 +48,7 @@ class TempCertificate:
         filename = 'Cheater[{}] {} - {}'.format(course_name, user, user.email)
         f = open(filename, 'w+')
         for i, solution in enumerate(self.cheated_solutions, start=1):
-            f.write('{}) Cheated on task {} - {}. Given solution - {}\n'.format(i, solution.task.name, solution.task.description, solution.repo))
+            f.write('{}) Cheated on tapsk {} - {}. Given solution - {}\n'.format(i, solution.task.name, solution.task.description, solution.repo))
         f.close()
 
     def save_certificate_in_db(self):
@@ -64,14 +68,15 @@ class TempCertificate:
 
 class SolutionGithubRepo:
 
-    def __init__(self, user, repo_name, solution):
+    def __init__(self, user_name, repo_name, solution):
         self.solution = solution
-        self.api_repo = self.__set_api_repo(user, repo_name)
+        self.api_repo = self.__set_api_repo(user_name, repo_name)
+        self.commits_count = 0
 
-    def __set_api_repo(self, user, repo_name):
+    def __set_api_repo(self, user_name, repo_name):
         github_client = Github(settings.GITHUB_OATH_TOKEN)
         try:
-            return github_client.get_user(user).get_repo(repo_name)
+            return github_client.get_user(user_name).get_repo(repo_name)
         except GithubException:
             return None
 
@@ -82,11 +87,18 @@ class SolutionGithubRepo:
         profile_github_account = self.solution.get_user_github_username()
         return self.api_repo.has_in_collaborators(profile_github_account) is False
 
-    def get_commits_count(self, start, end):
+    def is_fork(self):
+        return self.api_repo.fork
+
+    def update_commits_count(self, start, end):
         author = self.solution.get_user_github_username()
         commits = self.api_repo.get_commits(since=start, until=end, author=author)
         count = self.__count_commits(commits)
-        return count if count > 0 else self.__count_commits(self.api_repo.get_commits(since=start, until=end))
+        count = count if count > 0 else self.__count_commits(self.api_repo.get_commits(since=start, until=end))
+        self.commits_count = count
+
+    def get_commits_count(self):
+        return self.commits_count
 
     def __count_commits(self, commits):
         count = 0
