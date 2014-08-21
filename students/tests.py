@@ -34,7 +34,6 @@ class CheckInCaseTest(TestCase):
             'mac': self.student_user.mac,
             'token': self.checkin_settings,
         })
-
         self.assertEqual(response.status_code, 200)
 
     def test_new_check_in_result(self):
@@ -42,20 +41,16 @@ class CheckInCaseTest(TestCase):
             'mac': self.student_user.mac,
             'token': self.checkin_settings,
         })
-
         checkin = CheckIn.objects.get(student=self.student_user)
-
-        assert checkin is not None
+        self.assertIsNotNone(checkin)
 
     def test_new_check_in_case_insensitive(self):
         response = self.client.post('/set-check-in/', {
             'mac': self.student_user.mac,
             'token': self.checkin_settings,
         })
-
         checkin = CheckIn.objects.get(student=self.student_user)
-
-        assert checkin is not None
+        self.assertIsNotNone(checkin)
 
     def test_double_checkin_same_day(self):
         response_first = self.client.post('/set-check-in/', {'mac': self.student_user.mac,
