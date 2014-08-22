@@ -8,7 +8,7 @@ from django.utils import timezone
 
 from .management.commands import generate_tasks
 from students.models import User, CourseAssignment, Solution
-from .models import Course, Task, Certificate
+from .models import Course, Task, Certificate, Partner
 
 
 class CoursesTest(TestCase):
@@ -50,6 +50,14 @@ class CoursesTest(TestCase):
         response = self.client.get(
             reverse('courses:course-students', kwargs={'course_id': self.course.id}))
         self.assertEqual(200, response.status_code)
+
+
+class PartnerTest(TestCase):
+    def setUp(self):
+        self.partner = Partner.objects.create(name='Potato Company', description='Potato company')
+
+    def test_unicode(self):
+        self.assertEqual(self.partner.name, unicode(self.partner))
 
 
 class CertificateTest(TestCase):
