@@ -276,6 +276,7 @@ class SolutionTest(TestCase):
         })
 
         after_adding = Solution.objects.count()
+        # may be faulty if tested in DB as sqlite3
         self.assertEqual(before_adding, after_adding)
         self.assertEqual(422, response.status_code)
 
