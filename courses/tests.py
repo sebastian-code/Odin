@@ -1,5 +1,6 @@
 import datetime
 import mock
+from github import Repository
 
 from django.core.urlresolvers import reverse
 from django.test import TestCase, client
@@ -109,9 +110,12 @@ class CertificateTest(TestCase):
 
 
 class TaskGenerationTest(TestCase):
-    def test_get_api_repo(self):
-        # needs more advanced mocking
-        pass
+    @mock.patch('courses.management.commands.generate_tasks.Github')
+    def test_get_api_repo(self, mocked_github):
+        github_parameters = {'user': 'syndbg', 'repo_name': 'HackBulgaria'}
+        mocked_github.get_user.get_repo.return_value = Repository
+        generate_tasks.get_api_repo(github_parameters)
+        self.assertTrue(mocked_github.called)
 
     def test_get_user_and_repo_names(self):
         url = 'https://github.com/syndbg/HackBulgaria/tree/master/Core-Java-1'
@@ -136,7 +140,6 @@ class TaskGenerationTest(TestCase):
         self.assertTrue(generate_tasks.is_exam_task(mocked))
         mocked.path = 'exams/exam2/README.md'
         self.assertFalse(generate_tasks.is_exam_task(mocked))
-
 
     def test_get_dir_and_task_names(self):
         path = 'exams/exam1/1-Beers-And-Fries/README.md'
