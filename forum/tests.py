@@ -78,6 +78,7 @@ class ForumTest(TestCase):
 
         after_add = Topic.objects.count()
         self.assertEqual(before_add + 1, after_add)
+        self.assertEqual(302, response.status_code)
         self.assertRedirects(response, 'category/{}/'.format(self.category.id))
         self.assertTemplateUsed('add_topic.html', response)
 
@@ -93,6 +94,7 @@ class ForumTest(TestCase):
         after_add = Topic.objects.count()
 
         self.assertEqual(before_add, after_add)
+        self.assertEqual(302, response.status_code)
         self.assertRedirects(response, 'login/?next=/add-topic/{}/'.format(self.category.id))
         self.assertTemplateNotUsed('add_topic.html', response)
 
@@ -106,6 +108,7 @@ class ForumTest(TestCase):
 
         edited_topic = Topic.objects.filter(title='My Topic 2')
         self.assertEqual(1, edited_topic.count())
+        self.assertEqual(302, response.status_code)
         self.assertTemplateUsed('edit_topic.html', response)
 
     def test_edit_topic_not_logged(self):
@@ -115,6 +118,7 @@ class ForumTest(TestCase):
             'text': 'Lqlqlq lqlql',
         })
 
+        self.assertEqual(302, response.status_code)
         self.assertRedirects(response, 'login/?next=/edit-topic/{}/'.format(self.topic.id))
         self.assertTemplateNotUsed('edit_topic.html', response)
 
@@ -140,6 +144,7 @@ class ForumTest(TestCase):
 
         after_add = Comment.objects.count()
         self.assertEqual(before_add + 1, after_add)
+        self.assertEqual(302, response.status_code)
         self.assertTemplateUsed('show_topic.html', response)
 
     def test_add_comment_not_logged(self):
@@ -152,6 +157,7 @@ class ForumTest(TestCase):
 
         after_add = Comment.objects.count()
         self.assertEqual(before_add, after_add)
+        self.assertEqual(200, response.status_code)
         self.assertTemplateNotUsed('show_topic.html', response)
 
     def test_edit_comment(self):
@@ -163,8 +169,9 @@ class ForumTest(TestCase):
         })
 
         edited_comment = Comment.objects.filter(text=new_text)
-        self.assertRedirects(response, 'topic/{}/'.format(edited_comment.first().id))
         self.assertEqual(1, edited_comment.count())
+        self.assertEqual(302, response.status_code)
+        self.assertRedirects(response, 'topic/{}/'.format(edited_comment.first().id))
         self.assertTemplateUsed('edit_comment.html', response)
 
     def test_edit_comment_not_owned(self):
@@ -229,33 +236,15 @@ class ForumTest(TestCase):
         response = self.client.post(
             reverse('forum:add-topic',  kwargs={'category_id': self.category.id}),
             {
-                'title': 'test subscriging after new topic',
+                'title': 'test subscribing after new topic',
                 'text': 'Lqlqlq',
                 'category': self.category,
             }
         )
 
-        new_topic = Topic.objects.filter(title="test subscriging after new topic").first()
+        new_topic = Topic.objects.filter(title="test subscribing after new topic").first()
         self.assertTrue(new_topic in self.student_user.subscribed_topics.all())
-
-    def test_subscribing_after_new_topic(self):
-        self.client = client.Client()
-        self.client.login(
-            username=self.student_user.email,
-            password='123'
-        )
-
-        response = self.client.post(
-            reverse('forum:add-topic',  kwargs={'category_id': self.category.id}),
-            {
-                'title': 'test subscriging after new topic',
-                'text': 'Lqlqlq',
-                'category': self.category,
-            }
-        )
-
-        new_topic = Topic.objects.filter(title="test subscriging after new topic").first()
-        self.assertTrue(new_topic in self.student_user.subscribed_topics.all())
+        self.assertEqual(302, response.status_code)
         self.assertTemplateUsed('add_topic.html', response)
 
     def test_subscribing_after_new_comment(self):
@@ -276,6 +265,7 @@ class ForumTest(TestCase):
             'topic': empty_topic,
         })
 
+        self.assertEqual(302, response.status_code)
         self.assertTrue(empty_topic in self.student_user.subscribed_topics.all())
         self.assertTemplateUsed('show_topic.html', response)
 
@@ -306,6 +296,7 @@ class ForumTest(TestCase):
             'topic': empty_topic,
         })
 
+        self.assertEqual(302, response.status_code)
         self.assertTrue(empty_topic not in self.student_user.subscribed_topics.all())
         self.assertTemplateUsed('show_topic.html', response)
 
