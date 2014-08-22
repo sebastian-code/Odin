@@ -6,10 +6,32 @@ from django.test.client import Client
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.core.validators import ValidationError
+from django.db import IntegrityError
+from django.contrib.auth.hashers import make_password
 
 from courses.models import Partner, Course, Task
 from validators import validate_mac, validate_url, validate_github, validate_linkedin
 from .models import CheckIn, User, HrLoginLog, CourseAssignment, Solution
+
+
+class UserManagerTest(TestCase):
+    def setUp(self):
+        self.email = 'user@internet.com'
+        self.raw_password = 'abc123'
+
+    def test_create_user(self):
+        result = User.objects.create_user(self.email, self.raw_password)
+        hashed_password = make_password(self.raw_password)
+        self.assertRaises(IntegrityError, User.objects.create, username=self.email, password=hashed_password)
+        self.assertEqual(self.email, result.username)
+
+    def test_create_user_with_invalid_email(self):
+        self.assertRaises(ValueError, User.objects.create_user, email=None, password=self.raw_password)
+
+    def test_create_superuser(self):
+        result = User.objects.create_superuser(self.email, self.raw_password)
+        self.assertTrue(result.is_superuser)
+        self.assertTrue(result.is_staff)
 
 
 class CheckInCaseTest(TestCase):
