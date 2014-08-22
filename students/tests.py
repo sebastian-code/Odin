@@ -155,6 +155,7 @@ class SolutionTest(TestCase):
 
         self.student_user = User.objects.create_user('ivo_student@gmail.com', '123')
         self.student_user.status = User.STUDENT
+        self.student_user.github_account = 'https://github.com/Ivaylo-Bachvarov'
         self.student_user.save()
 
         self.partner_potato = Partner.objects.create(
@@ -176,6 +177,23 @@ class SolutionTest(TestCase):
             name="Green task",
             course=self.course,
         )
+        self.task_url = 'https://github.com/HackBulgaria/Frontend-JavaScript-1/tree/master/week1/2-jQuery-Gauntlet'
+        self.task = Task.objects.create(course=self.course, description=self.task_url, name='<2> jQuery-Gauntlet')
+        self.solution_url = 'https://github.com/syndbg/HackBulgaria/'
+        self.solution = Solution.objects.create(task=self.task, user=self.student_user, repo=self.solution_url)
+
+    def test_get_user_github_username(self):
+        self.assertEqual('Ivaylo-Bachvarov', self.solution.get_user_github_username())
+
+    def test_get_github_user_and_repo_names(self):
+        result = self.solution.get_github_user_and_repo_names()
+        self.assertEqual('syndbg', result['user_name'])
+        self.assertEqual('HackBulgaria', result['repo_name'])
+        self.solution.repo = 'https://github.com/syndbg/'
+
+        result = self.solution.get_github_user_and_repo_names()
+        self.assertEqual('syndbg', result['user_name'])
+        self.assertEqual('', result['repo_name'])
 
     def test_create_a_new_assignment(self):
         self.client = Client()
@@ -183,13 +201,16 @@ class SolutionTest(TestCase):
         response = self.client.get(
             reverse('students:assignment', kwargs={'id': self.assignment.id}))
         self.assertEqual(200, response.status_code)
+        self.assertTemplateUsed('assignment.html', response)
 
     def test_email_field_visibility_when_partner_hr(self):
         self.client = Client()
         self.client.login(username='ivan_hr@gmail.com', password='1234')
         response = self.client.get(
             reverse('students:assignment', kwargs={'id': self.assignment.id}))
+        self.assertEqual(200, response.status_code)
         self.assertContains(response, self.assignment.user.email)
+        self.assertTemplateUsed('assignment.html', response)
 
     def test_email_field_visibility_when_non_partner_hr(self):
         self.client = Client()
@@ -197,6 +218,7 @@ class SolutionTest(TestCase):
         response = self.client.get(
             reverse('students:assignment', kwargs={'id': self.assignment.id}))
         self.assertNotContains(response, self.assignment.user.email)
+        self.assertTemplateUsed('assignment.html', response)
 
     def test_add_solution_get_status(self):
         self.client = Client()
