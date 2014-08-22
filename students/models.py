@@ -72,7 +72,7 @@ class User(AbstractUser):
     def __unicode__(self):
         return unicode(self.get_full_name())
 
-    def getAvatarUrl(self):
+    def get_avatar_url(self):
         if not self.avatar:
             return settings.STATIC_URL + settings.NO_AVATAR_IMG
         return self.avatar.url
