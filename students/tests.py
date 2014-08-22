@@ -34,6 +34,26 @@ class UserManagerTest(TestCase):
         self.assertTrue(result.is_staff)
 
 
+class UserTest(TestCase):
+    def setUp(self):
+        self.student_user = User.objects.create_user('ivo_student@gmail.com', '123')
+        self.student_user.status = User.STUDENT
+        self.student_user.mac = '4c:80:93:1f:a4:50'
+        self.student_user.save()
+
+    def test_unicode(self):
+        self.assertEqual(self.student_user.get_full_name(), unicode(self.student_user))
+
+    def test_get_avatar_url(self):
+        self.student_user.avatar = None
+        self.assertEqual(settings.STATIC_URL + settings.NO_AVATAR_IMG, self.student_user.get_avatar_url())
+        self.student_user.avatar = 'Kappa.jpg'
+        self.assertEqual('/media/Kappa.jpg', self.student_user.get_avatar_url())
+
+    def test_get_courses(self):
+        self.assertEqual('', self.student_user.get_courses())
+
+
 class CheckInCaseTest(TestCase):
 
     def setUp(self):
@@ -104,6 +124,8 @@ class CourseAssignmentTest(TestCase):
         )
 
         self.student_user = User.objects.create_user('ivo_student@gmail.com', '123')
+        self.student_user.first_name = 'Ivaylo'
+        self.student_user.last_name = 'Bachvarov'
         self.student_user.status = User.STUDENT
         self.student_user.save()
 
@@ -121,6 +143,22 @@ class CourseAssignmentTest(TestCase):
             user=self.student_user, course=self.course, group_time=CourseAssignment.EARLY)
         self.assignment.favourite_partners.add(self.partner_potato)
         self.third_wheel = User.objects.create_user('third_wheel@gmail.com', '456')
+
+    def test_unicode(self):
+        self.assertEqual('<Ivaylo Bachvarov> Test Course - 1', unicode(self.assignment))
+
+    def test_get_favourite_partners(self):
+        self.assertEqual('Potato Company', self.assignment.get_favourite_partners())
+        self.assignment.favourite_partners.add(self.partner_salad)
+        self.assertEqual('Potato Company; Salad Company', self.assignment.get_favourite_partners())
+
+    def test_has_valid_github_account(self):
+        self.assertFalse(self.assignment.has_valid_github_account())
+        self.student_user.github_account = 'http://hackbulgaria.com'
+        self.assertFalse(self.assignment.has_valid_github_account())
+
+        self.student_user.github_account = 'https://github.com/Ivaylo-Bachvarov'
+        self.assertTrue(self.assignment.has_valid_github_account())
 
     def test_create_a_new_assignment(self):
         self.client = Client()
