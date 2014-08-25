@@ -1,10 +1,10 @@
 import re
 from github import Github
+from datetime import timedelta
 
 from django.core.management.base import BaseCommand
 from django.conf import settings
 from django.utils import timezone
-
 from courses.models import Course, Task
 
 
@@ -25,13 +25,13 @@ def is_weekly_task(tree_element):
     regex = re.compile(r'^week\d+')
     # paths as week1/2-jQuery-Gauntlet/<N>/README.md won't be counted as single tasks
     # instead there'll be only one week1/2-jQuery-Gauntlet/README.md task
-    return regex.match(tree_element.path) != None and tree_element.path.count('/') < 3
+    return regex.match(tree_element.path) is not None and tree_element.path.count('/') < 3
 
 
 def is_exam_task(tree_element):
     regex = re.compile(r'^exams/exam\d+')
     # paths as <exams/exam2/README.md> won't be counted as tasks
-    return regex.match(tree_element.path) != None and tree_element.path.count('/') > 2
+    return regex.match(tree_element.path) is not None and tree_element.path.count('/') > 2
 
 
 def get_dir_and_task_names(path):
@@ -41,9 +41,8 @@ def get_dir_and_task_names(path):
 
 
 def get_deadline():
-    deadline = timezone.now()
-    # deadline is always 7 days from today
-    return deadline.replace(day=deadline.day + 7, hour=23, minute=56, second=56)
+    date_now = timezone.now().replace(hour=23, minute=56, second=56)
+    return date_now + timedelta(days=7)
 
 
 def get_formatted_task_url(raw_task_url, dir_task_names, is_exam):

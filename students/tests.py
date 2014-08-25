@@ -1,8 +1,7 @@
 import datetime
 import unittest
 
-from django.test import TestCase
-from django.test.client import Client
+from django.test import TestCase, Client
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.core.validators import ValidationError
@@ -15,6 +14,7 @@ from .models import CheckIn, User, HrLoginLog, CourseAssignment, Solution
 
 
 class UserManagerTest(TestCase):
+
     def setUp(self):
         self.email = 'user@internet.com'
         self.raw_password = 'abc123'
@@ -35,6 +35,7 @@ class UserManagerTest(TestCase):
 
 
 class UserTest(TestCase):
+
     def setUp(self):
         self.student_user = User.objects.create_user('ivo_student@gmail.com', '123')
         self.student_user.status = User.STUDENT
@@ -57,7 +58,6 @@ class UserTest(TestCase):
 class CheckInCaseTest(TestCase):
 
     def setUp(self):
-        self.client = Client()
         self.checkin_settings = '123'
         settings.CHECKIN_TOKEN = self.checkin_settings
 
@@ -161,21 +161,18 @@ class CourseAssignmentTest(TestCase):
         self.assertTrue(self.assignment.has_valid_github_account())
 
     def test_create_a_new_assignment(self):
-        self.client = Client()
         self.client.login(username='ivo_student@gmail.com', password='123')
         response = self.client.get(
             reverse('students:assignment', kwargs={'id': self.assignment.id}))
         self.assertEqual(200, response.status_code)
 
     def test_email_field_visibility_when_partner_hr(self):
-        self.client = Client()
         self.client.login(username='ivan_hr@gmail.com', password='1234')
         response = self.client.get(
             reverse('students:assignment', kwargs={'id': self.assignment.id}))
         self.assertContains(response, self.assignment.user.email)
 
     def test_email_field_visibility_when_non_partner_hr(self):
-        self.client = Client()
         self.client.login(username='third_wheel@gmail.com', password='456')
         response = self.client.get(
             reverse('students:assignment', kwargs={'id': self.assignment.id}))
@@ -234,7 +231,6 @@ class SolutionTest(TestCase):
         self.assertEqual('', result['repo_name'])
 
     def test_create_a_new_assignment(self):
-        self.client = Client()
         self.client.login(username='ivo_student@gmail.com', password='123')
         response = self.client.get(
             reverse('students:assignment', kwargs={'id': self.assignment.id}))
@@ -242,7 +238,6 @@ class SolutionTest(TestCase):
         self.assertTemplateUsed('assignment.html', response)
 
     def test_email_field_visibility_when_partner_hr(self):
-        self.client = Client()
         self.client.login(username='ivan_hr@gmail.com', password='1234')
         response = self.client.get(
             reverse('students:assignment', kwargs={'id': self.assignment.id}))
@@ -251,7 +246,6 @@ class SolutionTest(TestCase):
         self.assertTemplateUsed('assignment.html', response)
 
     def test_email_field_visibility_when_non_partner_hr(self):
-        self.client = Client()
         self.client.login(username='third_wheel@gmail.com', password='456')
         response = self.client.get(
             reverse('students:assignment', kwargs={'id': self.assignment.id}))
@@ -259,29 +253,24 @@ class SolutionTest(TestCase):
         self.assertTemplateUsed('assignment.html', response)
 
     def test_add_solution_get_status(self):
-        self.client = Client()
         self.client.login(username='ivo_student@gmail.com', password='123')
         response = self.client.get(reverse('students:add-solution'))
         self.assertEqual(405, response.status_code)
 
     def test_add_solution_not_existing_task(self):
-        self.client = Client()
         before_adding = Solution.objects.count()
         self.client.login(username='ivo_student@gmail.com', password='123')
 
         response = self.client.post(reverse('students:add-solution'),
                                     {
-            'task': 3,
+            'task': 3777,
             'repo': 'https://github.com/HackBulgaria/Odin',
         })
-
         after_adding = Solution.objects.count()
-        # may be faulty if tested in DB as sqlite3
         self.assertEqual(before_adding, after_adding)
         self.assertEqual(422, response.status_code)
 
     def test_add_solution_status_code(self):
-        self.client = Client()
         self.client.login(username='ivo_student@gmail.com', password='123')
 
         before_adding = Solution.objects.count()
@@ -296,7 +285,6 @@ class SolutionTest(TestCase):
         self.assertEqual(200, response.status_code)
 
     def test_edit_solution(self):
-        self.client = Client()
         self.client.login(username='ivo_student@gmail.com', password='123')
 
         before_adding = Solution.objects.count()
