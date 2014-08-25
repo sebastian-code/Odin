@@ -1,14 +1,15 @@
 import datetime
-import mock
-from github import Repository
 
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.utils import timezone
 
-from .management.commands import generate_tasks
-from students.models import User, CourseAssignment, Solution
+import mock
+from github import Repository
+
 from .models import Course, Task, Certificate, Partner
+from students.models import User, CourseAssignment, Solution
+from .management.commands import generate_tasks
 
 
 class CoursesTest(TestCase):

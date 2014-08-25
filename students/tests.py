@@ -1,7 +1,7 @@
 import datetime
 import unittest
 
-from django.test import TestCase, Client
+from django.test import TestCase
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.core.validators import ValidationError

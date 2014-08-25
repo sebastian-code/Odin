@@ -1,8 +1,8 @@
 from django.contrib import admin
 
-from models import Certificate, Course, Partner, Task
-
 from adminsortable.admin import SortableAdminMixin
+
+from models import Certificate, Course, Partner, Task
 
 
 class CourseAdmin(admin.ModelAdmin):

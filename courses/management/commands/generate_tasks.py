@@ -1,10 +1,12 @@
 import re
-from github import Github
-from datetime import timedelta
 
 from django.core.management.base import BaseCommand
 from django.conf import settings
 from django.utils import timezone
+
+from github import Github
+from datetime import timedelta
+
 from courses.models import Course, Task
 
 

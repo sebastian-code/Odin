@@ -1,5 +1,6 @@
 from django.conf.urls import patterns, url
 
+
 urlpatterns = patterns('students.views',
     url(r'^login/$', 'login', name='login'),
     url(r'^assignment/(?P<id>[0-9]+)/$', 'assignment', name='assignment'),

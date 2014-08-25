@@ -1,3 +1,6 @@
+import datetime
+import json
+
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render, get_object_or_404
 from django.views.decorators.http import require_http_methods
@@ -11,9 +14,6 @@ from .forms import UserEditForm, AddNote, VoteForPartner, AddSolutionForm
 from .models import CourseAssignment, UserNote, User, CheckIn, Task, Solution
 from courses.models import Course, Certificate
 from forum.models import Comment
-
-import datetime
-import json
 
 
 def login(request):
