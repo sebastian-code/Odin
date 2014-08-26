@@ -1,12 +1,11 @@
-from django.forms import ModelForm
 from django import forms
-
-from .models import Topic, Comment
 
 from pagedown.widgets import PagedownWidget
 
+from .models import Topic, Comment
 
-class AddTopicForm(ModelForm):
+
+class AddTopicForm(forms.ModelForm):
     text = forms.CharField(widget=PagedownWidget())
 
     def __init__(self, *args, **kwargs):
@@ -26,7 +25,7 @@ class AddTopicForm(ModelForm):
         exclude = ['author', 'category']
 
 
-class AddCommentForm(ModelForm):
+class AddCommentForm(forms.ModelForm):
     text = forms.CharField(widget=PagedownWidget())
 
     def __init__(self, *args, **kwargs):

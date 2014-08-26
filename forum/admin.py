@@ -1,8 +1,8 @@
 from django.contrib import admin
 
-from .models import Category, Topic, Comment
-
 from adminsortable.admin import SortableAdminMixin
+
+from .models import Category, Topic, Comment
 
 
 class CategoryAdmin(SortableAdminMixin, admin.ModelAdmin):

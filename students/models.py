@@ -27,7 +27,6 @@ class UserManager(BaseUserManager):
         user = self.create_user(email, password=password)
         user.is_superuser = True
         user.is_staff = True
-        user.username = email
         user.save(using=self._db)
         return user
 
@@ -73,7 +72,7 @@ class User(AbstractUser):
     def __unicode__(self):
         return unicode(self.get_full_name())
 
-    def getAvatarUrl(self):
+    def get_avatar_url(self):
         if not self.avatar:
             return settings.STATIC_URL + settings.NO_AVATAR_IMG
         return self.avatar.url

@@ -11,7 +11,7 @@
                 <div class="panel text-center">
                     <h5>{{ assignment.user.get_full_name }}</h5>
                     <a href="{% url 'students:assignment' assignment.id  %}">
-                        <img style="height: 200px; width: 200px;" src="{{ assignment.user.getAvatarUrl }}" class="th">
+                        <img style="height: 200px; width: 200px;" src="{{ assignment.user.get_avatar_url }}" class="th">
                     </a>
                     {% if is_teacher_or_hr %}
                         <hr>
@@ -33,7 +33,7 @@
             <div class="panel text-center">
                 <h5>{{ assignment.user.get_full_name }}</h5>
                 <a href="{% url 'students:assignment' assignment.id  %}">
-                    <img style="height: 200px; width: 200px;" src="{{ assignment.user.getAvatarUrl }}" class="th">
+                    <img style="height: 200px; width: 200px;" src="{{ assignment.user.get_avatar_url }}" class="th">
                 </a>
                 {% if is_teacher_or_hr %}
                     <hr>

@@ -1,14 +1,15 @@
 import datetime
+
+from django.core.urlresolvers import reverse
+from django.test import TestCase
+from django.utils import timezone
+
 import mock
 from github import Repository
 
-from django.core.urlresolvers import reverse
-from django.test import TestCase, client
-from django.utils import timezone
-
-from .management.commands import generate_tasks
+from .models import Course, Task, Certificate, Partner
 from students.models import User, CourseAssignment, Solution
-from .models import Course, Task, Certificate
+from .management.commands import generate_tasks
 
 
 class CoursesTest(TestCase):
@@ -33,23 +34,41 @@ class CoursesTest(TestCase):
         )
 
     def test_show_course(self):
-        self.client = client.Client()
         response = self.client.get(
             reverse('courses:show-course', kwargs={'course_url': self.course.url}))
         self.assertEqual(200, response.status_code)
+        self.assertTemplateUsed('show_course.html', response)
 
     def test_show_nonexistent_course(self):
-        self.client = client.Client()
         response = self.client.get(
             reverse('courses:show-course', kwargs={'course_url': 'some_url'}))
         self.assertEqual(404, response.status_code)
+        self.assertTemplateNotUsed('show_course.html', response)
+
+    def test_show_all_courses(self):
+        response = self.client.get(reverse('courses:show-all-courses'))
+        self.assertEqual(200, response.status_code)
+        self.assertTemplateUsed('show_all_courses.html', response)
+
+    def test_show_all_partners(self):
+        response = self.client.get(reverse('courses:show-all-partners'))
+        self.assertEqual(200, response.status_code)
+        self.assertTemplateUsed('show_all_partners.html', response)
 
     def test_show_course_students(self):
-        self.client = client.Client()
         self.client.login(username='ivo_student@gmail.com', password='123')
         response = self.client.get(
             reverse('courses:course-students', kwargs={'course_id': self.course.id}))
         self.assertEqual(200, response.status_code)
+        self.assertTemplateUsed('course_students.html', response)
+
+
+class PartnerTest(TestCase):
+    def setUp(self):
+        self.partner = Partner.objects.create(name='Potato Company', description='Potato company')
+
+    def test_unicode(self):
+        self.assertEqual(self.partner.name, unicode(self.partner))
 
 
 class CertificateTest(TestCase):
@@ -93,18 +112,16 @@ class CertificateTest(TestCase):
             total_commits=15
         )
 
-    def test_certificate_status_code(self):
-        self.client = client.Client()
+    def test_show_certificate(self):
         response = self.client.get(self.certificate.get_absolute_url())
         self.assertEqual(200, response.status_code)
+        self.assertTemplateUsed('show_certificate.html', response)
 
     def test_certificate_show_solution(self):
-        self.client = client.Client()
         response = self.client.get(self.certificate.get_absolute_url())
         self.assertContains(response, 'class="code-sent"')
 
     def test_certificate_show_not_sended_solution_alert(self):
-        self.client = client.Client()
         response = self.client.get(self.certificate.get_absolute_url())
         self.assertContains(response, 'class="code-not-sent"')
 
@@ -153,8 +170,8 @@ class TaskGenerationTest(TestCase):
         self.assertEqual('week6', result['dir'])
 
     def test_get_deadline(self):
-        expected = timezone.now()
-        expected = expected.replace(day=expected.day + 7, hour=23, minute=56, second=56)
+        expected = timezone.now().replace(hour=23, minute=56, second=56)
+        expected = expected + datetime.timedelta(days=7)
         result = generate_tasks.get_deadline()
         self.assertEqual(expected.day, result.day)
         self.assertEqual(expected.hour, result.hour)

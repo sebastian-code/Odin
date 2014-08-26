@@ -2,20 +2,62 @@ import datetime
 import unittest
 
 from django.test import TestCase
-from django.test.client import Client
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.core.validators import ValidationError
+from django.db import IntegrityError
+from django.contrib.auth.hashers import make_password
 
 from courses.models import Partner, Course, Task
 from validators import validate_mac, validate_url, validate_github, validate_linkedin
 from .models import CheckIn, User, HrLoginLog, CourseAssignment, Solution
 
 
+class UserManagerTest(TestCase):
+
+    def setUp(self):
+        self.email = 'user@internet.com'
+        self.raw_password = 'abc123'
+
+    def test_create_user(self):
+        result = User.objects.create_user(self.email, self.raw_password)
+        hashed_password = make_password(self.raw_password)
+        self.assertRaises(IntegrityError, User.objects.create, username=self.email, password=hashed_password)
+        self.assertEqual(self.email, result.username)
+
+    def test_create_user_with_invalid_email(self):
+        self.assertRaises(ValueError, User.objects.create_user, email=None, password=self.raw_password)
+
+    def test_create_superuser(self):
+        result = User.objects.create_superuser(self.email, self.raw_password)
+        self.assertTrue(result.is_superuser)
+        self.assertTrue(result.is_staff)
+
+
+class UserTest(TestCase):
+
+    def setUp(self):
+        self.student_user = User.objects.create_user('ivo_student@gmail.com', '123')
+        self.student_user.status = User.STUDENT
+        self.student_user.mac = '4c:80:93:1f:a4:50'
+        self.student_user.save()
+
+    def test_unicode(self):
+        self.assertEqual(self.student_user.get_full_name(), unicode(self.student_user))
+
+    def test_get_avatar_url(self):
+        self.student_user.avatar = None
+        self.assertEqual(settings.STATIC_URL + settings.NO_AVATAR_IMG, self.student_user.get_avatar_url())
+        self.student_user.avatar = 'Kappa.jpg'
+        self.assertEqual('/media/Kappa.jpg', self.student_user.get_avatar_url())
+
+    def test_get_courses(self):
+        self.assertEqual('', self.student_user.get_courses())
+
+
 class CheckInCaseTest(TestCase):
 
     def setUp(self):
-        self.client = Client()
         self.checkin_settings = '123'
         settings.CHECKIN_TOKEN = self.checkin_settings
 
@@ -82,6 +124,8 @@ class CourseAssignmentTest(TestCase):
         )
 
         self.student_user = User.objects.create_user('ivo_student@gmail.com', '123')
+        self.student_user.first_name = 'Ivaylo'
+        self.student_user.last_name = 'Bachvarov'
         self.student_user.status = User.STUDENT
         self.student_user.save()
 
@@ -100,22 +144,35 @@ class CourseAssignmentTest(TestCase):
         self.assignment.favourite_partners.add(self.partner_potato)
         self.third_wheel = User.objects.create_user('third_wheel@gmail.com', '456')
 
+    def test_unicode(self):
+        self.assertEqual('<Ivaylo Bachvarov> Test Course - 1', unicode(self.assignment))
+
+    def test_get_favourite_partners(self):
+        self.assertEqual('Potato Company', self.assignment.get_favourite_partners())
+        self.assignment.favourite_partners.add(self.partner_salad)
+        self.assertEqual('Potato Company; Salad Company', self.assignment.get_favourite_partners())
+
+    def test_has_valid_github_account(self):
+        self.assertFalse(self.assignment.has_valid_github_account())
+        self.student_user.github_account = 'http://hackbulgaria.com'
+        self.assertFalse(self.assignment.has_valid_github_account())
+
+        self.student_user.github_account = 'https://github.com/Ivaylo-Bachvarov'
+        self.assertTrue(self.assignment.has_valid_github_account())
+
     def test_create_a_new_assignment(self):
-        self.client = Client()
         self.client.login(username='ivo_student@gmail.com', password='123')
         response = self.client.get(
             reverse('students:assignment', kwargs={'id': self.assignment.id}))
         self.assertEqual(200, response.status_code)
 
     def test_email_field_visibility_when_partner_hr(self):
-        self.client = Client()
         self.client.login(username='ivan_hr@gmail.com', password='1234')
         response = self.client.get(
             reverse('students:assignment', kwargs={'id': self.assignment.id}))
         self.assertContains(response, self.assignment.user.email)
 
     def test_email_field_visibility_when_non_partner_hr(self):
-        self.client = Client()
         self.client.login(username='third_wheel@gmail.com', password='456')
         response = self.client.get(
             reverse('students:assignment', kwargs={'id': self.assignment.id}))
@@ -133,6 +190,7 @@ class SolutionTest(TestCase):
 
         self.student_user = User.objects.create_user('ivo_student@gmail.com', '123')
         self.student_user.status = User.STUDENT
+        self.student_user.github_account = 'https://github.com/Ivaylo-Bachvarov'
         self.student_user.save()
 
         self.partner_potato = Partner.objects.create(
@@ -154,51 +212,65 @@ class SolutionTest(TestCase):
             name="Green task",
             course=self.course,
         )
+        self.task_url = 'https://github.com/HackBulgaria/Frontend-JavaScript-1/tree/master/week1/2-jQuery-Gauntlet'
+        self.task = Task.objects.create(course=self.course, description=self.task_url, name='<2> jQuery-Gauntlet')
+        self.solution_url = 'https://github.com/syndbg/HackBulgaria/'
+        self.solution = Solution.objects.create(task=self.task, user=self.student_user, repo=self.solution_url)
+
+    def test_get_user_github_username(self):
+        self.assertEqual('Ivaylo-Bachvarov', self.solution.get_user_github_username())
+
+    def test_get_github_user_and_repo_names(self):
+        result = self.solution.get_github_user_and_repo_names()
+        self.assertEqual('syndbg', result['user_name'])
+        self.assertEqual('HackBulgaria', result['repo_name'])
+        self.solution.repo = 'https://github.com/syndbg/'
+
+        result = self.solution.get_github_user_and_repo_names()
+        self.assertEqual('syndbg', result['user_name'])
+        self.assertEqual('', result['repo_name'])
 
     def test_create_a_new_assignment(self):
-        self.client = Client()
         self.client.login(username='ivo_student@gmail.com', password='123')
         response = self.client.get(
             reverse('students:assignment', kwargs={'id': self.assignment.id}))
         self.assertEqual(200, response.status_code)
+        self.assertTemplateUsed('assignment.html', response)
 
     def test_email_field_visibility_when_partner_hr(self):
-        self.client = Client()
         self.client.login(username='ivan_hr@gmail.com', password='1234')
         response = self.client.get(
             reverse('students:assignment', kwargs={'id': self.assignment.id}))
+        self.assertEqual(200, response.status_code)
         self.assertContains(response, self.assignment.user.email)
+        self.assertTemplateUsed('assignment.html', response)
 
     def test_email_field_visibility_when_non_partner_hr(self):
-        self.client = Client()
         self.client.login(username='third_wheel@gmail.com', password='456')
         response = self.client.get(
             reverse('students:assignment', kwargs={'id': self.assignment.id}))
         self.assertNotContains(response, self.assignment.user.email)
+        self.assertTemplateUsed('assignment.html', response)
 
     def test_add_solution_get_status(self):
-        self.client = Client()
         self.client.login(username='ivo_student@gmail.com', password='123')
         response = self.client.get(reverse('students:add-solution'))
         self.assertEqual(405, response.status_code)
 
     def test_add_solution_not_existing_task(self):
-        self.client = Client()
         before_adding = Solution.objects.count()
         self.client.login(username='ivo_student@gmail.com', password='123')
 
         response = self.client.post(reverse('students:add-solution'),
                                     {
-            'task': 3,
+            'task': 3777,
             'repo': 'https://github.com/HackBulgaria/Odin',
         })
-
         after_adding = Solution.objects.count()
         self.assertEqual(before_adding, after_adding)
         self.assertEqual(422, response.status_code)
 
     def test_add_solution_status_code(self):
-        self.client = Client()
         self.client.login(username='ivo_student@gmail.com', password='123')
 
         before_adding = Solution.objects.count()
@@ -213,7 +285,6 @@ class SolutionTest(TestCase):
         self.assertEqual(200, response.status_code)
 
     def test_edit_solution(self):
-        self.client = Client()
         self.client.login(username='ivo_student@gmail.com', password='123')
 
         before_adding = Solution.objects.count()
