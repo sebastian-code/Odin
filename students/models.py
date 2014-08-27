@@ -86,7 +86,6 @@ class User(AbstractUser):
         courses = []
         for course in self.courseassignment_set.all():
             courses.append(course)
-
         return courses
 
     def log_hr_login(sender, user, request, **kwargs):

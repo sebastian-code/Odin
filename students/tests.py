@@ -42,6 +42,20 @@ class UserTest(TestCase):
         self.student_user.mac = '4c:80:93:1f:a4:50'
         self.student_user.save()
 
+        self.course = Course.objects.create(
+            name='Test Course',
+            url='test-course',
+            application_until=datetime.datetime.now(),
+        )
+        self.course2 = Course.objects.create(
+            name='Test Course2',
+            url='test-course2',
+            application_until=datetime.datetime.now(),
+        )
+
+        self.assignment = CourseAssignment.objects.create(
+            user=self.student_user, course=self.course, group_time=CourseAssignment.EARLY)
+
     def test_unicode(self):
         self.assertEqual(self.student_user.get_full_name(), unicode(self.student_user))
 
@@ -52,7 +66,16 @@ class UserTest(TestCase):
         self.assertEqual('/media/Kappa.jpg', self.student_user.get_avatar_url())
 
     def test_get_courses(self):
-        self.assertEqual('', self.student_user.get_courses())
+        self.assertEqual(u'Test Course - 1', self.student_user.get_courses())
+        assignment2 = CourseAssignment.objects.create(
+            user=self.student_user, course=self.course2, group_time=CourseAssignment.LATE)
+        self.assertEqual(u'Test Course - 1; Test Course2 - 2', self.student_user.get_courses())
+
+    def test_get_courses_list(self):
+        self.assertEqual([self.assignment], self.student_user.get_courses_list())
+        assignment2 = CourseAssignment.objects.create(
+            user=self.student_user, course=self.course2, group_time=CourseAssignment.LATE)
+        self.assertEqual([self.assignment, assignment2], self.student_user.get_courses_list())
 
 
 class CheckInCaseTest(TestCase):
@@ -71,19 +94,13 @@ class CheckInCaseTest(TestCase):
         self.hr_user.mac = '4c:80:93:1f:a4:51'
         self.hr_user.save()
 
-    def test_new_check_in_status(self):
-        response = self.client.post('/set-check-in/', {
-            'mac': self.student_user.mac,
-            'token': self.checkin_settings,
-        })
-        self.assertEqual(response.status_code, 200)
-
-    def test_new_check_in_result(self):
+    def test_new_check_in(self):
         response = self.client.post('/set-check-in/', {
             'mac': self.student_user.mac,
             'token': self.checkin_settings,
         })
         checkin = CheckIn.objects.get(student=self.student_user)
+        self.assertEqual(200, response.status_code)
         self.assertIsNotNone(checkin)
 
     def test_new_check_in_case_insensitive(self):
@@ -92,6 +109,7 @@ class CheckInCaseTest(TestCase):
             'token': self.checkin_settings,
         })
         checkin = CheckIn.objects.get(student=self.student_user)
+        self.assertEqual(200, response.status_code)
         self.assertIsNotNone(checkin)
 
     def test_double_checkin_same_day(self):
@@ -104,7 +122,9 @@ class CheckInCaseTest(TestCase):
                                                               })
 
         self.assertEqual(response_first.status_code, 200)
+        self.assertIsNotNone(response_first)
         self.assertEqual(response_second.status_code, 418)
+        self.assertIsNotNone(response_second)
 
     def test_hr_login_log(self):
         before_log = HrLoginLog.objects.count()
