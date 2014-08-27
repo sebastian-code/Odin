@@ -398,6 +398,6 @@ class API_Tests(TestCase):
         })
         response = self.client.get('/api/checkins/')
         date_str = str(datetime.datetime.now().strftime('%Y-%m-%d'))
-        expected = [{"date": date_str, "student_id": 1, "student_courses": [], "student_name": ''}]
+        expected = [{"date": date_str, "student_id": self.student_user.id, "student_courses": [], "student_name": ''}]
         expected = "{}".format(expected).replace("'", '"')
         self.assertEqual(expected, response.content)
