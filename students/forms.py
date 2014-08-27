@@ -36,7 +36,7 @@ class UserEditForm(forms.ModelForm):
 
         if password1 != password2:
             raise forms.ValidationError(
-                _("The two password fields didn't match.")
+                _('The two password fields didn\'t match.')
             )
 
         return cleaned_data
@@ -65,7 +65,7 @@ class AddNote(forms.ModelForm):
         )
 
         fields = (
-            "assignment",
+            'assignment',
             'text',
         )
 
@@ -86,8 +86,8 @@ class VoteForPartner(forms.ModelForm):
         model = CourseAssignment
 
         fields = (
-            "favourite_partners",
-            "cv",
+            'favourite_partners',
+            'cv',
         )
 
 

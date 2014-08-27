@@ -18,7 +18,7 @@ from forum.models import Comment
 
 def login(request):
     if request.user.is_authenticated():
-        return redirect('students:user-profile')
+        return redirect('students:user_profile')
     else:
         return auth_views.login(request, template_name='login_form.html')
 
@@ -39,7 +39,7 @@ def edit_profile(request):
         form = UserEditForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             form.save()
-            return redirect('students:user-profile')
+            return redirect('students:user_profile')
     else:
         form = UserEditForm(instance=request.user)
     return render(request, 'edit_profile.html', locals())
@@ -80,22 +80,22 @@ def assignment(request, id):
 
 
 @csrf_exempt
+@require_http_methods(['POST'])
 def set_check_in(request):
-    if request.method == 'POST':
-        mac = request.POST['mac']
-        token = request.POST['token']
+    mac = request.POST['mac']
+    token = request.POST['token']
 
-        if settings.CHECKIN_TOKEN != token:
-            return HttpResponse(status=511)
+    if settings.CHECKIN_TOKEN != token:
+        return HttpResponse(status=511)
 
-        student = get_object_or_404(User, mac__iexact=mac)
-        try:
-            checkin = CheckIn(mac=mac, student=student)
-            checkin.save()
-        except IntegrityError:
-            return HttpResponse(status=418)
+    student = get_object_or_404(User, mac__iexact=mac)
+    try:
+        checkin = CheckIn(mac=mac, student=student)
+        checkin.save()
+    except IntegrityError:
+        return HttpResponse(status=418)
 
-        return HttpResponse(status=200)
+    return HttpResponse(status=200)
 
 
 @csrf_exempt
@@ -137,8 +137,7 @@ def api_checkins(request):
                 'name': assignment.course.name,
                 'group': assignment.group_time
             }
-
-        student_courses.append(course)
+            student_courses.append(course)
 
         needed_data.append({
             'student_id': checkin.student.id,
@@ -169,9 +168,9 @@ def solutions(request, course_id):
     return render(request, 'solutions.html', locals())
 
 
+@csrf_exempt
 @login_required
 @require_http_methods(['POST'])
-@csrf_exempt
 def add_solution(request):
     solution = Solution.objects.filter(
         user=request.user,

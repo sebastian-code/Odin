@@ -7,7 +7,7 @@
 {% block content %}
     <div class="large-12 columns">
 <div class="row">
-    <a href="{% url 'forum:add-topic' category.id %}"><button>Отвори нова тема</button></a>
+    <a href="{% url 'forum:add_topic' category.id %}"><button>Отвори нова тема</button></a>
 <table>
     <thead>
         <tr>
@@ -20,7 +20,7 @@
     <tbody>
     {% for topic in topics %}
         <tr>
-            <td><a href="{% url 'forum:show-topic' topic.id %}">{{ topic.title }}</a></td>
+            <td><a href="{% url 'forum:show_topic' topic.id %}">{{ topic.title }}</a></td>
             <td>{{ topic.author.get_full_name }}</td>
             <td>{{ topic.date|date:"d-m-Y" }}</td>
             <td>{{ topic.comment_set.count }}</td>

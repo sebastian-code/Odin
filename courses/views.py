@@ -24,7 +24,7 @@ def show_all_partners(request):
 
 
 @login_required
-def course_students(request, course_id):
+def show_course_students(request, course_id):
     assignments = CourseAssignment.objects.filter(course=course_id, user__status=User.STUDENT)
     is_teacher_or_hr = request.user.status == User.HR or request.user.status == User.TEACHER
     if request.user.hr_of:
@@ -33,7 +33,7 @@ def course_students(request, course_id):
             favourite_partners=request.user.hr_of,
             user__status=User.STUDENT
         )
-    return render(request, 'course_students.html', locals())
+    return render(request, 'show_course_students.html', locals())
 
 
 def show_certificate(request, assignment_id):

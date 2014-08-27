@@ -46,7 +46,7 @@
                         <a href="{{ assignment.course.git_repository }}" target="_blank">Материали в GitHub за курса</a>
                     </p>
                     <p>
-                        <a href="{% url 'courses:course-students' assignment.course.id %}">Вижте всички записали курса</a>
+                        <a href="{% url 'courses:show_course_students' assignment.course.id %}">Вижте всички записали курса</a>
                     </p>
                     </p>
                     <hr>{% if assignment.course.ask_for_favorite_partner and is_student and user == assignment.user %}
@@ -58,7 +58,7 @@
                     <p>
                         Всички ваши коментари (по теми в форума): {% for comment in comments %}
                         <ul>
-                            <li><a href="{% url 'forum:show-topic' comment.topic.id %}#{{ comment.id }}">{{ comment.topic }} #{{ comment.id }}</a>
+                            <li><a href="{% url 'forum:show_topic' comment.topic.id %}#{{ comment.id }}">{{ comment.topic }} #{{ comment.id }}</a>
                             </li>
                         </ul>
                         {% endfor %}

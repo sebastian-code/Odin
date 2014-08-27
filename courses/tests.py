@@ -35,32 +35,32 @@ class CoursesTest(TestCase):
 
     def test_show_course(self):
         response = self.client.get(
-            reverse('courses:show-course', kwargs={'course_url': self.course.url}))
+            reverse('courses:show_course', kwargs={'course_url': self.course.url}))
         self.assertEqual(200, response.status_code)
         self.assertTemplateUsed('show_course.html', response)
 
     def test_show_nonexistent_course(self):
         response = self.client.get(
-            reverse('courses:show-course', kwargs={'course_url': 'some_url'}))
+            reverse('courses:show_course', kwargs={'course_url': 'some_url'}))
         self.assertEqual(404, response.status_code)
         self.assertTemplateNotUsed('show_course.html', response)
 
     def test_show_all_courses(self):
-        response = self.client.get(reverse('courses:show-all-courses'))
+        response = self.client.get(reverse('courses:show_all_courses'))
         self.assertEqual(200, response.status_code)
         self.assertTemplateUsed('show_all_courses.html', response)
 
     def test_show_all_partners(self):
-        response = self.client.get(reverse('courses:show-all-partners'))
+        response = self.client.get(reverse('courses:show_all_partners'))
         self.assertEqual(200, response.status_code)
         self.assertTemplateUsed('show_all_partners.html', response)
 
     def test_show_course_students(self):
         self.client.login(username='ivo_student@gmail.com', password='123')
         response = self.client.get(
-            reverse('courses:course-students', kwargs={'course_id': self.course.id}))
+            reverse('courses:show_course_students', kwargs={'course_id': self.course.id}))
         self.assertEqual(200, response.status_code)
-        self.assertTemplateUsed('course_students.html', response)
+        self.assertTemplateUsed('show_course_students.html', response)
 
 
 class PartnerTest(TestCase):
@@ -91,12 +91,12 @@ class CertificateTest(TestCase):
         )
 
         self.task1 = Task.objects.create(
-            name="task1",
+            name='task1',
             course=self.course,
         )
 
         self.task2 = Task.objects.create(
-            name="task2",
+            name='task2',
             course=self.course,
         )
 

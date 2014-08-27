@@ -12,7 +12,7 @@ from .helper import send_topic_subscribe_email, subscribe_to_topic
 def show_categories(request):
     categories = Category.objects.all()
 
-    return render(request, "categories.html", locals())
+    return render(request, 'show_categories.html', locals())
 
 
 def show_category(request, category_id):
@@ -20,7 +20,7 @@ def show_category(request, category_id):
     topics = reversed(
         Topic.objects.filter(category=category).prefetch_related('author', 'comment_set'))
 
-    return render(request, "show_category.html", locals())
+    return render(request, 'show_category.html', locals())
 
 
 def show_topic(request, topic_id):
@@ -36,9 +36,9 @@ def show_topic(request, topic_id):
             subscribe_to_topic(request.user, topic)
             send_topic_subscribe_email(topic, comment)
 
-            return redirect('forum:show-topic', topic_id=topic_id)
+            return redirect('forum:show_topic', topic_id=topic_id)
 
-    return render(request, "show_topic.html", locals())
+    return render(request, 'show_topic.html', locals())
 
 
 @login_required
@@ -67,9 +67,9 @@ def add_topic(request, category_id):
         if form.is_valid():
             topic = form.save()
             subscribe_to_topic(request.user, topic)
-            return redirect('forum:show-category', category_id=category_id)
+            return redirect('forum:show_category', category_id=category_id)
 
-    return render(request, "add_topic.html", locals())
+    return render(request, 'add_topic.html', locals())
 
 
 @login_required
@@ -84,9 +84,9 @@ def edit_topic(request, topic_id):
     if request.method == 'POST':
         if form.is_valid():
             form.save()
-            return redirect('forum:show-topic', topic_id=topic_id)
+            return redirect('forum:show_topic', topic_id=topic_id)
 
-    return render(request, "edit_topic.html", locals())
+    return render(request, 'edit_topic.html', locals())
 
 
 @login_required
@@ -102,6 +102,6 @@ def edit_comment(request, comment_id):
     if request.method == 'POST':
         if form.is_valid():
             form.save()
-            return redirect('forum:show-topic', topic_id=comment.topic.pk)
+            return redirect('forum:show_topic', topic_id=comment.topic.pk)
 
-    return render(request, "edit_comment.html", locals())
+    return render(request, 'edit_comment.html', locals())

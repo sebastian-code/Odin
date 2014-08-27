@@ -209,7 +209,7 @@ class SolutionTest(TestCase):
         self.third_wheel = User.objects.create_user('third_wheel@gmail.com', '456')
 
         self.green_task = Task.objects.create(
-            name="Green task",
+            name='Green task',
             course=self.course,
         )
         self.task_url = 'https://github.com/HackBulgaria/Frontend-JavaScript-1/tree/master/week1/2-jQuery-Gauntlet'
@@ -254,14 +254,14 @@ class SolutionTest(TestCase):
 
     def test_add_solution_get_status(self):
         self.client.login(username='ivo_student@gmail.com', password='123')
-        response = self.client.get(reverse('students:add-solution'))
+        response = self.client.get(reverse('students:add_solution'))
         self.assertEqual(405, response.status_code)
 
     def test_add_solution_not_existing_task(self):
         before_adding = Solution.objects.count()
         self.client.login(username='ivo_student@gmail.com', password='123')
 
-        response = self.client.post(reverse('students:add-solution'),
+        response = self.client.post(reverse('students:add_solution'),
                                     {
             'task': 3777,
             'repo': 'https://github.com/HackBulgaria/Odin',
@@ -274,7 +274,7 @@ class SolutionTest(TestCase):
         self.client.login(username='ivo_student@gmail.com', password='123')
 
         before_adding = Solution.objects.count()
-        response = self.client.post(reverse('students:add-solution'),
+        response = self.client.post(reverse('students:add_solution'),
                                     {
             'task': self.green_task.id,
             'repo': 'https://github.com/HackBulgaria/Odin',
@@ -288,13 +288,13 @@ class SolutionTest(TestCase):
         self.client.login(username='ivo_student@gmail.com', password='123')
 
         before_adding = Solution.objects.count()
-        response = self.client.post(reverse('students:add-solution'),
+        response = self.client.post(reverse('students:add_solution'),
                                     {
             'task': self.green_task.id,
             'repo': 'https://github.com/HackBulgaria/Odin',
         })
 
-        response = self.client.post(reverse('students:add-solution'),
+        response = self.client.post(reverse('students:add_solution'),
                                     {
             'task': self.green_task.id,
             'repo': 'https://github.com/HackBulgaria/Odin2',
@@ -331,3 +331,53 @@ class ValidatorsTest(unittest.TestCase):
         self.assertRaises(ValidationError, validate_linkedin, invalid_url)
         valid_url = 'https://www.linkedin.com/in/jeffweiner08gst'  # Linkedin CEO
         self.assertIsNone(validate_linkedin(valid_url))
+
+
+class API_Tests(TestCase):
+
+    def setUp(self):
+        self.checkin_settings = '123'
+        settings.CHECKIN_TOKEN = self.checkin_settings
+
+        self.course = Course.objects.create(
+            name='Test Course',
+            url='test-course',
+            application_until=datetime.datetime.now(),
+        )
+
+        self.student_user = User.objects.create_user('ivo_student@gmail.com', '123')
+        self.student_user.mac = '4c:80:93:1f:a4:50'
+        self.student_user.status = User.STUDENT
+        self.student_user.github_account = 'https://github.com/Ivaylo-Bachvarov'
+        self.student_user.save()
+
+    def test_api_students_with_no_checkins(self):
+        expected = '[{"available": false, "courses": [], "github": "https://github.com/Ivaylo-Bachvarov", "name": ""}]'
+        response = self.client.get('/api/students/')
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(expected, response.content)
+
+    def test_api_students_with_checkins(self):
+        expected = '[{"available": true, "courses": [], "github": "https://github.com/Ivaylo-Bachvarov", "name": ""}]'
+        self.client.post('/set-check-in/', {
+            'mac': self.student_user.mac,
+            'token': self.checkin_settings,
+        })
+        response = self.client.get('/api/students/')
+        self.assertEqual(expected, response.content)
+
+    def test_api_checkins_with_none_checked_in(self):
+        response = self.client.get('/api/checkins/')
+        self.assertEqual(200, response.status_code)
+        self.assertEqual('[]', response.content)
+
+    def test_api_checkins_with_checked_in(self):
+        self.client.post('/set-check-in/', {
+            'mac': self.student_user.mac,
+            'token': self.checkin_settings,
+        })
+        response = self.client.get('/api/checkins/')
+        date_str = str(datetime.datetime.now().strftime('%Y-%m-%d'))
+        expected = [{"date": date_str, "student_id": 1, "student_courses": [], "student_name": ''}]
+        expected = "{}".format(expected).replace("'", '"')
+        self.assertEqual(expected, response.content)

@@ -72,4 +72,4 @@ class Certificate(models.Model):
     weekly_commits = models.ManyToManyField(WeeklyCommit)
 
     def get_absolute_url(self):
-        return reverse('courses:show-certificate', args=[str(self.assignment.id)])
+        return reverse('courses:show_certificate', args=[str(self.assignment.id)])
