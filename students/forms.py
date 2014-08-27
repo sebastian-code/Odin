@@ -79,6 +79,7 @@ class VoteForPartner(forms.ModelForm):
         self.fields['favourite_partners'].widget = forms.CheckboxSelectMultiple()
         if self.assignment:
             self.fields['favourite_partners'].queryset = Partner.objects.filter(
+                is_active=True,
                 course=self.assignment.course)
 
     class Meta:

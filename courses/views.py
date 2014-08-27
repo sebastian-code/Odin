@@ -19,7 +19,7 @@ def show_all_courses(request):
 
 
 def show_all_partners(request):
-    partners = Partner.objects.all()
+    partners = Partner.objects.filter(is_active=True)
     return render(request, 'show_all_partners.html', locals())
 
 

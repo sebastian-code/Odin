@@ -36,6 +36,8 @@ class Partner(models.Model):
     twitter = models.URLField(null=True, blank=True)
     website = models.URLField(null=True, blank=True)
 
+    is_active = models.BooleanField(default=False)
+
     class Meta:
         ordering = ('ordering',)
 
