@@ -18,6 +18,16 @@
         <a class="close-reveal-modal">&#215;</a>
     </div>
 
+    <div id="give-feedback" class="reveal-modal text-center" data-reveal>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <p>Моля посочете къде сте започнали работа след курса.</p>
+            {{ feedback_form }}
+            <button>Готово</button>
+        </form>
+        <a class="close-reveal-modal">&#215;</a>
+    </div>
+
     <div class="large-12 columns">
         <div class="panel">
             <div class="row" id="course-page">
@@ -35,7 +45,13 @@
                     <p>
                         <a href="{{ assignment.user.github_account }}" target="_blank">GitHub акаунт: {{ assignment.user.github_account }}</a>
                     </p>
-                    
+
+                    <!-- <p>
+                        {% if is_teacher or is_hr %}
+                        <a href="{{ assignment.user.github_account }}" target="_blank">След курса започна работа в: {{ assignment.user.after_course_works_at }}</a>
+                        {% endif %}
+                    </p> -->
+
                     {% if certificate %}
                     <p>
                         <a href="{{ certificate.get_absolute_url }}" target="_blank">Сертификат от курса</a>
@@ -49,11 +65,23 @@
                         <a href="{% url 'courses:show_course_students' assignment.course.id %}">Вижте всички записали курса</a>
                     </p>
                     </p>
-                    <hr>{% if assignment.course.ask_for_favorite_partner and is_student and user == assignment.user %}
-                    <p class="text-center">
-                        <button data-reveal-id="vote-for-partner">Посочете към кои от партньорите ни проявявате интерес</button>
-                    </p>
-                    {% endif %}
+
+                    <hr>
+
+                    <div class="text-center">
+                        {% if assignment.course.ask_for_favorite_partner and is_student and user == assignment.user %}
+                        <p>
+                            <button data-reveal-id="vote-for-partner">Посочете към кои от партньорите ни проявявате интерес</button>
+                        </p>
+                        {% endif %}
+
+                        {% if is_student and user == assignment.user %}
+                        <p>
+                            <button data-reveal-id="give-feedback">Посочете къде сте започнали работа след курса</button>
+                        </p>
+                        {% endif %}
+                    </div>
+
                     <hr>
                     <p>
                         Всички ваши коментари (по теми в форума): {% for comment in comments %}

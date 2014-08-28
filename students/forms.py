@@ -110,3 +110,21 @@ class AddSolutionForm(forms.ModelForm):
             'task',
             'repo',
         )
+
+
+class GiveFeedbackForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user')
+        super(GiveFeedbackForm, self).__init__(*args, **kwargs)
+
+        # self.fields['after_course_works_at'] = forms.TypedChoiceField()
+        if self.user:
+            self.fields['after_course_works_at'].queryset = Partner.objects.all()
+
+    class Meta:
+        model = User
+
+        fields = (
+            'after_course_works_at',
+        )

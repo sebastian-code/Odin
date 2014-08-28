@@ -51,14 +51,15 @@ class User(AbstractUser):
         blank=True,
     )
 
-    github_account = models.URLField(validators=[validate_github], null=True, blank=True)
-    linkedin_account = models.URLField(validators=[validate_linkedin], null=True, blank=True)
-    description = models.TextField(blank=True)
+    after_course_works_at = models.ForeignKey(Partner, related_name='after_course_works', blank=True, null=True)
     courses = models.ManyToManyField(Course, through='CourseAssignment')
-    mac = models.CharField(validators=[validate_mac], max_length=17, null=True, blank=True)
-    works_at = models.CharField(null=True, blank=True, max_length='40')
-    subscribed_topics = models.ManyToManyField('forum.Topic', blank=True)
+    description = models.TextField(blank=True)
+    github_account = models.URLField(validators=[validate_github], null=True, blank=True)
     hr_of = models.ForeignKey(Partner, blank=True, null=True)
+    linkedin_account = models.URLField(validators=[validate_linkedin], null=True, blank=True)
+    mac = models.CharField(validators=[validate_mac], max_length=17, null=True, blank=True)
+    subscribed_topics = models.ManyToManyField('forum.Topic', blank=True)
+    works_at = models.CharField(null=True, blank=True, max_length='40')
 
     AbstractUser._meta.get_field('email')._unique = True
 

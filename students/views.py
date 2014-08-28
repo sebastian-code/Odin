@@ -10,7 +10,7 @@ from django.http import HttpResponse
 from django.db import IntegrityError
 from django.conf import settings
 
-from .forms import UserEditForm, AddNote, VoteForPartner, AddSolutionForm
+from .forms import UserEditForm, AddNote, VoteForPartner, AddSolutionForm, GiveFeedbackForm
 from .models import CourseAssignment, UserNote, User, CheckIn, Task, Solution
 from courses.models import Course, Certificate
 from forum.models import Comment
@@ -74,6 +74,14 @@ def assignment(request, id):
             vote_form = VoteForPartner(request.POST, request.FILES, instance=assignment, assignment=assignment)
             if vote_form.is_valid():
                 vote_form.save()
+                return redirect('students:assignment', id=id)
+
+    if is_student and request.user == assignment.user:
+        feedback_form = GiveFeedbackForm(instance=assignment.user, user=assignment.user)
+        if request.method == 'POST':
+            feedback_form = GiveFeedbackForm(request.POST, request.FILES, instance=assignment.user, user=assignment.user)
+            if feedback_form.is_valid():
+                feedback_form.save()
                 return redirect('students:assignment', id=id)
 
     return render(request, 'assignment.html', locals())
