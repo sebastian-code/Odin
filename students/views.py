@@ -48,11 +48,11 @@ def edit_profile(request):
 @login_required
 def assignment(request, id):
     assignment = get_object_or_404(CourseAssignment, pk=id)
-    is_teacher = request.user.status == User.TEACHER
-    is_hr = request.user.status == User.HR
-    is_student = request.user.status == User.STUDENT
     certificate = Certificate.objects.filter(assignment=assignment).first()
     comments = Comment.objects.filter(author=assignment.user).order_by('topic').all()
+    is_hr = request.user.status == User.HR
+    is_student = request.user.status == User.STUDENT
+    is_teacher = request.user.status == User.TEACHER
 
     if is_teacher or is_hr:
         notes = UserNote.objects.filter(assignment=id)
@@ -76,10 +76,14 @@ def assignment(request, id):
                 vote_form.save()
                 return redirect('students:assignment', id=id)
 
-    if is_student and request.user == assignment.user:
-        feedback_form = GiveFeedbackForm(instance=assignment.user, user=assignment.user)
+    date_today = datetime.date.today()
+    # get course.end_time if existing, else fake a date from 10 years ago
+    course_end_date = assignment.course.end_time if assignment.course.end_time is not None else datetime.date(1990, 1, 1)
+
+    if is_student and date_today >= course_end_date and request.user == assignment.user:
+        feedback_form = GiveFeedbackForm(instance=assignment, assignment=assignment)
         if request.method == 'POST':
-            feedback_form = GiveFeedbackForm(request.POST, request.FILES, instance=assignment.user, user=assignment.user)
+            feedback_form = GiveFeedbackForm(request.POST, request.FILES, instance=assignment, assignment=assignment)
             if feedback_form.is_valid():
                 feedback_form.save()
                 return redirect('students:assignment', id=id)

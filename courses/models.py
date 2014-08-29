@@ -24,25 +24,24 @@ class Course(models.Model):
     url = models.SlugField(max_length=80, unique=True)
 
     def __unicode__(self):
-        return self.name
+        return unicode(self.name)
 
 
 class Partner(models.Model):
     description = tinymce_models.HTMLField(blank=False)
     facebook = models.URLField(null=True, blank=True)
+    is_active = models.BooleanField(default=False)
     logo = models.ImageField(upload_to="partner_logoes", null=True, blank=True)
     name = models.CharField(max_length=128)
     ordering = models.PositiveSmallIntegerField(default=0, blank=False, null=False)
     twitter = models.URLField(null=True, blank=True)
     website = models.URLField(null=True, blank=True)
 
-    is_active = models.BooleanField(default=False)
-
     class Meta:
         ordering = ('ordering',)
 
     def __unicode__(self):
-        return self.name
+        return unicode(self.name)
 
 
 class Task(models.Model):

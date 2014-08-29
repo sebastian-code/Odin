@@ -18,11 +18,11 @@
         <a class="close-reveal-modal">&#215;</a>
     </div>
 
-    <div id="give-feedback" class="reveal-modal text-center" data-reveal>
+    <div id="give-feedback" class="reveal-modal" data-reveal>
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            <p>Моля посочете къде сте започнали работа след курса.</p>
-            {{ feedback_form }}
+            <p>Моля посочете къде сте започнали работа след курсът.</p>
+            {{ feedback_form.after_course_works_at }}
             <button>Готово</button>
         </form>
         <a class="close-reveal-modal">&#215;</a>
@@ -37,20 +37,21 @@
                 <h2>{{ assignment.course }} и {{ assignment.user.get_full_name }}</h2>
 
                 <div>
+                    {% if is_teacher or is_hr %}
                     <p>
-                        {% if is_teacher or is_hr %}
                         <a href="mailto:{{ assignment.user.email }}" target="_blank" id="email">Email акаунт: {{ assignment.user.email }}</a>
-                        {% endif %}
                     </p>
+                    {% endif %}
+
                     <p>
                         <a href="{{ assignment.user.github_account }}" target="_blank">GitHub акаунт: {{ assignment.user.github_account }}</a>
                     </p>
 
-                    <!-- <p>
-                        {% if is_teacher or is_hr %}
-                        <a href="{{ assignment.user.github_account }}" target="_blank">След курса започна работа в: {{ assignment.user.after_course_works_at }}</a>
-                        {% endif %}
-                    </p> -->
+                    {% if is_teacher or is_hr %}
+                    <p>
+                        <a href="{{ assignment.after_course_works_at.website }}" target="_blank">След курса започна работа в: {{ assignment.user.after_course_works_at }}</a>
+                    </p>
+                    {% endif %}
 
                     {% if certificate %}
                     <p>
@@ -64,25 +65,25 @@
                     <p>
                         <a href="{% url 'courses:show_course_students' assignment.course.id %}">Вижте всички записали курса</a>
                     </p>
-                    </p>
 
                     <hr>
 
-                    <div class="text-center">
-                        {% if assignment.course.ask_for_favorite_partner and is_student and user == assignment.user %}
-                        <p>
+                    {% if is_student and user == assignment.user %}
+                        {% if assignment.course.ask_for_favorite_partner %}
+                        <p class="text-center">
                             <button data-reveal-id="vote-for-partner">Посочете към кои от партньорите ни проявявате интерес</button>
                         </p>
                         {% endif %}
 
-                        {% if is_student and user == assignment.user %}
-                        <p>
-                            <button data-reveal-id="give-feedback">Посочете къде сте започнали работа след курса</button>
+                        {% if date_today >= course_end_date %}
+                        <p class="text-center">
+                            <button data-reveal-id="give-feedback">Посочете къде сте започнали работа след курсът</button>
                         </p>
                         {% endif %}
-                    </div>
+                    {% endif %}
 
                     <hr>
+
                     <p>
                         Всички ваши коментари (по теми в форума): {% for comment in comments %}
                         <ul>

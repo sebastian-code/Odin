@@ -1,16 +1,17 @@
 import datetime
+import mock
 import unittest
 
-from django.test import TestCase
 from django.conf import settings
+from django.contrib.auth.hashers import make_password
 from django.core.urlresolvers import reverse
 from django.core.validators import ValidationError
 from django.db import IntegrityError
-from django.contrib.auth.hashers import make_password
+from django.test import TestCase
 
+from .models import CheckIn, User, HrLoginLog, CourseAssignment, Solution
 from courses.models import Partner, Course, Task
 from validators import validate_mac, validate_url, validate_github, validate_linkedin
-from .models import CheckIn, User, HrLoginLog, CourseAssignment, Solution
 
 
 class UserManagerTest(TestCase):
@@ -141,6 +142,7 @@ class CourseAssignmentTest(TestCase):
             name='Test Course',
             url='test-course',
             application_until=datetime.datetime.now(),
+            end_time=None
         )
 
         self.student_user = User.objects.create_user('ivo_student@gmail.com', '123')
@@ -167,6 +169,34 @@ class CourseAssignmentTest(TestCase):
     def test_unicode(self):
         self.assertEqual('<Ivaylo Bachvarov> Test Course - 1', unicode(self.assignment))
 
+    def test_vote_for_partner_form_visibility_when_not_ask_for_favorite_partner(self):
+        self.client.login(username='ivo_student@gmail.com', password='123')
+        response = self.client.get(reverse('students:assignment', kwargs={'id': self.assignment.id}))
+        self.assertNotContains(response, 'data-reveal-id="vote-for-partner"')
+
+    def test_vote_for_partner_form_visibility_when_ask_for_favorite_partner(self):
+        self.course.ask_for_favorite_partner = True
+        self.course.save()
+        self.client.login(username='ivo_student@gmail.com', password='123')
+        response = self.client.get(reverse('students:assignment', kwargs={'id': self.assignment.id}))
+        self.assertContains(response, 'data-reveal-id="vote-for-partner')
+
+    def test_give_feedback_form_visibility_when_course_no_end_time(self):
+        self.client.login(username='ivo_student@gmail.com', password='123')
+        response = self.client.get(reverse('students:assignment', kwargs={'id': self.assignment.id}))
+        self.assertNotContains(response, 'data-reveal-id="give-feedback"')
+
+    @mock.patch('students.views.datetime')
+    def test_give_feedback_form_visibility_when_before_course_end_time(self, mocked_datetime):
+        mocked_datetime.date = mock.MagicMock()
+        mocked_datetime.date.today = mock.MagicMock(return_value=datetime.date(1920, 1, 1))
+        self.course.end_time = datetime.date.today()
+        self.course.save()
+
+        self.client.login(username='ivo_student@gmail.com', password='123')
+        response = self.client.get(reverse('students:assignment', kwargs={'id': self.assignment.id}))
+        self.assertNotContains(response, 'data-reveal-id="give-feedback"')
+
     def test_get_favourite_partners(self):
         self.assertEqual('Potato Company', self.assignment.get_favourite_partners())
         self.assignment.favourite_partners.add(self.partner_salad)
@@ -185,18 +215,21 @@ class CourseAssignmentTest(TestCase):
         response = self.client.get(
             reverse('students:assignment', kwargs={'id': self.assignment.id}))
         self.assertEqual(200, response.status_code)
+        self.assertTemplateUsed('assignment.html', response)
 
     def test_email_field_visibility_when_partner_hr(self):
         self.client.login(username='ivan_hr@gmail.com', password='1234')
         response = self.client.get(
             reverse('students:assignment', kwargs={'id': self.assignment.id}))
         self.assertContains(response, self.assignment.user.email)
+        self.assertTemplateUsed('assignment.html', response)
 
     def test_email_field_visibility_when_non_partner_hr(self):
         self.client.login(username='third_wheel@gmail.com', password='456')
         response = self.client.get(
             reverse('students:assignment', kwargs={'id': self.assignment.id}))
         self.assertNotContains(response, self.assignment.user.email)
+        self.assertTemplateUsed('assignment.html', response)
 
 
 class SolutionTest(TestCase):

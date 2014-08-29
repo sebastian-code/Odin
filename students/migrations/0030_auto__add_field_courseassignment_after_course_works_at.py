@@ -8,15 +8,15 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding field 'User.after_course_works_at'
-        db.add_column(u'students_user', 'after_course_works_at',
+        # Adding field 'CourseAssignment.after_course_works_at'
+        db.add_column(u'students_courseassignment', 'after_course_works_at',
                       self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='after_course_works', null=True, to=orm['courses.Partner']),
                       keep_default=False)
 
 
     def backwards(self, orm):
-        # Deleting field 'User.after_course_works_at'
-        db.delete_column(u'students_user', 'after_course_works_at_id')
+        # Deleting field 'CourseAssignment.after_course_works_at'
+        db.delete_column(u'students_courseassignment', 'after_course_works_at_id')
 
 
     models = {
@@ -107,12 +107,13 @@ class Migration(SchemaMigration):
         },
         u'students.courseassignment': {
             'Meta': {'unique_together': "(('user', 'course'),)", 'object_name': 'CourseAssignment'},
+            'after_course_works_at': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'after_course_works'", 'null': 'True', 'to': u"orm['courses.Partner']"}),
             'course': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['courses.Course']"}),
             'cv': ('django.db.models.fields.files.FileField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'favourite_partners': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['courses.Partner']", 'symmetrical': 'False'}),
             'group_time': ('django.db.models.fields.SmallIntegerField', [], {}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'points': ('django.db.models.fields.PositiveIntegerField', [], {'default': "'0'"}),
+            'points': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['students.User']"})
         },
         u'students.hrloginlog': {
@@ -130,7 +131,6 @@ class Migration(SchemaMigration):
         },
         u'students.user': {
             'Meta': {'object_name': 'User'},
-            'after_course_works_at': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'after_course_works'", 'null': 'True', 'to': u"orm['courses.Partner']"}),
             'avatar': ('django_resized.forms.ResizedImageField', [], {'max_length': '100', 'max_width': '200', 'blank': 'True'}),
             'courses': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['courses.Course']", 'through': u"orm['students.CourseAssignment']", 'symmetrical': 'False'}),
             'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),

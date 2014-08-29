@@ -51,7 +51,6 @@ class User(AbstractUser):
         blank=True,
     )
 
-    after_course_works_at = models.ForeignKey(Partner, related_name='after_course_works', blank=True, null=True)
     courses = models.ManyToManyField(Course, through='CourseAssignment')
     description = models.TextField(blank=True)
     github_account = models.URLField(validators=[validate_github], null=True, blank=True)
@@ -111,9 +110,10 @@ class CourseAssignment(models.Model):
         (LATE, 'Late'),
     )
 
+    after_course_works_at = models.ForeignKey(Partner, related_name='after_course_works', blank=True, null=True)
     user = models.ForeignKey(User)
     course = models.ForeignKey(Course)
-    points = models.PositiveIntegerField(default='0')
+    points = models.PositiveIntegerField(default=0)
     group_time = models.SmallIntegerField(choices=GROUP_TIME_CHOICES)
     cv = models.FileField(blank=True, null=True, upload_to='cvs')
     favourite_partners = models.ManyToManyField(Partner)
