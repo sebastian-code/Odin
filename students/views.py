@@ -68,25 +68,29 @@ def assignment(request, id):
         else:
             form = AddNote()
 
-    if is_student and assignment.course.ask_for_favorite_partner and request.user == assignment.user:
-        vote_form = VoteForPartner(instance=assignment, assignment=assignment)
-        if request.method == 'POST':
-            vote_form = VoteForPartner(request.POST, request.FILES, instance=assignment, assignment=assignment)
-            if vote_form.is_valid():
-                vote_form.save()
-                return redirect('students:assignment', id=id)
+    if is_student and request.user == assignment.user:
+        if assignment.course.ask_for_favorite_partner:
+            vote_form = VoteForPartner(instance=assignment, assignment=assignment)
+            if request.method == 'POST':
+                vote_form = VoteForPartner(request.POST, request.FILES, instance=assignment, assignment=assignment)
+                if vote_form.is_valid():
+                    vote_form.save()
+                    return redirect('students:assignment', id=id)
 
-    date_today = datetime.date.today()
-    # get course.end_time if existing, else fake a date from 10 years ago
-    course_end_date = assignment.course.end_time if assignment.course.end_time is not None else datetime.date(1990, 1, 1)
+        date_today = datetime.date.today()
+        # get course.end_time if existing, else fake a date from 10 years ago
+        course_end_date = datetime.date(1990, 1, 1)
+        if assignment.course.end_time:
+            course_end_date = assignment.course.end_time
 
-    if is_student and date_today >= course_end_date and request.user == assignment.user:
-        feedback_form = GiveFeedbackForm(instance=assignment, assignment=assignment)
-        if request.method == 'POST':
-            feedback_form = GiveFeedbackForm(request.POST, request.FILES, instance=assignment, assignment=assignment)
-            if feedback_form.is_valid():
-                feedback_form.save()
-                return redirect('students:assignment', id=id)
+        has_ended = date_today >= course_end_date
+        if assignment.course.ask_for_feedback and has_ended:
+            feedback_form = GiveFeedbackForm(instance=assignment, assignment=assignment)
+            if request.method == 'POST':
+                feedback_form = GiveFeedbackForm(request.POST, request.FILES, instance=assignment, assignment=assignment)
+                if feedback_form.is_valid():
+                    feedback_form.save()
+                    return redirect('students:assignment', id=id)
 
     return render(request, 'assignment.html', locals())
 

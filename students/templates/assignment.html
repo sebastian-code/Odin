@@ -1,4 +1,7 @@
-{% extends "base.html" %} {% load markdown_deux_tags %} {% block meta %} {{ form.media }}
+{% extends "base.html" %}
+{% load markdown_deux_tags %}
+{% block meta %}
+{{ form.media }}
 <link rel="stylesheet" href="{{ STATIC_URL }}css/assignment.css" />{% endblock %} {% block content %}
 <div class="row">
 
@@ -75,7 +78,7 @@
                         </p>
                         {% endif %}
 
-                        {% if date_today >= course_end_date %}
+                        {% if assignment.course.ask_for_feedback and has_ended %}
                         <p class="text-center">
                             <button data-reveal-id="give-feedback">Посочете къде сте започнали работа след курсът</button>
                         </p>

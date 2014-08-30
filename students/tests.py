@@ -142,7 +142,8 @@ class CourseAssignmentTest(TestCase):
             name='Test Course',
             url='test-course',
             application_until=datetime.datetime.now(),
-            end_time=None
+            end_time=datetime.date.today(),
+            ask_for_feedback=True
         )
 
         self.student_user = User.objects.create_user('ivo_student@gmail.com', '123')
@@ -181,21 +182,36 @@ class CourseAssignmentTest(TestCase):
         response = self.client.get(reverse('students:assignment', kwargs={'id': self.assignment.id}))
         self.assertContains(response, 'data-reveal-id="vote-for-partner')
 
-    def test_give_feedback_form_visibility_when_course_no_end_time(self):
+    def test_give_feedback_form_visibility_when_not_ask_for_feedback(self):
+        self.course.ask_for_feedback = False
+        self.course.save()
+        self.client.login(username='ivo_student@gmail.com', password='123')
+        response = self.client.get(reverse('students:assignment', kwargs={'id': self.assignment.id}))
+        self.assertNotContains(response, 'data-reveal-id="give-feedback"')
+
+    def test_give_feedback_form_visibility_when_course_end_time_is_none(self):
+        self.course.end_time = None
+        self.course.save()
+        self.client.login(username='ivo_student@gmail.com', password='123')
+        response = self.client.get(reverse('students:assignment', kwargs={'id': self.assignment.id}))
+        self.assertContains(response, 'data-reveal-id="give-feedback"', count=1)
+
+    @mock.patch('students.views.datetime')
+    def test_give_feedback_form_visibility_when_course_has_not_ended(self, mocked_datetime):
+        mocked_datetime.date = mock.Mock()
+        mocked_datetime.date.today = mock.Mock(return_value=datetime.date(2000, 1, 1))
         self.client.login(username='ivo_student@gmail.com', password='123')
         response = self.client.get(reverse('students:assignment', kwargs={'id': self.assignment.id}))
         self.assertNotContains(response, 'data-reveal-id="give-feedback"')
 
     @mock.patch('students.views.datetime')
-    def test_give_feedback_form_visibility_when_before_course_end_time(self, mocked_datetime):
-        mocked_datetime.date = mock.MagicMock()
-        mocked_datetime.date.today = mock.MagicMock(return_value=datetime.date(1920, 1, 1))
-        self.course.end_time = datetime.date.today()
-        self.course.save()
-
+    def test_give_feedback_form_visiblity_when_course_has_ended(self, mocked_datetime):
+        mocked_datetime.date = mock.Mock()
+        mocked_datetime.date.today = mock.Mock(return_value=self.course.end_time + datetime.timedelta(days=7))
         self.client.login(username='ivo_student@gmail.com', password='123')
         response = self.client.get(reverse('students:assignment', kwargs={'id': self.assignment.id}))
-        self.assertNotContains(response, 'data-reveal-id="give-feedback"')
+        self.assertContains(response, 'data-reveal-id="give-feedback"')
+
 
     def test_get_favourite_partners(self):
         self.assertEqual('Potato Company', self.assignment.get_favourite_partners())
