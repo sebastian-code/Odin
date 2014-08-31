@@ -248,5 +248,6 @@ class TaskGenerationTest(TestCase):
         tree_element = mock.MagicMock()
         tree_element.path = 'week1/2-jQuery-Gauntlet/README.md'
         task_github_url = 'https://github.com/HackBulgaria/Frontend-JavaScript-1/tree/master/week1/2-jQuery-Gauntlet/'
-        generate_tasks.create_db_task(course, tree_element, False)
+        expected = 'Created task <2> jQuery Gauntlet - https://github.com/HackBulgaria/Frontend-JavaScript-1/tree/master/week1/2-jQuery-Gauntlet/'
+        self.assertEqual(expected, generate_tasks.create_db_task(course, tree_element, False))
         self.assertIsNotNone(Task.DoesNotExist, Task.objects.get(description=task_github_url))

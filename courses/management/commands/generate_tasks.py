@@ -69,7 +69,7 @@ def create_db_task(course, tree_element, is_exam):
 
     obj, created = Task.objects.get_or_create(name=task_name, description=task_github_url, course=course, is_exam=is_exam, week=dir_task_names['dir'], defaults={'deadline': deadline})
     if created:
-        print 'Created task {} - {}'.format(task_name, task_github_url)
+        return 'Created task {} - {}'.format(task_name, task_github_url)
 
 
 class Command(BaseCommand):
@@ -91,8 +91,8 @@ class Command(BaseCommand):
                 lambda x: 'README.md' in x.path and x.path.count('/') > 1 and x.type == 'blob', api_repo_tree.tree)
             for element in blob_tree_elements:
                 if is_exam_task(element):
-                    create_db_task(course, element, is_exam=True)
+                    print(create_db_task(course, element, is_exam=True))
                 elif is_weekly_task(element):
-                    create_db_task(course, element, is_exam=False)
+                    print(create_db_task(course, element, is_exam=False))
         else:
             print 'No github repo set for course <{}>'.format(course.name)
