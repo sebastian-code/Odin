@@ -1,9 +1,11 @@
 import datetime
 import mock
+import os
 import unittest
 
 from django.conf import settings
 from django.contrib.auth.hashers import make_password
+from django.core.management import call_command
 from django.core.urlresolvers import reverse
 from django.core.validators import ValidationError
 from django.db import IntegrityError
@@ -68,7 +70,7 @@ class UserTest(TestCase):
 
     def test_get_courses(self):
         self.assertEqual(u'Test Course - 1', self.student_user.get_courses())
-        assignment2 = CourseAssignment.objects.create(
+        CourseAssignment.objects.create(
             user=self.student_user, course=self.course2, group_time=CourseAssignment.LATE)
         self.assertEqual(u'Test Course - 1; Test Course2 - 2', self.student_user.get_courses())
 
@@ -211,7 +213,6 @@ class CourseAssignmentTest(TestCase):
         self.client.login(username='ivo_student@gmail.com', password='123')
         response = self.client.get(reverse('students:assignment', kwargs={'id': self.assignment.id}))
         self.assertContains(response, 'data-reveal-id="give-feedback"')
-
 
     def test_get_favourite_partners(self):
         self.assertEqual('Potato Company', self.assignment.get_favourite_partners())
@@ -450,3 +451,34 @@ class API_Tests(TestCase):
         expected = [{"date": date_str, "student_id": self.student_user.id, "student_courses": [], "student_name": ''}]
         expected = "{}".format(expected).replace("'", '"')
         self.assertEqual(expected, response.content)
+
+
+class GetCommandsTest(TestCase):
+    def setUp(self):
+        self.filename = 'students.txt'
+        self.user_without_github = User.objects.create_user('asd@gmail.com', '123')
+        self.user_without_github.first_name = 'Asd'
+        self.user_without_github.save()
+
+        self.user = User.objects.create_user('ivo_student@gmail.com', '123')
+        self.user.first_name = 'Ivo'
+        self.user.status = User.STUDENT
+        self.user.github_account = 'https://github.com/Ivaylo-Bachvarov'
+        self.user.save()
+
+    def tearDown(self):
+        os.remove(self.filename)
+
+    def test_get_people_with_no_github(self):
+        expected = '[1] {} - {}\n'.format(self.user_without_github.first_name, self.user_without_github.email)
+        call_command('get_people_with_no_github', self.filename)
+        with open(self.filename, 'r') as f:
+            actual = f.read()
+        self.assertEqual(expected, actual)
+
+    def test_get_github_accounts(self):
+        expected = '{} - {} - {}\n'.format(self.user.first_name, self.user.email, self.user.github_account)
+        call_command('get_github_accounts', self.filename)
+        with open(self.filename, 'r') as f:
+            actual = f.read()
+        self.assertEqual(expected, actual)
