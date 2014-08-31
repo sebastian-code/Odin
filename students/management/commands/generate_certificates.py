@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 
 from students.models import CourseAssignment, Solution
-from .helpers.classes import TempCertificate, SolutionGithubRepo
+from .helpers.classes import TempCertificate, GithubSolution
 
 
 def generate_certificate(assignment, solutions):
@@ -12,7 +12,7 @@ def generate_certificate(assignment, solutions):
         github_parameters = solution.get_github_user_and_repo_names()
 
         if is_new_valid_github_account(github_parameters, visited_repos):
-            solution_github_repo = SolutionGithubRepo(github_parameters['user_name'], github_parameters['repo_name'], solution)
+            solution_github_repo = GithubSolution(github_parameters['user_name'], github_parameters['repo_name'], solution)
             if solution_github_repo.is_invalid_repo():
                 return
             elif solution_github_repo.is_cheating():

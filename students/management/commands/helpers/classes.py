@@ -27,7 +27,7 @@ class TempCertificate:
         return date(year=end_time.year, month=end_time.month, day=end_time.day)
 
     def get_total_commits(self):
-        return reduce(lambda x, y: x + y, map(lambda x: x.commits_count, self.weekly_commits))
+        return reduce(lambda x, y: x + y, map(lambda x: x.commits_count, self.weekly_commits), 0)
 
     def update_stats(self, api_stats_dictionary):
         self.open_issues += api_stats_dictionary['open_issues']
@@ -65,7 +65,7 @@ class TempCertificate:
             print 'Created certificate for {}'.format(self.assignment.user)
 
 
-class SolutionGithubRepo:
+class GithubSolution:
 
     def __init__(self, user_name, repo_name, solution):
         self.solution = solution
