@@ -45,10 +45,55 @@ class CoursesTest(TestCase):
         self.assertEqual(404, response.status_code)
         self.assertTemplateNotUsed('show_course.html', response)
 
-    def test_show_all_courses(self):
+    def test_show_all_courses_when_no_active_courses(self):
         response = self.client.get(reverse('courses:show_all_courses'))
         self.assertEqual(200, response.status_code)
         self.assertTemplateUsed('show_all_courses.html', response)
+        self.assertNotContains(response, 'id="active_courses"')
+        self.assertContains(response, 'id="no_active_courses"')
+
+    def test_show_all_courses_when_active_courses(self):
+        self.course.start_time = datetime.date.today()
+        self.course.save()
+        response = self.client.get(reverse('courses:show_all_courses'))
+        self.assertEqual(200, response.status_code)
+        self.assertTemplateUsed('show_all_courses.html', response)
+        self.assertContains(response, 'id="active_courses"')
+        self.assertNotContains(response, 'id="no_active_courses"')
+
+    def test_show_all_courses_when_no_upcoming_courses(self):
+        self.course.delete()
+        response = self.client.get(reverse('courses:show_all_courses'))
+        self.assertEqual(200, response.status_code)
+        self.assertTemplateUsed('show_all_courses.html', response)
+        self.assertNotContains(response, 'id="upcoming_courses"')
+        self.assertContains(response, 'id="no_upcoming_courses"')
+
+    def test_show_all_courses_when_upcoming_courses(self):
+        self.course.start_time = None
+        self.course.save()
+        response = self.client.get(reverse('courses:show_all_courses'))
+        self.assertEqual(200, response.status_code)
+        self.assertTemplateUsed('show_all_courses.html', response)
+        self.assertContains(response, 'id="upcoming_courses"')
+        self.assertNotContains(response, 'id="no_upcoming_courses"')
+
+    def test_show_all_courses_when_no_ended_courses(self):
+        response = self.client.get(reverse('courses:show_all_courses'))
+        self.assertEqual(200, response.status_code)
+        self.assertTemplateUsed('show_all_courses.html', response)
+        self.assertNotContains(response, 'id="ended_courses"')
+        self.assertContains(response, 'id="no_ended_courses"')
+
+    def test_show_all_courses_when_ended_courses(self):
+        self.course.start_time = datetime.date.today() - datetime.timedelta(days=30)
+        self.course.end_time = datetime.date.today() - datetime.timedelta(days=1)
+        self.course.save()
+        response = self.client.get(reverse('courses:show_all_courses'))
+        self.assertEqual(200, response.status_code)
+        self.assertTemplateUsed('show_all_courses.html', response)
+        self.assertContains(response, 'id="ended_courses"')
+        self.assertNotContains(response, 'id="no_ended_courses"')
 
     def test_show_all_partners(self):
         response = self.client.get(reverse('courses:show_all_partners'))

@@ -1,7 +1,8 @@
-from datetime import datetime
+from datetime import date
 
-from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
+from django.shortcuts import render, get_object_or_404
 
 from students.models import CourseAssignment, User, Solution
 from .models import Course, Partner, Certificate, Task
@@ -9,12 +10,15 @@ from .models import Course, Partner, Certificate, Task
 
 def show_course(request, course_url):
     course = get_object_or_404(Course, url=course_url)
-    enable_applications = datetime.today().date() <= course.application_until
+    enable_applications = date.today() <= course.application_until
     return render(request, 'show_course.html', locals())
 
 
 def show_all_courses(request):
-    courses = Course.objects.all()
+    date_today = date.today()
+    active_courses = Course.objects.filter(Q(end_time__gt=date_today) | Q(end_time=None)).exclude(start_time=None)
+    upcoming_courses = Course.objects.filter(Q(start_time__gt=date_today) | Q(start_time=None))
+    ended_courses = Course.objects.filter(end_time__lte=date_today).exclude(start_time=None)
     return render(request, 'show_all_courses.html', locals())
 
 
