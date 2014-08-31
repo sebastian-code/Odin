@@ -53,12 +53,12 @@ class User(AbstractUser):
 
     courses = models.ManyToManyField(Course, through='CourseAssignment')
     description = models.TextField(blank=True)
-    github_account = models.URLField(validators=[validate_github], null=True, blank=True)
+    github_account = models.URLField(validators=[validate_github], blank=True)
     hr_of = models.ForeignKey(Partner, blank=True, null=True)
-    linkedin_account = models.URLField(validators=[validate_linkedin], null=True, blank=True)
-    mac = models.CharField(validators=[validate_mac], max_length=17, null=True, blank=True)
+    linkedin_account = models.URLField(validators=[validate_linkedin], blank=True)
+    mac = models.CharField(validators=[validate_mac], max_length=17, blank=True)
     subscribed_topics = models.ManyToManyField('forum.Topic', blank=True)
-    works_at = models.CharField(null=True, blank=True, max_length='40')
+    works_at = models.CharField(blank=True, max_length='40')
 
     AbstractUser._meta.get_field('email')._unique = True
 
@@ -115,7 +115,7 @@ class CourseAssignment(models.Model):
     course = models.ForeignKey(Course)
     points = models.PositiveIntegerField(default=0)
     group_time = models.SmallIntegerField(choices=GROUP_TIME_CHOICES)
-    cv = models.FileField(blank=True, null=True, upload_to='cvs')
+    cv = models.FileField(blank=True, upload_to='cvs', default='')
     favourite_partners = models.ManyToManyField(Partner)
 
     class Meta:
