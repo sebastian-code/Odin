@@ -1,6 +1,5 @@
 from django.core.management.base import BaseCommand
 
-
 from students.models import CourseAssignment, Solution
 from .helpers.classes import TempCertificate, SolutionGithubRepo
 

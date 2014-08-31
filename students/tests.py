@@ -13,6 +13,8 @@ from django.test import TestCase
 
 from .models import CheckIn, User, HrLoginLog, CourseAssignment, Solution
 from courses.models import Partner, Course, Task
+from management.commands.generate_certificates import is_new_valid_github_account
+from management.commands.helpers.classes import TempCertificate
 from validators import validate_mac, validate_url, validate_github, validate_linkedin
 
 
@@ -482,3 +484,60 @@ class GetCommandsTest(TestCase):
         with open(self.filename, 'r') as f:
             actual = f.read()
         self.assertEqual(expected, actual)
+
+
+class GenerateCertificateTest(TestCase):
+    def setUp(self):
+        self.github_parameters = {'user_name': 'syndbg', 'repo_name': 'atom'}
+        self.visited_repos = [{'user_name': 'kennethreitz', 'repo_name': 'requests'}, {'user_name': 'django', 'repo_name': 'django'}]
+
+    def test_is_new_valid_github_account(self):
+        existing_parameters = {'user_name': 'kennethreitz', 'repo_name': 'requests'}
+        self.assertFalse(is_new_valid_github_account(existing_parameters, self.visited_repos))
+        self.assertTrue(is_new_valid_github_account(self.github_parameters, self.visited_repos))
+
+    def test_generate_certificate(self):
+        pass
+
+
+class TempCertificateTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user('certificate@gmaaail.com', '123')
+        self.user.github_account = 'https://github.com/syndbg'
+        self.user.save()
+
+        self.start_time = datetime.date.today() - datetime.timedelta(days=7)
+        self.end_time = datetime.date.today()
+        self.user = User.objects.create()
+        self.course = Course.objects.create(
+            name='Certificate Course',
+            url='certificate-course',
+            application_until=datetime.datetime.now(),
+            start_time=self.start_time,
+            end_time=self.end_time
+        )
+        self.assignment = CourseAssignment.objects.create(
+            user=self.user, course=self.course, group_time=CourseAssignment.EARLY)
+        self.temp_certificate = TempCertificate(self.assignment)
+
+    def test_set_start_time(self):
+        self.assertEqual(self.start_time, self.temp_certificate.start_time)
+
+    def test_set_end_time(self):
+        expected = self.end_time + datetime.timedelta(days=31)
+        self.assertEqual(expected, self.temp_certificate.end_time)
+
+    def test_update_stats(self):
+        self.assertEqual(0, self.temp_certificate.open_issues)
+        self.assertEqual(0, self.temp_certificate.closed_issues)
+        api_stats_dictionary = {'open_issues': 5, 'closed_issues': 3}
+        self.temp_certificate.update_stats(api_stats_dictionary)
+        self.assertEqual(5, self.temp_certificate.open_issues)
+        self.assertEqual(3, self.temp_certificate.closed_issues)
+
+    # def test_add_cheated_solution(self):
+    #     solution_url = 'https://github.com/syndbg/HackBulgaria/'
+    #     task_url = 'https://github.com/HackBulgaria/Frontend-JavaScript-1/tree/master/week1/2-jQuery-Gauntlet'
+    #     task = Task.objects.create(course=self.course, description=task_url, name='<2> jQuery-Gauntlet')
+    #     solution = Solution.objects.create(task=task, user=self.user, repo=solution_url)
+    #     self.assert()

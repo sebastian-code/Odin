@@ -15,16 +15,14 @@ class UserManager(BaseUserManager):
         if not email:
             raise ValueError('Users must have an email address')
 
-        user = self.model(
-            email=UserManager.normalize_email(email),
-        )
-        user.username = email
+        email = self.normalize_email(email)
+        user = self.model(username=email, email=email)
         user.set_password(password)
         user.save(using=self._db)
         return user
 
     def create_superuser(self, email, password):
-        user = self.create_user(email, password=password)
+        user = self.create_user(email, password)
         user.is_superuser = True
         user.is_staff = True
         user.save(using=self._db)
@@ -111,15 +109,12 @@ class CourseAssignment(models.Model):
     )
 
     after_course_works_at = models.ForeignKey(Partner, related_name='after_course_works', blank=True, null=True)
-    user = models.ForeignKey(User)
     course = models.ForeignKey(Course)
-    points = models.PositiveIntegerField(default=0)
-    group_time = models.SmallIntegerField(choices=GROUP_TIME_CHOICES)
     cv = models.FileField(blank=True, upload_to='cvs', default='')
     favourite_partners = models.ManyToManyField(Partner)
-
-    class Meta:
-        unique_together = (('user', 'course'),)
+    group_time = models.SmallIntegerField(choices=GROUP_TIME_CHOICES)
+    points = models.PositiveIntegerField(default=0)
+    user = models.ForeignKey(User)
 
     def __unicode__(self):
         return u'<{}> {} - {}'.format(self.user.get_full_name(), self.course, self.group_time)
@@ -130,6 +125,9 @@ class CourseAssignment(models.Model):
     def has_valid_github_account(self):
         github_account = self.user.github_account
         return github_account is not None and '://github.com/' in github_account
+
+    class Meta:
+        unique_together = (('user', 'course'),)
 
 
 class UserNote(models.Model):
