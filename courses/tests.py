@@ -35,32 +35,77 @@ class CoursesTest(TestCase):
 
     def test_show_course(self):
         response = self.client.get(
-            reverse('courses:show-course', kwargs={'course_url': self.course.url}))
+            reverse('courses:show_course', kwargs={'course_url': self.course.url}))
         self.assertEqual(200, response.status_code)
         self.assertTemplateUsed('show_course.html', response)
 
     def test_show_nonexistent_course(self):
         response = self.client.get(
-            reverse('courses:show-course', kwargs={'course_url': 'some_url'}))
+            reverse('courses:show_course', kwargs={'course_url': 'some_url'}))
         self.assertEqual(404, response.status_code)
         self.assertTemplateNotUsed('show_course.html', response)
 
-    def test_show_all_courses(self):
-        response = self.client.get(reverse('courses:show-all-courses'))
+    def test_show_all_courses_when_no_active_courses(self):
+        response = self.client.get(reverse('courses:show_all_courses'))
         self.assertEqual(200, response.status_code)
         self.assertTemplateUsed('show_all_courses.html', response)
+        self.assertNotContains(response, 'id="active_courses"')
+        self.assertContains(response, 'id="no_active_courses"')
+
+    def test_show_all_courses_when_active_courses(self):
+        self.course.start_time = datetime.date.today()
+        self.course.save()
+        response = self.client.get(reverse('courses:show_all_courses'))
+        self.assertEqual(200, response.status_code)
+        self.assertTemplateUsed('show_all_courses.html', response)
+        self.assertContains(response, 'id="active_courses"')
+        self.assertNotContains(response, 'id="no_active_courses"')
+
+    def test_show_all_courses_when_no_upcoming_courses(self):
+        self.course.delete()
+        response = self.client.get(reverse('courses:show_all_courses'))
+        self.assertEqual(200, response.status_code)
+        self.assertTemplateUsed('show_all_courses.html', response)
+        self.assertNotContains(response, 'id="upcoming_courses"')
+        self.assertContains(response, 'id="no_upcoming_courses"')
+
+    def test_show_all_courses_when_upcoming_courses(self):
+        self.course.start_time = None
+        self.course.save()
+        response = self.client.get(reverse('courses:show_all_courses'))
+        self.assertEqual(200, response.status_code)
+        self.assertTemplateUsed('show_all_courses.html', response)
+        self.assertContains(response, 'id="upcoming_courses"')
+        self.assertNotContains(response, 'id="no_upcoming_courses"')
+
+    def test_show_all_courses_when_no_ended_courses(self):
+        response = self.client.get(reverse('courses:show_all_courses'))
+        self.assertEqual(200, response.status_code)
+        self.assertTemplateUsed('show_all_courses.html', response)
+        self.assertNotContains(response, 'id="ended_courses"')
+        self.assertContains(response, 'id="no_ended_courses"')
+
+    def test_show_all_courses_when_ended_courses(self):
+        self.course.start_time = datetime.date.today() - datetime.timedelta(days=30)
+        self.course.end_time = datetime.date.today() - datetime.timedelta(days=1)
+        self.course.save()
+        response = self.client.get(reverse('courses:show_all_courses'))
+        self.assertEqual(200, response.status_code)
+        self.assertTemplateUsed('show_all_courses.html', response)
+        self.assertContains(response, 'id="ended_courses"')
+        self.assertNotContains(response, 'id="no_ended_courses"')
 
     def test_show_all_partners(self):
-        response = self.client.get(reverse('courses:show-all-partners'))
+        response = self.client.get(reverse('courses:show_all_partners'))
         self.assertEqual(200, response.status_code)
         self.assertTemplateUsed('show_all_partners.html', response)
 
     def test_show_course_students(self):
         self.client.login(username='ivo_student@gmail.com', password='123')
         response = self.client.get(
-            reverse('courses:course-students', kwargs={'course_id': self.course.id}))
+            reverse('courses:show_course_students', kwargs={'course_id': self.course.id}))
         self.assertEqual(200, response.status_code)
-        self.assertTemplateUsed('course_students.html', response)
+        self.assertTemplateUsed('show_course_students.html', response)
 
 
 class PartnerTest(TestCase):
@@ -91,12 +136,12 @@ class CertificateTest(TestCase):
         )
 
         self.task1 = Task.objects.create(
-            name="task1",
+            name='task1',
             course=self.course,
         )
 
         self.task2 = Task.objects.create(
-            name="task2",
+            name='task2',
             course=self.course,
         )
 
@@ -203,5 +248,6 @@ class TaskGenerationTest(TestCase):
         tree_element = mock.MagicMock()
         tree_element.path = 'week1/2-jQuery-Gauntlet/README.md'
         task_github_url = 'https://github.com/HackBulgaria/Frontend-JavaScript-1/tree/master/week1/2-jQuery-Gauntlet/'
-        generate_tasks.create_db_task(course, tree_element, False)
+        expected = 'Created task <2> jQuery Gauntlet - https://github.com/HackBulgaria/Frontend-JavaScript-1/tree/master/week1/2-jQuery-Gauntlet/'
+        self.assertEqual(expected, generate_tasks.create_db_task(course, tree_element, False))
         self.assertIsNotNone(Task.DoesNotExist, Task.objects.get(description=task_github_url))

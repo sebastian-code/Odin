@@ -22,7 +22,7 @@
                 <div class="panel">
                     <h3>{{ topic.title }} 
                         {% if topic.author == user %} 
-                            <a href="{% url 'forum:edit-topic' topic.id %}"><img src="{{ STATIC_URL }}img/edit-icon.png" alt=""></a>
+                            <a href="{% url 'forum:edit_topic' topic.id %}"><img src="{{ STATIC_URL }}img/edit-icon.png" alt=""></a>
                         {% endif %}
                     </h3>
                     <p>{{ topic.text|markdown }}</p>
@@ -43,7 +43,7 @@
             <div class="large-9 columns">
                 <div class="panel">
                     {% if comment.author == user %}
-                        <a href="{% url 'forum:edit-comment' comment.id %}"><img src="{{ STATIC_URL }}img/edit-icon.png" alt="edit comment" id="comment-edit"></a>
+                        <a href="{% url 'forum:edit_comment' comment.id %}"><img src="{{ STATIC_URL }}img/edit-icon.png" alt="edit comment" id="comment-edit"></a>
                     {% endif %}
                     <p>{{ comment.text|markdown }}</p>
                 </div>

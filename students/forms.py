@@ -36,7 +36,7 @@ class UserEditForm(forms.ModelForm):
 
         if password1 != password2:
             raise forms.ValidationError(
-                _("The two password fields didn't match.")
+                _('The two password fields didn\'t match.')
             )
 
         return cleaned_data
@@ -65,7 +65,7 @@ class AddNote(forms.ModelForm):
         )
 
         fields = (
-            "assignment",
+            'assignment',
             'text',
         )
 
@@ -79,14 +79,15 @@ class VoteForPartner(forms.ModelForm):
         self.fields['favourite_partners'].widget = forms.CheckboxSelectMultiple()
         if self.assignment:
             self.fields['favourite_partners'].queryset = Partner.objects.filter(
+                is_active=True,
                 course=self.assignment.course)
 
     class Meta:
         model = CourseAssignment
 
         fields = (
-            "favourite_partners",
-            "cv",
+            'favourite_partners',
+            'cv',
         )
 
 
@@ -108,4 +109,21 @@ class AddSolutionForm(forms.ModelForm):
         fields = (
             'task',
             'repo',
+        )
+
+
+class GiveFeedbackForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        self.assignment = kwargs.pop('assignment')
+        super(GiveFeedbackForm, self).__init__(*args, **kwargs)
+
+        if self.assignment:
+            self.fields['after_course_works_at'].queryset = Partner.objects.all()
+
+    class Meta:
+        model = CourseAssignment
+
+        fields = (
+            'after_course_works_at',
         )

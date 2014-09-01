@@ -15,16 +15,14 @@ class UserManager(BaseUserManager):
         if not email:
             raise ValueError('Users must have an email address')
 
-        user = self.model(
-            email=UserManager.normalize_email(email),
-        )
-        user.username = email
+        email = self.normalize_email(email)
+        user = self.model(username=email, email=email)
         user.set_password(password)
         user.save(using=self._db)
         return user
 
     def create_superuser(self, email, password):
-        user = self.create_user(email, password=password)
+        user = self.create_user(email, password)
         user.is_superuser = True
         user.is_staff = True
         user.save(using=self._db)
@@ -51,14 +49,14 @@ class User(AbstractUser):
         blank=True,
     )
 
-    github_account = models.URLField(validators=[validate_github], null=True, blank=True)
-    linkedin_account = models.URLField(validators=[validate_linkedin], null=True, blank=True)
-    description = models.TextField(blank=True)
     courses = models.ManyToManyField(Course, through='CourseAssignment')
-    mac = models.CharField(validators=[validate_mac], max_length=17, null=True, blank=True)
-    works_at = models.CharField(null=True, blank=True, max_length='40')
-    subscribed_topics = models.ManyToManyField('forum.Topic', blank=True)
+    description = models.TextField(blank=True)
+    github_account = models.URLField(validators=[validate_github], blank=True)
     hr_of = models.ForeignKey(Partner, blank=True, null=True)
+    linkedin_account = models.URLField(validators=[validate_linkedin], blank=True)
+    mac = models.CharField(validators=[validate_mac], max_length=17, blank=True)
+    subscribed_topics = models.ManyToManyField('forum.Topic', blank=True)
+    works_at = models.CharField(blank=True, max_length='40')
 
     AbstractUser._meta.get_field('email')._unique = True
 
@@ -86,7 +84,6 @@ class User(AbstractUser):
         courses = []
         for course in self.courseassignment_set.all():
             courses.append(course)
-
         return courses
 
     def log_hr_login(sender, user, request, **kwargs):
@@ -111,15 +108,13 @@ class CourseAssignment(models.Model):
         (LATE, 'Late'),
     )
 
-    user = models.ForeignKey(User)
+    after_course_works_at = models.ForeignKey(Partner, related_name='after_course_works', blank=True, null=True)
     course = models.ForeignKey(Course)
-    points = models.PositiveIntegerField(default='0')
-    group_time = models.SmallIntegerField(choices=GROUP_TIME_CHOICES)
-    cv = models.FileField(blank=True, null=True, upload_to='cvs')
+    cv = models.FileField(blank=True, upload_to='cvs', default='')
     favourite_partners = models.ManyToManyField(Partner)
-
-    class Meta:
-        unique_together = (('user', 'course'),)
+    group_time = models.SmallIntegerField(choices=GROUP_TIME_CHOICES)
+    points = models.PositiveIntegerField(default=0)
+    user = models.ForeignKey(User)
 
     def __unicode__(self):
         return u'<{}> {} - {}'.format(self.user.get_full_name(), self.course, self.group_time)
@@ -130,6 +125,9 @@ class CourseAssignment(models.Model):
     def has_valid_github_account(self):
         github_account = self.user.github_account
         return github_account is not None and '://github.com/' in github_account
+
+    class Meta:
+        unique_together = (('user', 'course'),)
 
 
 class UserNote(models.Model):

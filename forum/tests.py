@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from django.test import TestCase, client
+from django.test import TestCase
 from django.core import mail
 from django.core.urlresolvers import reverse
 
@@ -12,7 +12,6 @@ class ForumTest(TestCase):
     def setUp(self):
         self.student_user = User.objects.create_user('ivo_student@gmail.com', '123')
         self.student_user.status = User.STUDENT
-        # self.student_user.first_name = "Иван"
         self.student_user.save()
 
         self.hr_user = User.objects.create_user('ivo_hr@gmail.com', '123')
@@ -36,41 +35,35 @@ class ForumTest(TestCase):
         )
 
     def test_show_categories(self):
-        self.client = client.Client()
         response = self.client.get(reverse('forum:forum'))
         self.assertEqual(200, response.status_code)
         self.assertTemplateUsed('categories.html', response)
 
     def test_show_category(self):
-        self.client = client.Client()
         response = self.client.get(
-            reverse('forum:show-category', kwargs={'category_id': self.category.id}))
+            reverse('forum:show_category', kwargs={'category_id': self.category.id}))
         self.assertEqual(200, response.status_code)
         self.assertTemplateUsed('show_category.html', response)
 
     def test_show_nonexistent_category(self):
-        self.client = client.Client()
-        response = self.client.get(reverse('forum:show-category', kwargs={'category_id': '234'}))
+        response = self.client.get(reverse('forum:show_category', kwargs={'category_id': '234'}))
         self.assertEqual(404, response.status_code)
         self.assertTemplateNotUsed('show_category.html', response)
 
     def test_show_topic(self):
-        self.client = client.Client()
-        response = self.client.get(reverse('forum:show-topic', kwargs={'topic_id': self.topic.id}))
+        response = self.client.get(reverse('forum:show_topic', kwargs={'topic_id': self.topic.id}))
         self.assertEqual(200, response.status_code)
         self.assertTemplateUsed('show_topic.html', response)
 
     def test_show_nonexistent_topic(self):
-        self.client = client.Client()
-        response = self.client.get(reverse('forum:show-topic', kwargs={'topic_id': '234'}))
+        response = self.client.get(reverse('forum:show_topic', kwargs={'topic_id': '234'}))
         self.assertEqual(404, response.status_code)
         self.assertTemplateNotUsed('show_topic.html', response)
 
     def test_add_topic(self):
-        self.client = client.Client()
         self.client.login(username='ivo_student@gmail.com', password='123')
         before_add = Topic.objects.count()
-        response = self.client.post(reverse('forum:add-topic',  kwargs={'category_id': self.category.id}), {
+        response = self.client.post(reverse('forum:add_topic',  kwargs={'category_id': self.category.id}), {
             'title': 'My Topic',
             'text': 'Lqlqlq',
             'category': self.category,
@@ -79,14 +72,12 @@ class ForumTest(TestCase):
         after_add = Topic.objects.count()
         self.assertEqual(before_add + 1, after_add)
         self.assertEqual(302, response.status_code)
-        self.assertRedirects(response, 'category/{}/'.format(self.category.id))
+        self.assertRedirects(response, 'forum/category/{}/'.format(self.category.id))
         self.assertTemplateUsed('add_topic.html', response)
 
     def test_add_topic_not_logged_redirect(self):
-        self.client = client.Client()
-
         before_add = Topic.objects.count()
-        response = self.client.post(reverse('forum:add-topic',  kwargs={'category_id': self.category.id}), {
+        response = self.client.post(reverse('forum:add_topic',  kwargs={'category_id': self.category.id}), {
             'title': 'My Topic',
             'text': 'Lqlqlq',
             'category': self.category,
@@ -95,13 +86,12 @@ class ForumTest(TestCase):
 
         self.assertEqual(before_add, after_add)
         self.assertEqual(302, response.status_code)
-        self.assertRedirects(response, 'login/?next=/add-topic/{}/'.format(self.category.id))
+        self.assertRedirects(response, 'login/?next=/forum/add-topic/{}/'.format(self.category.id))
         self.assertTemplateNotUsed('add_topic.html', response)
 
     def test_edit_topic(self):
-        self.client = client.Client()
         self.client.login(username='ivo_student@gmail.com', password='123')
-        response = self.client.post(reverse('forum:edit-topic',  kwargs={'topic_id': self.topic.id}), {
+        response = self.client.post(reverse('forum:edit_topic',  kwargs={'topic_id': self.topic.id}), {
             'title': 'My Topic 2',
             'text': 'Lqlqlq lqlql',
         })
@@ -112,20 +102,18 @@ class ForumTest(TestCase):
         self.assertTemplateUsed('edit_topic.html', response)
 
     def test_edit_topic_not_logged(self):
-        self.client = client.Client()
-        response = self.client.post(reverse('forum:edit-topic',  kwargs={'topic_id': self.topic.id}), {
+        response = self.client.post(reverse('forum:edit_topic',  kwargs={'topic_id': self.topic.id}), {
             'title': 'My Topic 2',
             'text': 'Lqlqlq lqlql',
         })
 
         self.assertEqual(302, response.status_code)
-        self.assertRedirects(response, 'login/?next=/edit-topic/{}/'.format(self.topic.id))
+        self.assertRedirects(response, 'login/?next=/forum/edit-topic/{}/'.format(self.topic.id))
         self.assertTemplateNotUsed('edit_topic.html', response)
 
     def test_edit_topic_not_owned(self):
-        self.client = client.Client()
         self.client.login(username='ivo_hr@gmail.com', password='123')
-        response = self.client.post(reverse('forum:edit-topic',  kwargs={'topic_id': self.topic.id}), {
+        response = self.client.post(reverse('forum:edit_topic',  kwargs={'topic_id': self.topic.id}), {
             'title': 'My Topic 2',
             'text': 'Lqlqlq lqlql',
         })
@@ -134,10 +122,9 @@ class ForumTest(TestCase):
         self.assertTemplateNotUsed('edit_topic.html', response)
 
     def test_add_comment(self):
-        self.client = client.Client()
         self.client.login(username='ivo_student@gmail.com', password='123')
         before_add = Comment.objects.count()
-        response = self.client.post(reverse('forum:show-topic', kwargs={'topic_id': self.topic.id}), {
+        response = self.client.post(reverse('forum:show_topic', kwargs={'topic_id': self.topic.id}), {
             'text': 'Lqlqlq',
             'topic': self.topic,
         })
@@ -148,9 +135,8 @@ class ForumTest(TestCase):
         self.assertTemplateUsed('show_topic.html', response)
 
     def test_add_comment_not_logged(self):
-        self.client = client.Client()
         before_add = Comment.objects.count()
-        response = self.client.post(reverse('forum:show-topic', kwargs={'topic_id': self.topic.id}), {
+        response = self.client.post(reverse('forum:show_topic', kwargs={'topic_id': self.topic.id}), {
             'text': 'Lqlqlq',
             'topic': self.topic,
         })
@@ -161,24 +147,22 @@ class ForumTest(TestCase):
         self.assertTemplateNotUsed('show_topic.html', response)
 
     def test_edit_comment(self):
-        self.client = client.Client()
         self.client.login(username='ivo_student@gmail.com', password='123')
         new_text = 'New text of the comment'
-        response = self.client.post(reverse('forum:edit-comment', kwargs={'comment_id': self.comment.id}), {
+        response = self.client.post(reverse('forum:edit_comment', kwargs={'comment_id': self.comment.id}), {
             'text': new_text,
         })
 
         edited_comment = Comment.objects.filter(text=new_text)
         self.assertEqual(1, edited_comment.count())
         self.assertEqual(302, response.status_code)
-        self.assertRedirects(response, 'topic/{}/'.format(edited_comment.first().id))
+        self.assertRedirects(response, 'forum/topic/{}/'.format(edited_comment.first().id))
         self.assertTemplateUsed('edit_comment.html', response)
 
     def test_edit_comment_not_owned(self):
-        self.client = client.Client()
         self.client.login(username='ivo_hr@gmail.com', password='123')
         new_text = 'New text of the comment'
-        response = self.client.post(reverse('forum:edit-comment', kwargs={'comment_id': self.comment.id}), {
+        response = self.client.post(reverse('forum:edit_comment', kwargs={'comment_id': self.comment.id}), {
             'text': new_text,
         })
 
@@ -187,8 +171,6 @@ class ForumTest(TestCase):
 
     # Testing subscriptions
     def test_unsubscribing(self):
-        self.client = client.Client()
-
         self.client.login(
             username=self.student_user.email,
             password='123',
@@ -205,8 +187,6 @@ class ForumTest(TestCase):
         self.assertTrue(self.topic not in self.student_user.subscribed_topics.all())
 
     def test_subscribing(self):
-        self.client = client.Client()
-
         self.client.login(
             username=self.student_user.email,
             password='123',
@@ -227,14 +207,13 @@ class ForumTest(TestCase):
         self.assertEqual(302, response.status_code)
 
     def test_subscribing_after_new_topic(self):
-        self.client = client.Client()
         self.client.login(
             username=self.student_user.email,
             password='123'
         )
 
         response = self.client.post(
-            reverse('forum:add-topic',  kwargs={'category_id': self.category.id}),
+            reverse('forum:add_topic',  kwargs={'category_id': self.category.id}),
             {
                 'title': 'test subscribing after new topic',
                 'text': 'Lqlqlq',
@@ -248,7 +227,6 @@ class ForumTest(TestCase):
         self.assertTemplateUsed('add_topic.html', response)
 
     def test_subscribing_after_new_comment(self):
-        self.client = client.Client()
         self.client.login(
             username=self.student_user.email,
             password='123'
@@ -260,7 +238,7 @@ class ForumTest(TestCase):
             category=self.category,
         )
 
-        response = self.client.post(reverse('forum:show-topic', kwargs={'topic_id': empty_topic.id}), {
+        response = self.client.post(reverse('forum:show_topic', kwargs={'topic_id': empty_topic.id}), {
             'text': 'Lqlqlq lqlqlql lqlqlql',
             'topic': empty_topic,
         })
@@ -270,7 +248,6 @@ class ForumTest(TestCase):
         self.assertTemplateUsed('show_topic.html', response)
 
     def test_subscribing_after_unsubscribing(self):
-        self.client = client.Client()
         self.client.login(
             username=self.student_user.email,
             password='123',
@@ -282,7 +259,7 @@ class ForumTest(TestCase):
             category=self.category,
         )
 
-        response = self.client.post(reverse('forum:show-topic', kwargs={'topic_id': empty_topic.id}), {
+        response = self.client.post(reverse('forum:show_topic', kwargs={'topic_id': empty_topic.id}), {
             'text': 'Lqlqlq lqlqlql lqlqlql',
             'topic': empty_topic,
         })
@@ -291,7 +268,7 @@ class ForumTest(TestCase):
             reverse('forum:unsubscribe', kwargs={'topic_id': empty_topic.id})
         )
 
-        response = self.client.post(reverse('forum:show-topic', kwargs={'topic_id': empty_topic.id}), {
+        response = self.client.post(reverse('forum:show_topic', kwargs={'topic_id': empty_topic.id}), {
             'text': 'Lqlqlq lqlqlql lqlqlql2',
             'topic': empty_topic,
         })
@@ -301,14 +278,13 @@ class ForumTest(TestCase):
         self.assertTemplateUsed('show_topic.html', response)
 
     def test_sending_emails(self):
-        self.client = client.Client()
         self.client.login(
             username=self.student_user.email,
             password='123',
         )
 
         response = self.client.post(
-            reverse('forum:add-topic',  kwargs={'category_id': self.category.id}),
+            reverse('forum:add_topic',  kwargs={'category_id': self.category.id}),
             {
                 'title': 'test sending emails',
                 'text': 'Lqlqlq',
@@ -324,7 +300,7 @@ class ForumTest(TestCase):
             password='123',
         )
 
-        response = self.client.post(reverse('forum:show-topic', kwargs={'topic_id': new_topic.id}), {
+        response = self.client.post(reverse('forum:show_topic', kwargs={'topic_id': new_topic.id}), {
             'text': 'Lqlqlq lqlqlql lqlqlql23',
             'topic': new_topic,
         })
@@ -332,14 +308,13 @@ class ForumTest(TestCase):
         self.assertEqual(1, len(mail.outbox))
 
     def test_new_comment_email_title(self):
-        self.client = client.Client()
         self.client.login(
             username=self.student_user.email,
             password='123',
         )
 
         response = self.client.post(
-            reverse('forum:add-topic',  kwargs={'category_id': self.category.id}),
+            reverse('forum:add_topic',  kwargs={'category_id': self.category.id}),
             {
                 'title': 'Нова тема тряляля',
                 'text': 'Lqlqlq',
@@ -355,7 +330,7 @@ class ForumTest(TestCase):
             password='123',
         )
 
-        response = self.client.post(reverse('forum:show-topic', kwargs={'topic_id': new_topic.id}), {
+        response = self.client.post(reverse('forum:show_topic', kwargs={'topic_id': new_topic.id}), {
             'text': 'Lqlqlq lqlqlql lqlqlql23',
             'topic': new_topic,
         })

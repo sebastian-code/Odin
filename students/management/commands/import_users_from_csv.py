@@ -39,7 +39,7 @@ class Command(BaseCommand):
 
             for row in csv_line:
                 email = row[0]
-                full_name = row[1].strip().split(" ")
+                full_name = row[1].strip().split(' ')
                 new_password = random_password()
                 group_time = row[2].strip()
                 course_id = row[3].strip()

@@ -10,7 +10,7 @@ from django.http import HttpResponse
 from django.db import IntegrityError
 from django.conf import settings
 
-from .forms import UserEditForm, AddNote, VoteForPartner, AddSolutionForm
+from .forms import UserEditForm, AddNote, VoteForPartner, AddSolutionForm, GiveFeedbackForm
 from .models import CourseAssignment, UserNote, User, CheckIn, Task, Solution
 from courses.models import Course, Certificate
 from forum.models import Comment
@@ -18,7 +18,7 @@ from forum.models import Comment
 
 def login(request):
     if request.user.is_authenticated():
-        return redirect('students:user-profile')
+        return redirect('students:user_profile')
     else:
         return auth_views.login(request, template_name='login_form.html')
 
@@ -39,7 +39,7 @@ def edit_profile(request):
         form = UserEditForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             form.save()
-            return redirect('students:user-profile')
+            return redirect('students:user_profile')
     else:
         form = UserEditForm(instance=request.user)
     return render(request, 'edit_profile.html', locals())
@@ -48,11 +48,11 @@ def edit_profile(request):
 @login_required
 def assignment(request, id):
     assignment = get_object_or_404(CourseAssignment, pk=id)
-    is_teacher = request.user.status == User.TEACHER
-    is_hr = request.user.status == User.HR
-    is_student = request.user.status == User.STUDENT
     certificate = Certificate.objects.filter(assignment=assignment).first()
     comments = Comment.objects.filter(author=assignment.user).order_by('topic').all()
+    is_hr = request.user.status == User.HR
+    is_student = request.user.status == User.STUDENT
+    is_teacher = request.user.status == User.TEACHER
 
     if is_teacher or is_hr:
         notes = UserNote.objects.filter(assignment=id)
@@ -68,34 +68,50 @@ def assignment(request, id):
         else:
             form = AddNote()
 
-    if is_student and assignment.course.ask_for_favorite_partner and request.user == assignment.user:
-        vote_form = VoteForPartner(instance=assignment, assignment=assignment)
-        if request.method == 'POST':
-            vote_form = VoteForPartner(request.POST, request.FILES, instance=assignment, assignment=assignment)
-            if vote_form.is_valid():
-                vote_form.save()
-                return redirect('students:assignment', id=id)
+    if is_student and request.user == assignment.user:
+        if assignment.course.ask_for_favorite_partner:
+            vote_form = VoteForPartner(instance=assignment, assignment=assignment)
+            if request.method == 'POST':
+                vote_form = VoteForPartner(request.POST, request.FILES, instance=assignment, assignment=assignment)
+                if vote_form.is_valid():
+                    vote_form.save()
+                    return redirect('students:assignment', id=id)
+
+        date_today = datetime.date.today()
+        # get course.end_time if existing, else fake a date from 10 years ago
+        course_end_date = datetime.date(1990, 1, 1)
+        if assignment.course.end_time:
+            course_end_date = assignment.course.end_time
+
+        has_ended = date_today >= course_end_date
+        if assignment.course.ask_for_feedback and has_ended:
+            feedback_form = GiveFeedbackForm(instance=assignment, assignment=assignment)
+            if request.method == 'POST':
+                feedback_form = GiveFeedbackForm(request.POST, request.FILES, instance=assignment, assignment=assignment)
+                if feedback_form.is_valid():
+                    feedback_form.save()
+                    return redirect('students:assignment', id=id)
 
     return render(request, 'assignment.html', locals())
 
 
 @csrf_exempt
+@require_http_methods(['POST'])
 def set_check_in(request):
-    if request.method == 'POST':
-        mac = request.POST['mac']
-        token = request.POST['token']
+    mac = request.POST['mac']
+    token = request.POST['token']
 
-        if settings.CHECKIN_TOKEN != token:
-            return HttpResponse(status=511)
+    if settings.CHECKIN_TOKEN != token:
+        return HttpResponse(status=511)
 
-        student = get_object_or_404(User, mac__iexact=mac)
-        try:
-            checkin = CheckIn(mac=mac, student=student)
-            checkin.save()
-        except IntegrityError:
-            return HttpResponse(status=418)
+    student = get_object_or_404(User, mac__iexact=mac)
+    try:
+        checkin = CheckIn(mac=mac, student=student)
+        checkin.save()
+    except IntegrityError:
+        return HttpResponse(status=418)
 
-        return HttpResponse(status=200)
+    return HttpResponse(status=200)
 
 
 @csrf_exempt
@@ -137,8 +153,7 @@ def api_checkins(request):
                 'name': assignment.course.name,
                 'group': assignment.group_time
             }
-
-        student_courses.append(course)
+            student_courses.append(course)
 
         needed_data.append({
             'student_id': checkin.student.id,
@@ -169,9 +184,9 @@ def solutions(request, course_id):
     return render(request, 'solutions.html', locals())
 
 
+@csrf_exempt
 @login_required
 @require_http_methods(['POST'])
-@csrf_exempt
 def add_solution(request):
     solution = Solution.objects.filter(
         user=request.user,

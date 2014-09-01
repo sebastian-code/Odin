@@ -2,7 +2,7 @@ from django.conf import settings
 from courses.models import WeeklyCommit, Certificate
 
 from github import Github, GithubException
-from datetime import datetime, timedelta
+from datetime import date, timedelta
 
 
 class TempCertificate:
@@ -20,14 +20,14 @@ class TempCertificate:
 
     def __set_start_time(self):
         start_time = self.assignment.course.start_time
-        return datetime(year=start_time.year, month=start_time.month, day=start_time.day)
+        return date(year=start_time.year, month=start_time.month, day=start_time.day)
 
     def __set_end_time(self):
         end_time = self.assignment.course.end_time + timedelta(days=31)
-        return datetime(year=end_time.year, month=end_time.month, day=end_time.day)
+        return date(year=end_time.year, month=end_time.month, day=end_time.day)
 
     def get_total_commits(self):
-        return reduce(lambda x, y: x + y, map(lambda x: x.commits_count, self.weekly_commits))
+        return reduce(lambda x, y: x + y, map(lambda x: x.commits_count, self.weekly_commits), 0)
 
     def update_stats(self, api_stats_dictionary):
         self.open_issues += api_stats_dictionary['open_issues']
@@ -46,10 +46,9 @@ class TempCertificate:
         course_name = self.cheated_solutions[0].task.course
         user = self.cheated_solutions[0].user
         filename = 'Cheater[{}] {} - {}'.format(course_name, user, user.email)
-        f = open(filename, 'w+')
-        for i, solution in enumerate(self.cheated_solutions, start=1):
-            f.write('{}) Cheated on tapsk {} - {}. Given solution - {}\n'.format(i, solution.task.name, solution.task.description, solution.repo))
-        f.close()
+        with open(filename, 'w+') as f:
+            for i, solution in enumerate(self.cheated_solutions, start=1):
+                f.write('{}) Cheated on task {} - {}. Given solution - {}\n'.format(i, solution.task.name, solution.task.description, solution.repo))
 
     def save_certificate_in_db(self):
         db_certificate = Certificate.objects.create(assignment=self.assignment, issues_closed=self.closed_issues, issues_opened=self.open_issues, total_commits=self.get_total_commits())
@@ -66,7 +65,7 @@ class TempCertificate:
             print 'Created certificate for {}'.format(self.assignment.user)
 
 
-class SolutionGithubRepo:
+class GithubSolution:
 
     def __init__(self, user_name, repo_name, solution):
         self.solution = solution

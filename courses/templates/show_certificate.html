@@ -15,7 +15,7 @@
         <a href="http://{{ request.get_host }}/">
             <img id="logo" src="{{ STATIC_URL }}img/HackBG-certificates-logo.png" alt="HackBulgaria Logo">
         </a>
-        <h2 id="title">Certificate for being awesome in <a href="{% url 'courses:show-course' course.url %}">{{ course.name }}</a></h2>
+        <h2 id="title">Certificate for being awesome in <a href="{% url 'courses:show_course' course.url %}">{{ course.name }}</a></h2>
         <div>
             <p id="name"><a href="{{ user.github_account }}">{{ user }}</a></p>
         </div>

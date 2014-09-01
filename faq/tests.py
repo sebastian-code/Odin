@@ -14,6 +14,6 @@ class FaqTest(TestCase):
 
     def test_show_faqs(self):
         self.client = client.Client()
-        response = self.client.get(reverse('faq:show-faqs'))
+        response = self.client.get(reverse('faq:show_faqs'))
         self.assertEqual(200, response.status_code)
         self.assertTemplateUsed('show_faqs.html', response)
