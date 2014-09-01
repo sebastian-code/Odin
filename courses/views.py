@@ -16,7 +16,7 @@ def show_course(request, course_url):
 
 def show_all_courses(request):
     date_today = date.today()
-    active_courses = Course.objects.filter(Q(end_time__gt=date_today) | Q(end_time=None)).exclude(start_time=None)
+    active_courses = Course.objects.filter(Q(start_time__lte=date_today) | Q(end_time__gt=date_today) | Q(end_time=None)).exclude(start_time=None)
     upcoming_courses = Course.objects.filter(Q(start_time__gt=date_today) | Q(start_time=None))
     ended_courses = Course.objects.filter(end_time__lte=date_today).exclude(start_time=None)
     return render(request, 'show_all_courses.html', locals())
