@@ -116,7 +116,7 @@ def set_check_in(request):
 
 @csrf_exempt
 def api_students(request):
-    all_students = User.objects.filter(status=User.STUDENT).all()
+    all_students = User.objects.filter(status=User.STUDENT)
     needed_data = []
 
     for student in all_students:
@@ -168,9 +168,9 @@ def api_checkins(request):
 @login_required
 def solutions(request, course_id):
     course = get_object_or_404(Course, pk=course_id)
-    tasks = Task.objects.filter(course=course).order_by('name')
+    tasks = Task.objects.filter(course=course).select_related('solution').order_by('name')
     weeks = sorted(set(map(lambda task: task.week, tasks)))
-    solutions = Solution.objects.filter(task__in=tasks, user=request.user).prefetch_related('task')
+    solutions = Solution.objects.filter(task__in=tasks, user=request.user).select_related('task')
 
     # Zips user's solutions with tasks
     solutions_by_task = {}
