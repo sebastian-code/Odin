@@ -29,7 +29,7 @@ def show_all_partners(request):
 
 @login_required
 def show_course_students(request, course_id):
-    assignments = CourseAssignment.objects.filter(course=course_id, user__status=User.STUDENT)
+    assignments = CourseAssignment.objects.filter(course=course_id, user__status=User.STUDENT).select_related('user')
     is_teacher_or_hr = request.user.status == User.HR or request.user.status == User.TEACHER
     if request.user.hr_of:
         interested_in_me = CourseAssignment.objects.filter(
