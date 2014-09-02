@@ -7,18 +7,18 @@ from tinymce import models as tinymce_models
 class Course(models.Model):
     description = tinymce_models.HTMLField(blank=False)
     git_repository = models.CharField(blank=True, max_length=256)
-    image = models.ImageField(upload_to='courses_logoes', blank=True, default='')
+    image = models.ImageField(upload_to="courses_logoes", null=True, blank=True)
     name = models.CharField(blank=False, max_length=64)
     partner = models.ManyToManyField('Partner', null=True, blank=True)
     short_description = models.CharField(blank=True, max_length=300)
     show_on_index = models.BooleanField(default=False)
 
     application_until = models.DateField()
-    applications_url = models.URLField(blank=True)
+    applications_url = models.URLField(null=True, blank=True)
     ask_for_favorite_partner = models.BooleanField(default=False)
     ask_for_feedback = models.BooleanField(default=False)
     end_time = models.DateField(blank=True, null=True)
-    next_season_mail_list = models.URLField(blank=True)
+    next_season_mail_list = models.URLField(null=True, blank=True)
     SEO_description = models.CharField(blank=False, max_length=255)
     SEO_title = models.CharField(blank=False, max_length=255)
     start_time = models.DateField(blank=True, null=True)
@@ -30,13 +30,13 @@ class Course(models.Model):
 
 class Partner(models.Model):
     description = tinymce_models.HTMLField(blank=False)
-    facebook = models.URLField(blank=True)
+    facebook = models.URLField(null=True, blank=True)
     is_active = models.BooleanField(default=False)
-    logo = models.ImageField(upload_to='partner_logoes', blank=True, default='')
+    logo = models.ImageField(upload_to="partner_logoes", null=True, blank=True)
     name = models.CharField(max_length=128)
     ordering = models.PositiveSmallIntegerField(default=0, blank=False, null=False)
-    twitter = models.URLField(blank=True)
-    website = models.URLField(blank=True)
+    twitter = models.URLField(null=True, blank=True)
+    website = models.URLField(null=True, blank=True)
 
     class Meta:
         ordering = ('ordering',)
@@ -51,7 +51,7 @@ class Task(models.Model):
     description = models.URLField()
     is_exam = models.BooleanField(default=False)
     name = models.CharField(max_length=128)
-    week = models.CharField(max_length=10, blank=False)
+    week = models.CharField(max_length=10, blank=False, null=False)
 
     def __unicode__(self):
         return self.name
