@@ -47,15 +47,15 @@ def edit_profile(request):
 
 @login_required
 def assignment(request, id):
-    assignment = get_object_or_404(CourseAssignment, pk=id)
+    assignment = get_object_or_404(CourseAssignment.objects.select_related('user', 'course'), pk=id)
     certificate = Certificate.objects.filter(assignment=assignment).first()
-    comments = Comment.objects.filter(author=assignment.user).order_by('topic').all()
+    comments = Comment.objects.filter(author=assignment.user).order_by('topic')
     is_hr = request.user.status == User.HR
     is_student = request.user.status == User.STUDENT
     is_teacher = request.user.status == User.TEACHER
 
     if is_teacher or is_hr:
-        notes = UserNote.objects.filter(assignment=id)
+        notes = UserNote.objects.filter(assignment=id).select_related('author')
 
     if is_teacher:
         if request.method == 'POST':
