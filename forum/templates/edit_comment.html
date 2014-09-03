@@ -4,7 +4,7 @@
     {{ form.media }}
     <link rel="stylesheet" href="{{ STATIC_URL }}css/forum-style.css" />
     <title>Форум на Hack Bulgaria</title>
-{% endblock %}
+{% endblock meta %}
 
 {% block content %}
 <form action="" method="POST">
@@ -12,4 +12,4 @@
     {{ form.text }}
     <button>Редактирай!</button>
 </form>
-{% endblock %}
+{% endblock content %}

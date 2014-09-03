@@ -1,8 +1,12 @@
 {% extends "base.html" %}
 {% load markdown_deux_tags %}
+
 {% block meta %}
 {{ form.media }}
-<link rel="stylesheet" href="{{ STATIC_URL }}css/assignment.css" />{% endblock %} {% block content %}
+<link rel="stylesheet" href="{{ STATIC_URL }}css/assignment.css" />
+{% endblock meta %}
+
+{% block content %}
 <div class="row">
 
     <div id="vote-for-partner" class="reveal-modal" data-reveal>
@@ -115,4 +119,4 @@
         </div>
     </div>
 </div>
-{% endblock %}
+{% endblock content %}
