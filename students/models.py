@@ -130,6 +130,12 @@ class CourseAssignment(models.Model):
         unique_together = (('user', 'course'),)
 
 
+class StudentStartedWorkingAt(models.Model):
+    assignment = models.ForeignKey(CourseAssignment)
+    partner = models.ForeignKey(Partner, blank=True, null=True)
+    partner_name = models.CharField(max_length=128, blank=True, null=True)
+
+
 class UserNote(models.Model):
     text = models.TextField(blank=True)
     assignment = models.ForeignKey(CourseAssignment)
