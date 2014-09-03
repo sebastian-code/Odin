@@ -47,15 +47,15 @@ def edit_profile(request):
 
 @login_required
 def assignment(request, id):
-    assignment = get_object_or_404(CourseAssignment, pk=id)
+    assignment = get_object_or_404(CourseAssignment.objects.select_related('user', 'course'), pk=id)
     certificate = Certificate.objects.filter(assignment=assignment).first()
-    comments = Comment.objects.filter(author=assignment.user).order_by('topic').all()
+    comments = Comment.objects.filter(author=assignment.user).order_by('topic')
     is_hr = request.user.status == User.HR
     is_student = request.user.status == User.STUDENT
     is_teacher = request.user.status == User.TEACHER
 
     if is_teacher or is_hr:
-        notes = UserNote.objects.filter(assignment=id)
+        notes = UserNote.objects.filter(assignment=id).select_related('author')
 
     if is_teacher:
         if request.method == 'POST':
@@ -116,7 +116,7 @@ def set_check_in(request):
 
 @csrf_exempt
 def api_students(request):
-    all_students = User.objects.filter(status=User.STUDENT).all()
+    all_students = User.objects.filter(status=User.STUDENT)
     needed_data = []
 
     for student in all_students:
@@ -168,9 +168,9 @@ def api_checkins(request):
 @login_required
 def solutions(request, course_id):
     course = get_object_or_404(Course, pk=course_id)
-    tasks = Task.objects.filter(course=course).order_by('name')
+    tasks = Task.objects.filter(course=course).select_related('solution').order_by('name')
     weeks = sorted(set(map(lambda task: task.week, tasks)))
-    solutions = Solution.objects.filter(task__in=tasks, user=request.user).prefetch_related('task')
+    solutions = Solution.objects.filter(task__in=tasks, user=request.user).select_related('task')
 
     # Zips user's solutions with tasks
     solutions_by_task = {}

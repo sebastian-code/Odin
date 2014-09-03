@@ -11,7 +11,6 @@ from .helper import send_topic_subscribe_email, subscribe_to_topic
 
 def show_categories(request):
     categories = Category.objects.all()
-
     return render(request, 'show_categories.html', locals())
 
 
@@ -25,7 +24,7 @@ def show_category(request, category_id):
 
 def show_topic(request, topic_id):
     topic = get_object_or_404(Topic, pk=topic_id)
-    comments = Comment.objects.filter(topic=topic).order_by('id').prefetch_related('author')
+    comments = Comment.objects.filter(topic=topic).order_by('id').select_related('author')
 
     data = request.POST if request.POST else None
     form = AddCommentForm(data, author=request.user, topic=topic)
