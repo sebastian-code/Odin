@@ -30,7 +30,18 @@
             {% csrf_token %}
             <p>Моля посочете къде сте започнали работа след курсът.</p>
             {{ feedback_form.error }}
-            {{ feedback_form }}
+
+            <div id="partner-selection-container">
+                {{ feedback_form.partner }}
+            </div>
+
+            <div id="partner-name-input-container">
+                <label>Име на компанията:</label>
+                {{ feedback_form.partner_name }}
+            </div>
+
+            <button id="back-to-partners-list" name="button">Назад</button>
+            <button id="cant-find-partner" name="button">Не намирам компанията в списъка</button>
             <button>Готово</button>
         </form>
         <a class="close-reveal-modal">&#215;</a>
@@ -121,3 +132,63 @@
     </div>
 </div>
 {% endblock content %}
+
+{% block jsfooter %}
+    <script type="text/javascript" charset="utf-8">
+        $(function() {
+            var $partnerNameContainer = $("#partner-name-input-container"),
+                $partnerSelectionContainer = $("#partner-selection-container"),
+                $cantFindPartnerButton = $("#cant-find-partner"),
+                $backButton = $("#back-to-partners-list");
+
+            function hideAll(elements) {
+                elements.forEach(function($el) {
+                    $el.hide();
+                });
+            }
+
+            function showAll(elements) {
+                elements.forEach(function($el) {
+                    $el.show();
+                });
+            }
+
+            function defaultState() {
+                var toShow = [],
+                    toHide = [$partnerNameContainer, $backButton];
+
+                showAll(toShow);
+                hideAll(toHide);
+            }
+
+            function pickPartnerFromListState() {
+                var toShow = [$cantFindPartnerButton, $partnerSelectionContainer],
+                    toHide = [$backButton, $partnerNameContainer];
+
+                showAll(toShow);
+                hideAll(toHide);
+            }
+
+            function cantFindPartnerState() {
+                var toShow = [$backButton, $partnerNameContainer],
+                    toHide = [$cantFindPartnerButton, $partnerSelectionContainer];
+
+                showAll(toShow);
+                hideAll(toHide);
+            }
+
+
+            $cantFindPartnerButton.on("click", function(event) {
+                event.preventDefault();
+                cantFindPartnerState();
+            });
+
+            $backButton.on("click", function(event) {
+                event.preventDefault();
+                pickPartnerFromListState();
+            });
+
+            defaultState();
+        });
+    </script>
+{% endblock jsfooter %}
