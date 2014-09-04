@@ -29,7 +29,8 @@
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <p>Моля посочете къде сте започнали работа след курсът.</p>
-            {{ feedback_form.after_course_works_at }}
+            {{ feedback_form.error }}
+            {{ feedback_form }}
             <button>Готово</button>
         </form>
         <a class="close-reveal-modal">&#215;</a>

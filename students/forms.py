@@ -1,7 +1,7 @@
 from django import forms
 from django.utils.translation import ugettext as _
 
-from .models import User, UserNote, CourseAssignment, Solution
+from .models import User, UserNote, CourseAssignment, Solution, StudentStartedWorkingAt
 from courses.models import Partner
 
 from pagedown.widgets import PagedownWidget
@@ -119,11 +119,18 @@ class GiveFeedbackForm(forms.ModelForm):
         super(GiveFeedbackForm, self).__init__(*args, **kwargs)
 
         if self.assignment:
-            self.fields['after_course_works_at'].queryset = Partner.objects.all()
+            self.fields['partner'].queryset = Partner.objects.all()
+
+    def save(self, *args, **kwargs):
+        instance = super(GiveFeedbackForm, self).save(commit=False)
+        instance.assignment = self.assignment
+        instance.save()
+        return instance
 
     class Meta:
-        model = CourseAssignment
+        model = StudentStartedWorkingAt
 
         fields = (
-            'after_course_works_at',
+            'partner',
+            'partner_name'
         )

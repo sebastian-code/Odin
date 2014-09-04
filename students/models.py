@@ -108,7 +108,6 @@ class CourseAssignment(models.Model):
         (LATE, 'Late'),
     )
 
-    after_course_works_at = models.ForeignKey(Partner, related_name='after_course_works', blank=True, null=True)
     course = models.ForeignKey(Course)
     cv = models.FileField(blank=True, null=True, upload_to='cvs')
     favourite_partners = models.ManyToManyField(Partner)
@@ -134,6 +133,9 @@ class StudentStartedWorkingAt(models.Model):
     assignment = models.ForeignKey(CourseAssignment)
     partner = models.ForeignKey(Partner, blank=True, null=True)
     partner_name = models.CharField(max_length=128, blank=True, null=True)
+
+    def __unicode__(self):
+        return '{} - {}'.format(self.assignment, self.partner)
 
 
 class UserNote(models.Model):

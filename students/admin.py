@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from models import User, CourseAssignment, UserNote, CheckIn, HrLoginLog, Solution
+from models import User, CourseAssignment, UserNote, CheckIn, HrLoginLog, Solution, StudentStartedWorkingAt
 
 
 class UsersAdmin(admin.ModelAdmin):
@@ -77,3 +77,4 @@ class SolutionAdmin(admin.ModelAdmin):
     list_filter = ('task__course', 'user')
 
 admin.site.register(Solution, SolutionAdmin)
+admin.site.register(StudentStartedWorkingAt)
