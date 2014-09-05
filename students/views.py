@@ -82,13 +82,14 @@ def assignment(request, id):
         course_end_date = datetime.date(1990, 1, 1)
         if assignment.course.end_time:
             course_end_date = assignment.course.end_time
-
         has_ended = date_today >= course_end_date
-        if assignment.course.ask_for_feedback and has_ended:
+        has_started_working_at = len(assignment.studentstartedworkingat_set.all()) > 0
+        if assignment.course.ask_for_feedback and has_ended and not has_started_working_at:
             feedback_form = GiveFeedbackForm(assignment=assignment)
             if request.method == 'POST':
                 feedback_form = GiveFeedbackForm(request.POST, request.FILES, assignment=assignment)
                 if feedback_form.is_valid():
+                    feedback_form.save()
                     return redirect('students:assignment', id=id)
 
     return render(request, 'assignment.html', locals())

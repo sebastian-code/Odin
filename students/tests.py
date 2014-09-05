@@ -13,7 +13,7 @@ from django.test import TestCase
 import mock
 from github import GithubException
 
-from .models import CheckIn, User, HrLoginLog, CourseAssignment, Solution
+from .models import CheckIn, User, HrLoginLog, CourseAssignment, Solution, StudentStartedWorkingAt
 from courses.models import Partner, Course, Task
 from management.commands.generate_certificates import is_new_valid_github_account
 from management.commands.helpers.classes import TempCertificate, GithubSolution
@@ -217,6 +217,19 @@ class CourseAssignmentTest(TestCase):
         self.client.login(username='ivo_student@gmail.com', password='123')
         response = self.client.get(reverse('students:assignment', kwargs={'id': self.assignment.id}))
         self.assertContains(response, 'data-reveal-id="give-feedback"')
+
+    def test_give_feedback_form_visibility_when_has_not_started_working_at(self):
+        self.client.login(username='ivo_student@gmail.com', password='123')
+        response = self.client.get(reverse('students:assignment', kwargs={'id': self.assignment.id}))
+        self.assertContains(response, 'data-reveal-id="give-feedback"')
+
+    def test_give_feedback_form_visibility_when_has_started_working_at(self):
+        StudentStartedWorkingAt.objects.create(assignment=self.assignment,
+                                               partner=self.partner_potato,
+                                               partner_name=self.partner_potato.name)
+        self.client.login(username='ivo_student@gmail.com', password='123')
+        response = self.client.get(reverse('students:assignment', kwargs={'id': self.assignment.id}))
+        self.assertNotContains(response, 'data-reveal-id="give-feedback"')
 
     def test_get_favourite_partners(self):
         self.assertEqual('Potato Company', self.assignment.get_favourite_partners())

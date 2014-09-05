@@ -94,7 +94,7 @@
                         </p>
                         {% endif %}
 
-                        {% if assignment.course.ask_for_feedback and has_ended %}
+                        {% if assignment.course.ask_for_feedback and has_ended and not has_started_working_at %}
                         <p class="text-center">
                             <button data-reveal-id="give-feedback">Посочете къде сте започнали работа след курсът</button>
                         </p>

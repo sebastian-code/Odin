@@ -135,7 +135,7 @@ class StudentStartedWorkingAt(models.Model):
     partner_name = models.CharField(max_length=128, blank=True, null=True)
 
     def __unicode__(self):
-        return '{} - {}'.format(self.assignment, self.partner)
+        return u'{} - {}'.format(self.assignment, self.partner)
 
 
 class UserNote(models.Model):
