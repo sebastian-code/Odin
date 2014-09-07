@@ -2,7 +2,7 @@
 
 {% block meta %}
     <title>Често задавани въпроси</title>
-{% endblock %}
+{% endblock meta %}
 
 {% block content %}
 <div class="row">
@@ -13,7 +13,7 @@
             <a href="#panel{{ faq.id }}">{{ faq.title }}</a>
             <div id="panel{{ faq.id }}" class="content">
               {% load markdown_deux_tags %}
-              
+
               <p>{{ faq.text | markdown }}</p>
             </div>
           </dd>
@@ -22,4 +22,4 @@
     </div>
 </div>
 <p></p>
-{% endblock %}
+{% endblock content %}

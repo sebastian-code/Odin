@@ -2,7 +2,7 @@
 
 {% block meta %}
     <title>{{ user.get_full_name }} | Hack Bulgaria</title>
-{% endblock %}
+{% endblock meta %}
 
 
 {% block content %}
@@ -27,17 +27,17 @@
                     <ol>
                         {% for assignment in user.courseassignment_set.all %}
                             <li>
-                                <a href="{% url 'students:assignment' assignment.pk %}">{{ assignment.course }}</a> - 
-                                <i class="foundicon-paper-clip"></i> 
-                                <a href="{% url 'students:solutions' assignment.course.pk %}">Предай задачи</a> 
-                                
+                                <a href="{% url 'students:assignment' assignment.pk %}">{{ assignment.course }}</a> -
+                                <i class="foundicon-paper-clip"></i>
+                                <a href="{% url 'students:solutions' assignment.course.pk %}">Предай задачи</a>
+
                                 {% if assignment.certificate_set.all %}
-                                    - <i class="foundicon-address-book"></i> 
+                                    - <i class="foundicon-address-book"></i>
                                     <a href="{{ assignment.certificate_set.first.get_absolute_url }}">
                                         Сертификат
                                     </a>
                                 {% endif %}
-                            
+
                             </li>
                         {% endfor %}
                     </ol>
@@ -53,4 +53,4 @@
     </div>
 </div>
 
-{% endblock %}
+{% endblock content %}

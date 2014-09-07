@@ -3,7 +3,7 @@
 
 {% block meta %}
     <title>Предаване на задачи</title>
-{% endblock %}
+{% endblock meta %}
 
 {% block content %}
     <h3>{{ course }}</h3>
@@ -43,10 +43,10 @@
                         {% endfor %}
                     </div>
                 </div>
-            </dd>     
+            </dd>
         {% endfor %}
     </dl>
-{% endblock %}
+{% endblock content %}
 
 {% block jsfooter %}
     <script>
@@ -74,4 +74,4 @@
             });
         });
     </script>
-{% endblock  %}
+{% endblock jsfooter %}

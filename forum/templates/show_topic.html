@@ -5,23 +5,23 @@
     {{ form.media }}
     <link rel="stylesheet" href="{{ STATIC_URL }}css/forum-style.css" />
     <title>Форум на Hack Bulgaria</title>
-{% endblock %}
+{% endblock meta %}
 
 {% block content %}
 <div class="row">
     <div class="large-12 columns">
         <div class="row">
             <div class="large-3 columns">
-                <div class="panel text-center"> 
+                <div class="panel text-center">
                     <h5>{{ topic.author.get_full_name }}</h5>
                     <img src="{{ topic.author.get_avatar_url }}" class="th">
                 </div>
-            </div>            
-            
+            </div>
+
             <div class="large-9 columns">
                 <div class="panel">
-                    <h3>{{ topic.title }} 
-                        {% if topic.author == user %} 
+                    <h3>{{ topic.title }}
+                        {% if topic.author == user %}
                             <a href="{% url 'forum:edit_topic' topic.id %}"><img src="{{ STATIC_URL }}img/edit-icon.png" alt=""></a>
                         {% endif %}
                     </h3>
@@ -30,16 +30,16 @@
             </div>
             <hr>
         </div>
-        
+
         {% for comment in comments %}
         <div class="row" id="{{ comment.id }}">
             <div class="large-3 columns">
-                <div class="panel text-center"> 
+                <div class="panel text-center">
                     <h5>{{ comment.author.get_full_name }}</h5>
                     <img src="{{ comment.author.get_avatar_url }}" alt="" class="th">
                 </div>
-            </div>            
-            
+            </div>
+
             <div class="large-9 columns">
                 <div class="panel">
                     {% if comment.author == user %}
@@ -59,17 +59,17 @@
                 <button>Пускай</button>
             </form>
         {% endif %}
-        
+
         {% if user.is_authenticated %}
             {% if topic in request.user.subscribed_topics.all %}
             <div id="unsubscribe-text">
-                    Оставяйки коментар в темата, ще започнеш да получаваш email за всеки нов коментар. Ако не искаш - натисни този бутон. 
+                    Оставяйки коментар в темата, ще започнеш да получаваш email за всеки нов коментар. Ако не искаш - натисни този бутон.
 
                     <button class="button tiny" id="unsubscribe" data-topic-id="{{ topic.id }}">Unsubscribe</button>
                 </div>
             {% else %}
                 <div id="subscribe-text">
-                    Абонирай се към тази тема, за да получаваш email за всеки коментар. 
+                    Абонирай се към тази тема, за да получаваш email за всеки коментар.
 
                     <button class="button tiny" id="subscribe" data-topic-id="{{ topic.id }}">Subscribe</button>
                 </div>
@@ -78,7 +78,7 @@
     </div>
 </div>
 
-{% endblock %}
+{% endblock content %}
 
 {% block jsfooter %}
     <script>
@@ -100,6 +100,6 @@
             }).done(function() {
                 $("#subscribe-text").hide("slow");
             });
-        });    
+        });
     </script>
-{% endblock %}
+{% endblock jsfooter %}
