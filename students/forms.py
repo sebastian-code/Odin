@@ -1,10 +1,11 @@
 from django import forms
 from django.utils.translation import ugettext as _
+from django.core.exceptions import ValidationError
+
+from pagedown.widgets import PagedownWidget
 
 from .models import User, UserNote, CourseAssignment, Solution, StudentStartedWorkingAt
 from courses.models import Partner
-
-from pagedown.widgets import PagedownWidget
 
 
 class UserEditForm(forms.ModelForm):
@@ -124,7 +125,10 @@ class GiveFeedbackForm(forms.ModelForm):
         instance = super(GiveFeedbackForm, self).save(commit=False)
         instance.assignment = self.assignment
         other_company = Partner.objects.get(name='Other Company')
-        if instance.partner_name is not None:
+
+        if not instance.partner and not instance.partner_name:
+            return
+        elif instance.partner_name:
             instance.partner = other_company
         elif instance.partner:
             instance.partner_name = instance.partner.name
