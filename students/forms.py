@@ -123,8 +123,9 @@ class GiveFeedbackForm(forms.ModelForm):
     def save(self, *args, **kwargs):
         instance = super(GiveFeedbackForm, self).save(commit=False)
         instance.assignment = self.assignment
-        if instance.partner is None:
-            instance.partner = Partner.objects.get(name='Other Company')
+        other_company = Partner.objects.get(name='Other Company')
+        if instance.partner_name is not None:
+            instance.partner = other_company
         elif instance.partner:
             instance.partner_name = instance.partner.name
         instance.save()
