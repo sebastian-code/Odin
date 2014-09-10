@@ -1,5 +1,7 @@
 from django.shortcuts import render
 
+from students.models import CourseAssignment
+
 
 def show_all_stats(request):
     pass
@@ -22,8 +24,8 @@ def show_company_stats(request, company_id):
 
 
 def show_assignments_stats(request):
-    pass
-
+    assignments = CourseAssignment.objects.all()
+    
 
 def show_courses_stats(request):
     pass
