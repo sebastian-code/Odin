@@ -5,5 +5,14 @@
 {% endblock meta %}
 
 {% block content %}
+    <ul class="pricing-table">
+      <li class="title">{{ partner.name }}</li>
+      <li class="bullet-item">Money spent: {{ partner.money_spent }}</li>
+      <li class="bullet-item">Hired: {{ assignments.count }}</li>
+      <li class="bullet-item">Cost Per Recruitment: {{ cost_per_recruitment }}</li>
+    </ul>
+    {% for assignment in assignments %}
+
+    {% endfor %}
 
 {% endblock content %}

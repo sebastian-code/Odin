@@ -1,9 +1,8 @@
 from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 
 from courses.models import Partner
-from students.models import CourseAssignment
+from students.models import CourseAssignment, StudentStartedWorkingAt
 
 
 @staff_member_required
@@ -19,10 +18,10 @@ def show_partners_stats(request):
 @staff_member_required
 def show_partner_stats(request, partner_id):
     partner = Partner.objects.get(pk=partner_id)
-    print partner
-    course_assignments = CourseAssignment.objects.filter(course__partner=partner)
-    print course_assignments
-    return render(request, 'show_partner_company_stats', locals())
+    total_assignments = CourseAssignment.objects.filter(course__partner=partner).count()
+    assignments = StudentStartedWorkingAt.objects.filter(partner=partner)
+    cost_per_recruitment = partner.money_spent / assignments.count() if assignments.count() > 0 else 0
+    return render(request, 'show_partner_company_stats.html', locals())
 
 
 @staff_member_required
@@ -33,7 +32,7 @@ def show_companies_stats(request):
 @staff_member_required
 def show_assignments_stats(request):
     assignments = CourseAssignment.objects.all()
-    return render(request);
+    return render(request)
 
 
 @staff_member_required
