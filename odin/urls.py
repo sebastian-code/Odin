@@ -19,7 +19,7 @@ urlpatterns = patterns('',
     url(r'', include('faq.urls', namespace='faq')),
     url(r'', include('students.urls', namespace='students')),
     url(r'^forum/', include('forum.urls', namespace='forum')),
-
+    url(r'^stats/', include('statistics.urls', namespace='statistics')),
 
     url(r'^password_reset/$', views.password_reset, {'template_name': 'password_reset_form.html'}, name='password_reset'),
     url(r'^password_reset/done/$', views.password_reset_done, {'template_name': 'password_reset_done.html'}, name='password_reset_done'),
