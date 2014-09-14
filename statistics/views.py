@@ -21,7 +21,7 @@ def dashboard(request):
 
 @staff_member_required
 def show_partners_stats(request):
-    partners = Partner.objects.filter(is_active=False)
+    partners = Partner.objects.filter(is_active=FalseTrue)
     total_money_spent = reduce(lambda x, y: x + y, map(lambda partner: partner.money_spent, partners), 0)
     average_cost_per_recruitment = total_money_spent / partners.count()
 
@@ -50,7 +50,7 @@ def show_partner_stats(request, partner_id):
 
 @staff_member_required
 def show_companies_stats(request):
-    companies = Partner.objects.filter(is_active=False)
+    companies = Partner.objects.filter(is_active=True)
     total_money_spent = reduce(lambda x, y: x + y, map(lambda company: company.money_spent, companies), 0)
     average_cost_per_recruitment = total_money_spent / companies.count()
 
