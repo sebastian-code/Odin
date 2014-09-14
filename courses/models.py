@@ -45,6 +45,9 @@ class Partner(models.Model):
     def __unicode__(self):
         return unicode(self.name)
 
+    def get_statistics_url(self):
+        return reverse('statistics:show_partner_stats', args=[self.id])
+
 
 class Task(models.Model):
     course = models.ForeignKey(Course)
