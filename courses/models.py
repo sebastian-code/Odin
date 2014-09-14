@@ -33,6 +33,7 @@ class Partner(models.Model):
     facebook = models.URLField(null=True, blank=True)
     is_active = models.BooleanField(default=False)
     logo = models.ImageField(upload_to="partner_logoes", null=True, blank=True)
+    money_spent = models.PositiveIntegerField(default=0, blank=False, null=False)
     name = models.CharField(max_length=128)
     ordering = models.PositiveSmallIntegerField(default=0, blank=False, null=False)
     twitter = models.URLField(null=True, blank=True)
@@ -43,6 +44,9 @@ class Partner(models.Model):
 
     def __unicode__(self):
         return unicode(self.name)
+
+    def get_statistics_url(self):
+        return reverse('statistics:show_partner_stats', args=[self.id])
 
 
 class Task(models.Model):

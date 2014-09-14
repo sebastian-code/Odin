@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block meta %}
+    <title>Статистики за {{ partner.name }} - HackBulgaria</title>
+{% endblock meta %}
+
+{% block content %}
+    <h2 class="text-center">{{ partner.name }}</h2>
+
+    <ul class="pricing-table">
+      <li class="bullet-item">Разходи: {{ partner.money_spent }} BGN</li>
+      <li class="bullet-item">Брой наети: {{ started_working_ats.count }}</li>
+      <li class="bullet-item">Процент наети от курсове: {{ hired_percent }} %</li>
+      <li class="bullet-item">Cost Per Recruitment: {{ cost_per_recruitment }} BGN</li>
+    </ul>
+
+
+    {% if started_working_ats %}
+    <h3 id="hired-people" class="text-center">Наети хора: </h2>
+    <ul class="medium-block-grid-4">
+        {% for started_working_at in started_working_ats %}
+        <li><img src="{{ started_working_at.assignment.user.get_avatar_url }}"/>{{ started_working_at.assignment.user.get_full_name }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+{% endblock content %}
