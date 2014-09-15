@@ -1,7 +1,7 @@
 from django.core.urlresolvers import reverse
 from django.contrib.admin.views.decorators import staff_member_required
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 from courses.models import Course, Partner
 from helpers import division_or_zero
@@ -24,8 +24,8 @@ def dashboard(request):
 def show_partners_stats(request):
     partners = Partner.objects.filter(is_active=True)
     total_money_spent = 0
-    average_cost_per_recruitment = 0
     total_started_working_ats = 0
+    average_cost_per_recruitment = 0
     for partner in partners:
         partner_started_working_ats = StudentStartedWorkingAt.objects.filter(partner=partner).count()
         partner_cost_per_recruitment = division_or_zero(partner.money_spent, partner_started_working_ats)
@@ -39,7 +39,7 @@ def show_partners_stats(request):
 
 @staff_member_required
 def show_partner_stats(request, partner_id):
-    partner = Partner.objects.get(pk=partner_id)
+    partner = get_object_or_404(Partner, pk=partner_id)
     total_assignments = CourseAssignment.objects.filter(course__partner=partner).count()
     started_working_ats = StudentStartedWorkingAt.objects.filter(partner=partner).select_related('assignment')
     started_working_ats_count = started_working_ats.count()
@@ -79,7 +79,7 @@ def show_courses_stats(request):
 
 @staff_member_required
 def show_course_stats(request, course_id):
-    course = Course.objects.get(pk=course_id)
+    course = get_object_or_404(Course, pk=course_id)
     partners = course.partner.all()
     total_course_funds = 0
     for partner in partners:
