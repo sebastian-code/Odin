@@ -104,7 +104,8 @@
                     <hr>
 
                     <p>
-                        Всички ваши коментари (по теми в форума): {% for comment in comments %}
+                        Всички ваши коментари (по теми в форума):
+                        {% for comment in comments %}
                         <ul>
                             <li><a href="{% url 'forum:show_topic' comment.topic.id %}#{{ comment.id }}">{{ comment.topic }} #{{ comment.id }}</a>
                             </li>
@@ -112,20 +113,24 @@
                         {% endfor %}
                     </p>
                 </div>
-                {% if is_teacher or is_hr %} {% for note in notes %}
-                <p class="large-12 columns">
-                    <strong>{{ note.author.get_full_name }}</strong>:
-                    <br>
-                    <small>{{ note.post_time|date:"d-m-Y" }}</small>
-                    <br>{{ note.text | markdown }}
-                    <hr>
-                </p>
-                {% endfor %} {% endif %} {% if is_teacher %} {{ form.errors }}
-                <form method="POST">
-                    {% csrf_token %} {{form.text}}
-                    <input type="hidden" name="assignment" value="{{ assignment.id }}">
-                    <button>Дайте коментар!</button>
-                </form>
+                {% if is_teacher or is_hr %}
+                    {% for note in notes %}
+                    <p class="large-12 columns">
+                        <strong>{{ note.author.get_full_name }}</strong>:
+                        <br>
+                        <small>{{ note.post_time|date:"d-m-Y" }}</small>
+                        <br>{{ note.text | markdown }}
+                        <hr>
+                    </p>
+                    {% endfor %}
+                {% endif %}
+                {% if is_teacher %}
+                    {{ form.errors }}
+                    <form method="POST">
+                        {% csrf_token %} {{form.text}}
+                        <input type="hidden" name="assignment" value="{{ assignment.id }}">
+                        <button>Дайте коментар!</button>
+                    </form>
                 {% endif %}
             </div>
         </div>
