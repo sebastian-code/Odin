@@ -7,7 +7,7 @@ from students.models import User
 from .models import Category, Topic, Comment
 
 
-class ForumTest(TestCase):
+class ForumViewsTest(TestCase):
 
     def setUp(self):
         self.student_user = User.objects.create_user('ivo_student@gmail.com', '123')
@@ -153,10 +153,8 @@ class ForumTest(TestCase):
             'text': new_text,
         })
 
-        edited_comment = Comment.objects.filter(text=new_text)
-        self.assertEqual(1, edited_comment.count())
         self.assertEqual(302, response.status_code)
-        self.assertRedirects(response, 'forum/topic/{}/'.format(edited_comment.first().id))
+        self.assertRedirects(response, 'forum/topic/{}/'.format(self.comment.id))
         self.assertTemplateUsed('edit_comment.html', response)
 
     def test_edit_comment_not_owned(self):

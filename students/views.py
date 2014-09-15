@@ -49,7 +49,7 @@ def edit_profile(request):
 def assignment(request, id):
     assignment = get_object_or_404(CourseAssignment.objects.select_related('user', 'course'), pk=id)
     certificate = Certificate.objects.filter(assignment=assignment).first()
-    comments = Comment.objects.filter(author=assignment.user).order_by('topic')
+    comments = Comment.objects.filter(author=assignment.user).select_related('topic').order_by('topic')
     is_hr = request.user.status == User.HR
     is_student = request.user.status == User.STUDENT
     is_teacher = request.user.status == User.TEACHER

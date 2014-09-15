@@ -10,8 +10,8 @@
     <ul class="pricing-table">
       <li class="bullet-item">Разходи: {{ partner.money_spent }} BGN</li>
       <li class="bullet-item">Брой наети: {{ started_working_ats.count }}</li>
-      <li class="bullet-item">Процент наети от курсове: {{ hired_percent }} %</li>
-      <li class="bullet-item">Cost Per Recruitment: {{ cost_per_recruitment }} BGN</li>
+      <li class="bullet-item">Процент наети от курсове: {{ hired_percent|floatformat:"-2" }} %</li>
+      <li class="bullet-item">Cost Per Recruitment: {{ cost_per_recruitment|floatformat:"-2" }} BGN</li>
     </ul>
 
 
