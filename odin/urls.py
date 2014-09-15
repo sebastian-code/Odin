@@ -14,6 +14,7 @@ urlpatterns = patterns('',
     url(r'^tinymce/', include('tinymce.urls')),
 
     url(r'^api/', include('odin.api', namespace='api')),
+    url(r'^polls/', include('polls.urls', namespace='polls')),
     url(r'', include('website.urls')),
     url(r'', include('courses.urls', namespace='courses')),
     url(r'', include('faq.urls', namespace='faq')),
