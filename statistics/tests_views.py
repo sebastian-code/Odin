@@ -32,11 +32,6 @@ class StatisticsViewsTest(TestCase):
         self.assertEqual(200, response.status_code)
         self.assertTemplateUsed('show_partner_company_stats.html', response)
 
-    def test_show_non_existent_partner_stats(self):
-        response = self.client.get(reverse('statistics:show_partner_stats', kwargs={'partner_id': 55}))
-        self.assertEqual(404, response.status_code)
-        self.assertTemplateNotUsed('show_partner_company_stats.html', response)
-
     def test_show_companies_stats(self):
         response = self.client.get(reverse('statistics:show_companies_stats'))
         self.assertEqual(200, response.status_code)
@@ -53,8 +48,3 @@ class StatisticsViewsTest(TestCase):
         response = self.client.get(reverse('statistics:show_course_stats', kwargs={'course_id': self.course.id}))
         self.assertEqual(200, response.status_code)
         self.assertTemplateUsed('show_course_stats.html', response)
-
-    def test_show_non_existent_course_stats(self):
-        response = self.client.get(reverse('statistics:show_course_stats', kwargs={'course_id': 100}))
-        self.assertEqual(404, response.status_code)
-        self.assertTemplateNotUsed('show_course_stats.html', response)

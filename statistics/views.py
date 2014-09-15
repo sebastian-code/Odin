@@ -40,6 +40,7 @@ def show_partners_stats(request):
 @staff_member_required
 def show_partner_stats(request, partner_id):
     partner = get_object_or_404(Partner, pk=partner_id)
+    print 'partner {}'.format(partner)
     total_assignments = CourseAssignment.objects.filter(course__partner=partner).count()
     started_working_ats = StudentStartedWorkingAt.objects.filter(partner=partner).select_related('assignment')
     started_working_ats_count = started_working_ats.count()
