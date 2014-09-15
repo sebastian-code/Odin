@@ -17,75 +17,9 @@ from .models import CheckIn, User, HrLoginLog, CourseAssignment, Solution, Stude
 from courses.models import Partner, Course, Task
 from management.commands.generate_certificates import is_new_valid_github_account
 from management.commands.helpers.classes import TempCertificate, GithubSolution
-from validators import validate_mac, validate_url, validate_github, validate_linkedin
 
 
-class UserManagerTest(TestCase):
-
-    def setUp(self):
-        self.email = 'user@internet.com'
-        self.raw_password = 'abc123'
-
-    def test_create_user(self):
-        result = User.objects.create_user(self.email, self.raw_password)
-        hashed_password = make_password(self.raw_password)
-        self.assertRaises(IntegrityError, User.objects.create, username=self.email, password=hashed_password)
-        self.assertEqual(self.email, result.username)
-
-    def test_create_user_with_invalid_email(self):
-        self.assertRaises(ValueError, User.objects.create_user, email=None, password=self.raw_password)
-
-    def test_create_superuser(self):
-        result = User.objects.create_superuser(self.email, self.raw_password)
-        self.assertTrue(result.is_superuser)
-        self.assertTrue(result.is_staff)
-
-
-class UserTest(TestCase):
-
-    def setUp(self):
-        self.student_user = User.objects.create_user('ivo_student@gmail.com', '123')
-        self.student_user.status = User.STUDENT
-        self.student_user.mac = '4c:80:93:1f:a4:50'
-        self.student_user.save()
-
-        self.course = Course.objects.create(
-            name='Test Course',
-            url='test-course',
-            application_until=datetime.datetime.now(),
-        )
-        self.course2 = Course.objects.create(
-            name='Test Course2',
-            url='test-course2',
-            application_until=datetime.datetime.now(),
-        )
-
-        self.assignment = CourseAssignment.objects.create(
-            user=self.student_user, course=self.course, group_time=CourseAssignment.EARLY)
-
-    def test_unicode(self):
-        self.assertEqual(self.student_user.get_full_name(), unicode(self.student_user))
-
-    def test_get_avatar_url(self):
-        self.student_user.avatar = None
-        self.assertEqual(settings.STATIC_URL + settings.NO_AVATAR_IMG, self.student_user.get_avatar_url())
-        self.student_user.avatar = 'Kappa.jpg'
-        self.assertEqual('/media/Kappa.jpg', self.student_user.get_avatar_url())
-
-    def test_get_courses(self):
-        self.assertEqual(u'Test Course - 1', self.student_user.get_courses())
-        CourseAssignment.objects.create(
-            user=self.student_user, course=self.course2, group_time=CourseAssignment.LATE)
-        self.assertEqual(u'Test Course - 1; Test Course2 - 2', self.student_user.get_courses())
-
-    def test_get_courses_list(self):
-        self.assertEqual([self.assignment], self.student_user.get_courses_list())
-        assignment2 = CourseAssignment.objects.create(
-            user=self.student_user, course=self.course2, group_time=CourseAssignment.LATE)
-        self.assertEqual([self.assignment, assignment2], self.student_user.get_courses_list())
-
-
-class CheckInCaseTest(TestCase):
+class CheckInCaseViewsTest(TestCase):
 
     def setUp(self):
         self.checkin_settings = '123'
@@ -140,8 +74,7 @@ class CheckInCaseTest(TestCase):
 
         self.assertEqual(before_log + 1, after_log)
 
-
-class CourseAssignmentTest(TestCase):
+class CourseAssignmentViewsTest(TestCase):
 
     def setUp(self):
         self.course = Course.objects.create(
@@ -172,9 +105,6 @@ class CourseAssignmentTest(TestCase):
             user=self.student_user, course=self.course, group_time=CourseAssignment.EARLY)
         self.assignment.favourite_partners.add(self.partner_potato)
         self.third_wheel = User.objects.create_user('third_wheel@gmail.com', '456')
-
-    def test_unicode(self):
-        self.assertEqual('<Ivaylo Bachvarov> Test Course - 1', unicode(self.assignment))
 
     def test_vote_for_partner_form_visibility_when_not_ask_for_favorite_partner(self):
         self.client.login(username='ivo_student@gmail.com', password='123')
@@ -231,19 +161,6 @@ class CourseAssignmentTest(TestCase):
         response = self.client.get(reverse('students:assignment', kwargs={'id': self.assignment.id}))
         self.assertNotContains(response, 'data-reveal-id="give-feedback"')
 
-    def test_get_favourite_partners(self):
-        self.assertEqual('Potato Company', self.assignment.get_favourite_partners())
-        self.assignment.favourite_partners.add(self.partner_salad)
-        self.assertEqual('Potato Company; Salad Company', self.assignment.get_favourite_partners())
-
-    def test_has_valid_github_account(self):
-        self.assertFalse(self.assignment.has_valid_github_account())
-        self.student_user.github_account = 'http://hackbulgaria.com'
-        self.assertFalse(self.assignment.has_valid_github_account())
-
-        self.student_user.github_account = 'https://github.com/Ivaylo-Bachvarov'
-        self.assertTrue(self.assignment.has_valid_github_account())
-
     def test_create_a_new_assignment(self):
         self.client.login(username='ivo_student@gmail.com', password='123')
         response = self.client.get(
@@ -266,7 +183,7 @@ class CourseAssignmentTest(TestCase):
         self.assertTemplateUsed('assignment.html', response)
 
 
-class SolutionTest(TestCase):
+class SolutionViewsTest(TestCase):
 
     def setUp(self):
         self.course = Course.objects.create(
@@ -303,26 +220,6 @@ class SolutionTest(TestCase):
         self.task = Task.objects.create(course=self.course, description=self.task_url, name='<2> jQuery-Gauntlet')
         self.solution_url = 'https://github.com/syndbg/HackBulgaria/'
         self.solution = Solution.objects.create(task=self.task, user=self.student_user, repo=self.solution_url)
-
-    def test_get_user_github_username(self):
-        self.assertEqual('Ivaylo-Bachvarov', self.solution.get_user_github_username())
-
-    def test_get_github_user_and_repo_names(self):
-        result = self.solution.get_github_user_and_repo_names()
-        self.assertEqual('syndbg', result['user_name'])
-        self.assertEqual('HackBulgaria', result['repo_name'])
-        self.solution.repo = 'https://github.com/syndbg/'
-
-        result = self.solution.get_github_user_and_repo_names()
-        self.assertEqual('syndbg', result['user_name'])
-        self.assertEqual('', result['repo_name'])
-
-    def test_create_a_new_assignment(self):
-        self.client.login(username='ivo_student@gmail.com', password='123')
-        response = self.client.get(
-            reverse('students:assignment', kwargs={'id': self.assignment.id}))
-        self.assertEqual(200, response.status_code)
-        self.assertTemplateUsed('assignment.html', response)
 
     def test_email_field_visibility_when_partner_hr(self):
         self.client.login(username='ivan_hr@gmail.com', password='1234')
@@ -393,33 +290,6 @@ class SolutionTest(TestCase):
         self.assertEqual(200, response.status_code)
 
 
-class ValidatorsTest(unittest.TestCase):
-
-    def test_validate_mac(self):
-        invalid_mac = ':ez:77:b4:14:66:b'
-        self.assertRaises(ValidationError, validate_mac, invalid_mac)
-        valid_mac = 'bd:88:d0:19:63:c9'
-        self.assertIsNone(validate_mac(valid_mac))
-
-    def test_validate_url(self):
-        invalid_url = '%invalid%[/]*url.com'
-        self.assertRaises(ValidationError, validate_url, invalid_url, 'github', 'invalid url given', 'invalid_url')
-        valid_url = 'http://hackbulgaria.com'
-        self.assertIsNone(validate_url(valid_url, 'hackbulgaria.com', 'invalid url given', 'invalid_url'))
-
-    def test_validate_github(self):
-        invalid_url = 'http://facebook.com'
-        self.assertRaises(ValidationError, validate_github, invalid_url)
-        valid_url = 'https://github.com/HackBulgaria/Odin'
-        self.assertIsNone(validate_github(valid_url))
-
-    def test_validate_linkedin(self):
-        invalid_url = 'http://facebook.com'
-        self.assertRaises(ValidationError, validate_linkedin, invalid_url)
-        valid_url = 'https://www.linkedin.com/in/jeffweiner08gst'  # Linkedin CEO
-        self.assertIsNone(validate_linkedin(valid_url))
-
-
 class API_Tests(TestCase):
 
     def setUp(self):
@@ -468,160 +338,3 @@ class API_Tests(TestCase):
         expected = [{"date": date_str, "student_id": self.student_user.id, "student_courses": [], "student_name": ''}]
         expected = "{}".format(expected).replace("'", '"')
         self.assertEqual(expected, response.content)
-
-
-class GetCommandsTest(TestCase):
-    def setUp(self):
-        self.filename = 'students.txt'
-        self.user_without_github = User.objects.create_user('asd@gmail.com', '123')
-        self.user_without_github.first_name = 'Asd'
-        self.user_without_github.save()
-
-        self.user = User.objects.create_user('ivo_student@gmail.com', '123')
-        self.user.first_name = 'Ivo'
-        self.user.status = User.STUDENT
-        self.user.github_account = 'https://github.com/Ivaylo-Bachvarov'
-        self.user.save()
-
-    def tearDown(self):
-        os.remove(self.filename)
-
-    def test_get_people_with_no_github(self):
-        expected = '[1] {} - {}\n'.format(self.user_without_github.first_name, self.user_without_github.email)
-        call_command('get_people_with_no_github', self.filename)
-        with open(self.filename, 'r') as f:
-            actual = f.read()
-        self.assertEqual(expected, actual)
-
-    def test_get_github_accounts(self):
-        expected = '{} - {} - {}\n'.format(self.user.first_name, self.user.email, self.user.github_account)
-        call_command('get_github_accounts', self.filename)
-        with open(self.filename, 'r') as f:
-            actual = f.read()
-        self.assertEqual(expected, actual)
-
-
-class GenerateCertificateTest(TestCase):
-    def setUp(self):
-        self.github_parameters = {'user_name': 'syndbg', 'repo_name': 'atom'}
-        self.visited_repos = [{'user_name': 'kennethreitz', 'repo_name': 'requests'}, {'user_name': 'django', 'repo_name': 'django'}]
-
-    def test_is_new_valid_github_account(self):
-        existing_parameters = {'user_name': 'kennethreitz', 'repo_name': 'requests'}
-        self.assertFalse(is_new_valid_github_account(existing_parameters, self.visited_repos))
-        self.assertTrue(is_new_valid_github_account(self.github_parameters, self.visited_repos))
-
-    def test_generate_certificate(self):
-        pass
-
-
-class TempCertificateTest(TestCase):
-    def setUp(self):
-        self.user = User.objects.create_user('certificate@gmaaail.com', '123')
-        self.user.github_account = 'https://github.com/syndbg'
-        self.user.save()
-
-        self.start_time = datetime.date.today() - datetime.timedelta(days=7)
-        self.end_time = datetime.date.today()
-        self.user = User.objects.create()
-        self.course = Course.objects.create(
-            name='Certificate Course',
-            url='certificate-course',
-            application_until=datetime.datetime.now(),
-            start_time=self.start_time,
-            end_time=self.end_time
-        )
-        self.assignment = CourseAssignment.objects.create(
-            user=self.user, course=self.course, group_time=CourseAssignment.EARLY)
-        self.temp_certificate = TempCertificate(self.assignment)
-
-    def test_set_start_time(self):
-        self.assertEqual(self.start_time, self.temp_certificate.start_time)
-
-    def test_set_end_time(self):
-        expected = self.end_time + datetime.timedelta(days=31)
-        self.assertEqual(expected, self.temp_certificate.end_time)
-
-    def test_get_total_commits(self):
-        self.assertEqual(0, self.temp_certificate.get_total_commits())
-
-    def test_update_stats(self):
-        self.assertEqual(0, self.temp_certificate.open_issues)
-        self.assertEqual(0, self.temp_certificate.closed_issues)
-        api_stats_dictionary = {'open_issues': 5, 'closed_issues': 3}
-        self.temp_certificate.update_stats(api_stats_dictionary)
-        self.assertEqual(5, self.temp_certificate.open_issues)
-        self.assertEqual(3, self.temp_certificate.closed_issues)
-
-    def test_add_cheated_solution(self):
-        task_url = 'https://github.com/HackBulgaria/Frontend-JavaScript-1/tree/master/week1/2-jQuery-Gauntlet'
-        task = Task.objects.create(course=self.course, description=task_url, name='<2> jQuery-Gauntlet')
-        solution_url = 'https://github.com/syndbg/HackBulgaria/'
-        solution = Solution.objects.create(task=task, user=self.user, repo=solution_url)
-        self.temp_certificate.add_cheated_solution(solution)
-        self.assertTrue(self.temp_certificate.has_cheated)
-        self.assertIn(solution, self.temp_certificate.cheated_solutions)
-
-    def test_save_weekly_commit_in_db(self):
-        pass
-
-    def test_log_cheating(self):
-        pass
-
-    def test_save_certificate_in_db(self):
-        pass
-
-    def test_log_or_save_in_db(self):
-        pass
-
-
-class GithubSolutionTest(TestCase):
-
-    def setUp(self):
-        self.start_time = datetime.date.today() - datetime.timedelta(days=7)
-        self.end_time = datetime.date.today()
-        self.user = User.objects.create_user('certificate@gmail.com', '123')
-        self.user.github_account = 'https://github.com/syndbg'
-        self.user.save()
-        self.course = Course.objects.create(
-            name='Certificate Course',
-            url='certificate-course',
-            start_time=self.start_time,
-            application_until=datetime.datetime.now(),
-            end_time=self.end_time
-        )
-        task_url = 'https://github.com/HackBulgaria/Frontend-JavaScript-1/tree/master/week1/2-jQuery-Gauntlet'
-        task = Task.objects.create(course=self.course, description=task_url, name='<2> jQuery-Gauntlet')
-        solution_url = 'https://github.com/syndbg/HackBulgaria/'
-        self.solution = Solution.objects.create(task=task, user=self.user, repo=solution_url)
-
-        self.username = 'syndbg'
-        self.repo_name = 'HackBulgaria'
-        self.github_solution = GithubSolution(self.username, self.repo_name, self.solution)
-
-    def test_set_api_repo(self):
-        pass
-
-    def test_is_invalid_repo(self):
-        pass
-
-    def test_is_cheating(self):
-        pass
-
-    def test_is_fork(self):
-        pass
-
-    def test_update_commits_count(self):
-        pass
-
-    def test_get_commits_count(self):
-        self.assertEqual(0, self.github_solution.get_commits_count())
-
-    def test_count_commits(self):
-        pass
-
-    def test_get_closed_issues_count(self):
-        pass
-
-    def test_get_stats(self):
-        pass
