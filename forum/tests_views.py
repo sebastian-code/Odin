@@ -153,9 +153,8 @@ class ForumViewsTest(TestCase):
             'text': new_text,
         })
 
-        edited_comment = Comment.objects.get(text=new_text)
         self.assertEqual(302, response.status_code)
-        self.assertRedirects(response, 'forum/topic/{}/'.format(edited_comment.id))
+        self.assertRedirects(response, 'forum/topic/{}/'.format(self.comment.id))
         self.assertTemplateUsed('edit_comment.html', response)
 
     def test_edit_comment_not_owned(self):
