@@ -7,7 +7,7 @@ from students.models import User
 from .models import Category, Topic, Comment
 
 
-class ForumTest(TestCase):
+class ForumViewsTest(TestCase):
 
     def setUp(self):
         self.student_user = User.objects.create_user('ivo_student@gmail.com', '123')
