@@ -26,7 +26,8 @@ class PartnerModelTest(TestCase):
         self.assertEqual(self.partner.name, unicode(self.partner))
 
     def test_get_statistics_url(self):
-        self.assertEqual('/stats/partners/1/', self.partner.get_statistics_url())
+        expected = '/stats/partners/{}/'.format(self.partner.id)
+        self.assertEqual(expected, self.partner.get_statistics_url())
 
 
 class TaskModelTest(TestCase):
@@ -68,4 +69,5 @@ class CertificateModelTest(TestCase):
         )
 
     def test_get_absolute_url(self):
-        self.assertEqual('/certificate/1/', self.certificate.get_absolute_url())
+        expected = '/certificate/{}/'.format(self.certificate.id)
+        self.assertEqual(expected, self.certificate.get_absolute_url())
