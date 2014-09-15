@@ -8,7 +8,7 @@ urlpatterns = patterns('statistics.views',
     url(r'^partners/all/$', 'show_partners_stats', name='show_partners_stats'),
     url(r'^partners/(?P<partner_id>[0-9]+)/$', 'show_partner_stats', name='show_partner_stats'),
 
-    url(r'^companies/$', 'show_companies_stats', name='show_companies_stats'),
+    url(r'^companies/all/$', 'show_companies_stats', name='show_companies_stats'),
     # url(r'^companies/(?P<company_id>[0-9]+)/$', 'show_company_stats', name='show_company_stats'),
 
     url(r'^assignments/$', 'show_assignments_stats', name='show_assignments_stats'),

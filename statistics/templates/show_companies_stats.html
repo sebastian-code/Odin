@@ -7,18 +7,17 @@
 {% block content %}
     <div class="row">
         <h2 class="text-center">Статистики за всички непартньори</h2>
-
         <ul class="pricing-table">
           <li class="bullet-item">Общо разходи: {{ total_money_spent }} BGN</li>
-          <li class="bullet-item">Общ брой наети: {{ total_started_working_ats }}</li>
-          <li class="bullet-item">Общ процент наети от курсове: {{ total_hired_percent }} %</li>
-          <li class="bullet-item">Average Cost Per Recruitment: {{ average_cost_per_recruitment }} BGN</li>
+          <li class="bullet-item">Общ брой наети: {{ total_started_working_ats|floatformat }}</li>
+          <li class="bullet-item">Общ процент наети от курсове: {{ total_hired_percent|floatformat:"-2" }} %</li>
+          <li class="bullet-item">Average Cost Per Recruitment: {{ average_cost_per_recruitment|floatformat:"-2" }} BGN</li>
         </ul>
 
-    <div id="partners-list" class="text-center">
-        <h3>Партньори:</h3>
-        {% for partner in partners %}
-        <p><a href="{{ partner.get_statistics_url }}">{{ partner.name}}</a></p>
+    <ul id="companies-list" class="medium-block-grid-4">
+        <h3 class="text-center">Непартньори:</h3>
+        {% for company in companies %}
+        <li><a href="{{ company.get_statistics_url }}">{% if company.logo %}<img src="{{ company.logo.url }}"/>{% endif %} {{ company.name}}</a></li>
         {% endfor %}
-    </div>
+    </ul>
 {% endblock content %}
