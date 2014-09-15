@@ -69,5 +69,5 @@ class CertificateModelTest(TestCase):
         )
 
     def test_get_absolute_url(self):
-        expected = '/certificate/{}/'.format(self.certificate.id)
+        expected = '/certificate/{}/'.format(self.assignment.id)
         self.assertEqual(expected, self.certificate.get_absolute_url())
