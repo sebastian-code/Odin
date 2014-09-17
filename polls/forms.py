@@ -7,22 +7,18 @@ from pagedown.widgets import PagedownWidget
 from models import Answer
 
 
-class AddPollAnswerForm(forms.ModelForm):
+class AddPollAnswerForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
+        self.poll = kwargs.pop('poll')
         self.user = kwargs.pop('user')
+        questions = self.poll.question.all()
         super(AddPollAnswerForm, self).__init__(*args, **kwargs)
 
-    def save(self, *args, **kwargs):
-        instance = super(AddPollAnswerForm, self).save(commit=False)
-        instance.user = self.user
-        instance.save()
-        return instance
+        for question in questions:
+            self.fields[str(question.id)] = forms.ModelChoiceField(queryset= \
+            question.choice_set)
 
-    class Meta:
-        model = Answer
-
-        fields = (
-            'choice',
-            'user',
-        )
+    def save(self):
+        print self.cleaned_data
+        print self.user
