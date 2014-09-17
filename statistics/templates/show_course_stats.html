@@ -13,19 +13,24 @@
       <li class="bullet-item">Процент наети: {{ hired_percent|floatformat:"-2" }} %</li>
     </ul>
 
-    <ul id="partners-list" class="  medium-block-grid-4">
-        <h3 class="text-center">Партньори:</h3>
+    <div class="row" data-equalizer>
+        <h3 class="text-center">Партньори</h3>
         {% for partner in partners %}
-        <li><a href="{{ partner.get_statistics_url }}">{% if partner.logo %}<img src="{{ partner.logo.url }}"/>{% endif %} {{ partner.name}}</a></li>
-        {% endfor %}
-    </ul>
+        <div class="medium-4 columns" data-equalizer-watch>
+            <a href="{{ partner.get_statistics_url }}">{% if partner.logo %}<img src="{{ partner.logo.url }}"/>{% endif %}
+            <p>{{ partner.name }}</p></a>
+        </div>
+      {% endfor %}
+    </div>
 
     {% if started_working_ats %}
-    <h3 id="hired-people" class="text-center">Наети хора: </h2>
-    <ul class="medium-block-grid-4">
-        {% for started_working_at in started_working_ats %}
-        <li><img src="{{ started_working_at.assignment.user.get_avatar_url }}"/>{{ started_working_at.assignment.user.get_full_name }} - {{ started_working_at.partner_name }}</li>
-        {% endfor %}
-    </ul>
+    <div class="row" data-equalizer>
+        <h3 id="hired-people" class="text-center">Наети хора:</h2>
+        <ul class="medium-block-grid-4" data-equalizer-watch>
+            {% for started_working_at in started_working_ats %}
+            <li><img src="{{ started_working_at.assignment.user.get_avatar_url }}"/><p>{{ started_working_at.assignment.user.get_full_name }} - {{ started_working_at.partner_name }}</p></li>
+            {% endfor %}
+        </ul>
+    </div>
     {% endif %}
 {% endblock content %}

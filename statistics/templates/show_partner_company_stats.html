@@ -16,11 +16,14 @@
 
 
     {% if started_working_ats %}
-    <h3 id="hired-people" class="text-center">Наети хора: </h2>
-    <ul class="medium-block-grid-4">
-        {% for started_working_at in started_working_ats %}
-        <li><img src="{{ started_working_at.assignment.user.get_avatar_url }}"/>{{ started_working_at.assignment.user.get_full_name }}</li>
-        {% endfor %}
-    </ul>
+    <div class="row" data-equalizer>
+        <h3 id="hired-people" class="text-center">Наети хора: </h2>
+        <ul class="medium-block-grid-4" data-equalizer-watch>
+            {% for started_working_at in started_working_ats %}
+            <li><img src="{{ started_working_at.assignment.user.get_avatar_url }}"/>
+            <p>{{ started_working_at.assignment.user.get_full_name }}</p></li>
+            {% endfor %}
+        </ul>
+    </div>
     {% endif %}
 {% endblock content %}

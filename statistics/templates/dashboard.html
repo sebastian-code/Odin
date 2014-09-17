@@ -5,20 +5,50 @@
 {% endblock meta %}
 
 {% block content %}
-    <h3 class="text-center">Companies/Partners stats</h3>
-    <div id="select-companies-partners">
+    <h3 class="text-center">Companies and Partners stats</h3>
+    <div id="select-partners-companies" class="text-justify">
         <div class="medium-3 columns">
-            {{ select_company_form }}
+        <h4>Pick a company:</h4>
+        <select>
+            {% for company in companies %}
+            <option value="{{ company.get_statistics_url }}">{{ company }}</option>
+            {% endfor %}
+        </select>
         </div>
+
         <div class="medium-3 columns">
-            {{ select_partner_form }}
+        <h4>Pick a partner:</h4>
+        <select>
+            {% for partner in partners %}
+            <option value="{{ partner.get_statistics_url }}">{{ partner }}</option>
+            {% endfor %}
+        </select>
         </div>
     </div>
 
-    <!-- <ul class="button-group">
-      <li><a href="#" class="button">Button 1</a></li>
-      <li><a href="#" class="button">Button 2</a></li>
-      <li><a href="#" class="button">Button 3</a></li>
-    </ul> -->
+    <hr>
 
+    <h3 class="text-center">Courses stats</h3>
+    <div id="select-courses-stats" class="medium-3 columns">
+        <h4>Pick a course:</h4>
+        <select>
+            {% for course in courses %}
+            <option value="{{ course.get_statistics_url }}">{{ course }}</option>
+            {% endfor %}
+        </select>
+    </div>
 {% endblock content %}
+
+{% block jsfooter %}
+<script>
+    $(function(){
+      $('select').on('change', function (event) {
+          var url = $(this).val();
+          if (url) {
+              window.location = url;
+          }
+          return false;
+      });
+    });
+</script>
+{% endblock jsfooter %}

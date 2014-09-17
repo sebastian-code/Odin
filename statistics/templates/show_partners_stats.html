@@ -15,10 +15,13 @@
           <li class="bullet-item">Average Cost Per Recruitment: {{ average_cost_per_recruitment|floatformat:"-2" }} BGN</li>
         </ul>
 
-    <ul id="partners-list" class="medium-block-grid-4">
-        <h3 class="text-center">Партньори:</h3>
+    <div class="row" data-equalizer>
+        <h3 class="text-center">Партньори</h3>
         {% for partner in partners %}
-        <li><a href="{{ partner.get_statistics_url }}"><img src="{{ partner.logo.url }}"/> {{ partner.name}}</a></li>
-        {% endfor %}
-    </ul>
+        <div class="medium-4 columns" data-equalizer-watch>
+            <a href="{{ partner.get_statistics_url }}">{% if partner.logo %}<img src="{{ partner.logo.url }}"/>{% endif %}
+            <p>{{ partner.name }}</p></a>
+        </div>
+      {% endfor %}
+    </div>
 {% endblock content %}
