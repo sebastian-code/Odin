@@ -39,5 +39,5 @@ class Poll(models.Model):
     def user_has_answered(self, user):
         result = False
         for question in self.question.all():
-            result = any(choice.answer_set.filter(user=user).count() < 1 for choice in question.choice_set.all())
+            result = any(choice.answer_set.filter(user=user).count() > 0 for choice in question.choice_set.all())
         return result
