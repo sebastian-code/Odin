@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+    <h3>Poll: {{ poll.title }}</h3>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form }}
+        <button>Submit!</button>
+    </form>
+{% endblock content %}
+
+{% block jsfooter %}
+    <script>
+        $(document).ready(function() {
+            $(".task-sender").change(function(ev) {
+                var $current = $(this),
+                    repo = $current.val()
+                    task = $current.data("task"),
+                    sendTo = $current.data("send-to");
+
+                $.ajax({
+                    type: 'POST',
+                    url: sendTo,
+                    data: {
+                        task: task,
+                        repo: repo
+                    }
+                })
+                .done(function(data) {
+                    $current.parents("div.collapse").find("span").html("<i class='foundicon-checkmark'></i>")
+                })
+                .fail(function() {
+                    $current.parents("div.collapse").find("span").html("<i class='foundicon-remove'></i>")
+                })
+            });
+        });
+    </script>
+{% endblock jsfooter %}

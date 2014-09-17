@@ -23,22 +23,23 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.flatpages',
 
+    'adminfiles',
+    'adminsortable',
+    'corsheaders',
+    'debug_toolbar',
+    'markdown_deux',
+    'pagedown',
+    'sorl.thumbnail',
     'south',
     'tinymce',
-    'adminsortable',
-    'pagedown',
-    'markdown_deux',
-    'debug_toolbar',
-    'corsheaders',
-    'adminfiles',
-    'sorl.thumbnail',
 
-    'website',
     'courses',
     'faq',
-    'students',
     'forum',
-    'statistics'
+    'polls',
+    'statistics',
+    'students',
+    'website',
 )
 
 MIDDLEWARE_CLASSES = (
