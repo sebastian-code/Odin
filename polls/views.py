@@ -1,7 +1,7 @@
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
@@ -17,32 +17,13 @@ def results(request, poll_id):
 @login_required
 def poll(request, poll_id):
     poll = get_object_or_404(Poll, pk=poll_id)
+    if poll.is_active is False or poll.user_has_answered():
+        return redirect('students:user_profile')
     data = request.POST if request.POST else None
     form = AddPollAnswerForm(data=data, poll=poll, user=request.user)
 
     if request.method == 'POST':
         if form.is_valid():
             form.save()
-
+            return redirect('students:user_profile')
     return render(request, 'poll.html', locals())
-
-
-@csrf_exempt
-@login_required
-@require_http_methods(['POST'])
-def add_answer(request):
-    answer = Answer.objects.filter(
-        user=request.user,
-        choice=request.POST['choice'],
-    ).first()
-
-    if answer:
-        form = AddAnswerPollForm(request.POST, instance=answer, user=request.user)
-    else:
-        form = AddAnswerPollForm(request.POST, user=request.user)
-
-    if form.is_valid():
-        form.save()
-        return HttpResponse(status=200)
-
-    return HttpResponse(status=422)
