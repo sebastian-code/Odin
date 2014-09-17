@@ -18,9 +18,10 @@ class StatisticsViewsTest(TestCase):
 
         self.partner = Partner.objects.create(name='Potato Company', description='Potato company')
 
-    # TODO: implement the view
     def test_dashboard(self):
-        pass
+        response = self.client.get(reverse('statistics:dashboard'))
+        self.assertEqual(200, response.status_code)
+        self.assertTemplateUsed('dashboard.html', response)
 
     def test_show_partners_stats(self):
         response = self.client.get(reverse('statistics:show_partners_stats'))
@@ -41,6 +42,7 @@ class StatisticsViewsTest(TestCase):
     def test_show_assignments_stats(self):
         pass
 
+    # TODO: implement the view
     def test_show_courses_stats(self):
         pass
 
