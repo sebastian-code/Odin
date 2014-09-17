@@ -14,7 +14,8 @@ class AddPollAnswerForm(forms.Form):
         super(AddPollAnswerForm, self).__init__(*args, **kwargs)
 
         for question in self.questions:
-            self.fields[str(question.title)] = forms.ModelChoiceField(queryset=question.choice_set)
+            self.fields[str(question.id)] = forms.ModelChoiceField(queryset=question.choice_set)
+            self.fields[str(question.id)].label = question.title
 
     def save(self):
         for choice in self.cleaned_data.values():
