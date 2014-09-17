@@ -17,7 +17,7 @@ def results(request, poll_id):
 @login_required
 def poll(request, poll_id):
     poll = get_object_or_404(Poll, pk=poll_id)
-    if poll.is_active is False or poll.user_has_answered():
+    if poll.is_active is False or poll.user_has_answered(request.user):
         return redirect('students:user_profile')
     data = request.POST if request.POST else None
     form = AddPollAnswerForm(data=data, poll=poll, user=request.user)

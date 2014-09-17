@@ -36,10 +36,8 @@ class Poll(models.Model):
     def __unicode__(self):
         return unicode(self.title)
 
-    def user_has_answered(self):
-        result = True
+    def user_has_answered(self, user):
+        result = False
         for question in self.question.all():
-            for choice in question.choice_set.all():
-                if choice.answer_set.count() < 1:
-                    result = False
+            result = any(choice.answer_set.filter(user=user).count() < 1 for choice in question.choice_set.all())
         return result
