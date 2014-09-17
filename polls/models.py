@@ -5,7 +5,6 @@ from students.models import User
 
 class Question(models.Model):
     free_text_enabled = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
     title = models.CharField(blank=True, max_length=256)
 
     def __unicode__(self):
@@ -32,6 +31,7 @@ class Answer(models.Model):
 class Poll(models.Model):
     title = models.CharField(max_length=256)
     question = models.ManyToManyField(Question)
+    is_active = models.BooleanField(default=True)
 
     def __unicode__(self):
         return unicode(self.title)

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+    <h3>{{ poll.title }}</h3>
+    {% for question in questions %}
+    <h4>{{ question.title }}</h4>
+        {% for choice in question.choice_set.all %}
+        <p>choice</p>
+        {% endfor %}
+    {% endfor %}
+    </dl>
+{% endblock content %}
+
+{% block jsfooter %}
+    <script>
+        $(document).ready(function() {
+            $(".task-sender").change(function(ev) {
+                var $current = $(this),
+                    repo = $current.val()
+                    task = $current.data("task"),
+                    sendTo = $current.data("send-to");
+
+                $.ajax({
+                    type: 'POST',
+                    url: sendTo,
+                    data: {
+                        task: task,
+                        repo: repo
+                    }
+                })
+                .done(function(data) {
+                    $current.parents("div.collapse").find("span").html("<i class='foundicon-checkmark'></i>")
+                })
+                .fail(function() {
+                    $current.parents("div.collapse").find("span").html("<i class='foundicon-remove'></i>")
+                })
+            });
+        });
+    </script>
+{% endblock jsfooter %}
