@@ -11,7 +11,7 @@ from models import Question, Choice, Answer, Poll
 
 @staff_member_required
 def results(request, poll_id):
-    return HttpResponse("You're looking at the results of poll %s." % poll_id)
+    return HttpResponse('You\'re looking at the results of poll %s.' % poll_id)
 
 
 @login_required
@@ -25,5 +25,10 @@ def poll(request, poll_id):
     if request.method == 'POST':
         if form.is_valid():
             form.save()
-            return redirect('students:user_profile')
+            return redirect('poll:vote_successful')
     return render(request, 'poll.html', locals())
+
+
+@login_required
+def poll_vote_successful(request):
+    return render(request, 'poll_vote_successful.html', locals())
