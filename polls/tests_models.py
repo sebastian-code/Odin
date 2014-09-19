@@ -46,9 +46,20 @@ class AnswerModelTest(TestCase):
 
 class PollModelTest(TestCase):
     def setUp(self):
+        self.student_user = User.objects.create_user('ivo_student@gmail.com', '123')
+        self.student_user.status = User.STUDENT
+        self.student_user.save()
         self.question = Question.objects.create(title='Chicken or Egg?')
         self.poll = Poll.objects.create(title='Very important!')
         self.poll.question.add(self.question)
 
     def test_unicode(self):
         self.assertEqual('Very important!', unicode(self.poll))
+
+    def test_user_has_answered_when_no_answers(self):
+        self.assertFalse(self.poll.user_has_answered(self.student_user))
+
+    def test_user_has_answered_when_answered(self):
+        choice = Choice.objects.create(question=self.question)
+        Answer.objects.create(choice=choice, user=self.student_user)
+        self.assertTrue(self.poll.user_has_answered(self.student_user))
