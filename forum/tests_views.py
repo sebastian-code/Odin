@@ -60,7 +60,7 @@ class ForumViewsTest(TestCase):
         self.assertEqual(404, response.status_code)
         self.assertTemplateNotUsed('show_topic.html', response)
 
-    def test_add_topic(self):
+    def test_add_topic_http_get(self):
         self.client.login(username='ivo_student@gmail.com', password='123')
         before_add = Topic.objects.count()
         response = self.client.post(reverse('forum:add_topic',  kwargs={'category_id': self.category.id}), {
@@ -73,6 +73,12 @@ class ForumViewsTest(TestCase):
         self.assertEqual(before_add + 1, after_add)
         self.assertEqual(302, response.status_code)
         self.assertRedirects(response, 'forum/category/{}/'.format(self.category.id))
+        self.assertTemplateUsed('add_topic.html', response)
+
+    def test_add_topic_http_post(self):
+        self.client.login(username='ivo_student@gmail.com', password='123')
+        response = self.client.get(reverse('forum:add_topic',  kwargs={'category_id': self.category.id}))
+        self.assertEqual(200, response.status_code)
         self.assertTemplateUsed('add_topic.html', response)
 
     def test_add_topic_not_logged_redirect(self):
@@ -89,7 +95,7 @@ class ForumViewsTest(TestCase):
         self.assertRedirects(response, 'login/?next=/forum/add-topic/{}/'.format(self.category.id))
         self.assertTemplateNotUsed('add_topic.html', response)
 
-    def test_edit_topic(self):
+    def test_edit_topic_http_post(self):
         self.client.login(username='ivo_student@gmail.com', password='123')
         response = self.client.post(reverse('forum:edit_topic',  kwargs={'topic_id': self.topic.id}), {
             'title': 'My Topic 2',
@@ -101,6 +107,12 @@ class ForumViewsTest(TestCase):
         self.assertEqual(302, response.status_code)
         self.assertTemplateUsed('edit_topic.html', response)
 
+    def test_edit_topic_http_get(self):
+        self.client.login(username='ivo_student@gmail.com', password='123')
+        response = self.client.get(reverse('forum:edit_topic',  kwargs={'topic_id': self.topic.id}))
+        self.assertEqual(200, response.status_code)
+        self.assertTemplateUsed('edit_topic.html')
+
     def test_edit_topic_not_logged(self):
         response = self.client.post(reverse('forum:edit_topic',  kwargs={'topic_id': self.topic.id}), {
             'title': 'My Topic 2',
@@ -108,7 +120,7 @@ class ForumViewsTest(TestCase):
         })
 
         self.assertEqual(302, response.status_code)
-        self.assertRedirects(response, 'login/?next=/forum/edit-topic/{}/'.format(self.topic.id))
+        self.assertRedirects(response,   'login/?next=/forum/edit-topic/{}/'.format(self.topic.id))
         self.assertTemplateNotUsed('edit_topic.html', response)
 
     def test_edit_topic_not_owned(self):
@@ -146,7 +158,7 @@ class ForumViewsTest(TestCase):
         self.assertEqual(200, response.status_code)
         self.assertTemplateNotUsed('show_topic.html', response)
 
-    def test_edit_comment(self):
+    def test_edit_comment_http_post(self):
         self.client.login(username='ivo_student@gmail.com', password='123')
         new_text = 'New text of the comment'
         response = self.client.post(reverse('forum:edit_comment', kwargs={'comment_id': self.comment.id}), {
@@ -155,6 +167,13 @@ class ForumViewsTest(TestCase):
 
         self.assertEqual(302, response.status_code)
         self.assertRedirects(response, 'forum/topic/{}/'.format(self.comment.id))
+        self.assertTemplateUsed('edit_comment.html', response)
+
+    def test_edit_comment_http_get(self):
+        self.client.login(username='ivo_student@gmail.com', password='123')
+        new_text = 'New text of the comment'
+        response = self.client.get(reverse('forum:edit_comment', kwargs={'comment_id': self.comment.id}))
+        self.assertEqual(200, response.status_code)
         self.assertTemplateUsed('edit_comment.html', response)
 
     def test_edit_comment_not_owned(self):
