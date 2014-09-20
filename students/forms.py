@@ -61,9 +61,6 @@ class AddNote(forms.ModelForm):
 
     class Meta:
         model = UserNote
-        exclude = (
-            'author',
-        )
 
         fields = (
             'assignment',
