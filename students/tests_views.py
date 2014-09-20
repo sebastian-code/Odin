@@ -54,6 +54,19 @@ class UserViewsTest(TestCase):
         self.assertEqual(200, response.status_code)
         self.assertTemplateUsed('profile.html', response)
 
+    def test_edit_profile_http_post(self):
+        self.client.login(username='ivo_student@gmail.com', password='123')
+        response = self.client.post(reverse('students:edit_profile'))
+        self.assertEqual(302, response.status_code)
+        self.assertRedirects(response, reverse('students:user_profile'))
+        self.assertTemplateUsed('assignment.html')
+
+    def test_edit_profile_http_get(self):
+        self.client.login(username='ivo_student@gmail.com', password='123')
+        response = self.client.get(reverse('students:edit_profile'))
+        self.assertEqual(200, response.status_code)
+        self.assertTemplateUsed('edit_profile.html', response)
+
 
 class CheckInCaseViewsTest(TestCase):
 
