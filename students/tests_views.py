@@ -102,6 +102,13 @@ class CheckInCaseViewsTest(TestCase):
         self.assertEqual(200, response.status_code)
         self.assertIsNotNone(checkin)
 
+    def test_set_checkin_when_checkin_token_differs(self):
+        response = self.client.post('/set-check-in/', {
+            'mac': self.student_user.mac,
+            'token': '456',
+        })
+        self.assertEqual(511, response.status_code)
+
     def test_double_checkin_same_day(self):
         response_first = self.client.post('/set-check-in/', {'mac': self.student_user.mac,
                                                              'token': self.checkin_settings,
