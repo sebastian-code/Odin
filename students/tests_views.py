@@ -39,7 +39,7 @@ class UserViewsTest(TestCase):
 
     def test_logout_when_not_logged_in(self):
         response = self.client.post('/logout')
-        self.assertEqual(301, response.status_code)
+        self.assertEqual(301, response.status_code, )
         self.assertTemplateUsed('login_form.html', response)
 
     def test_logout_when_logged_in(self):
@@ -47,6 +47,12 @@ class UserViewsTest(TestCase):
         response = self.client.post('/logout')
         self.assertEqual(301, response.status_code)
         self.assertTemplateUsed('index.html', response)
+
+    def test_user_profile(self):
+        self.client.login(username='ivo_student@gmail.com', password='123')
+        response = self.client.get(reverse('students:user_profile'))
+        self.assertEqual(200, response.status_code)
+        self.assertTemplateUsed('profile.html', response)
 
 
 class CheckInCaseViewsTest(TestCase):
