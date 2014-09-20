@@ -1,22 +1,13 @@
 import datetime
-import os
-import unittest
 
 from django.conf import settings
-from django.contrib.auth.hashers import make_password
-from django.core.management import call_command
 from django.core.urlresolvers import reverse
-from django.core.validators import ValidationError
-from django.db import IntegrityError
 from django.test import TestCase
 
 import mock
-from github import GithubException
 
 from .models import CheckIn, User, HrLoginLog, CourseAssignment, Solution, StudentStartedWorkingAt
 from courses.models import Partner, Course, Task
-from management.commands.generate_certificates import is_new_valid_github_account
-from management.commands.helpers.classes import TempCertificate, GithubSolution
 
 
 class UserViewsTest(TestCase):
@@ -238,9 +229,6 @@ class CourseAssignmentViewsTest(TestCase):
         self.assertTemplateUsed('assignment.html', response)
         self.assertTrue('notes' in response.context)
         self.assertTrue('form' in response.context)
-
-    def test_assignment_notes_visibility_when_seeing_your_own_assignment(self):
-        teacher_user = User.objects.create()
 
     def test_email_field_visibility_when_partner_hr(self):
         self.client.login(username='ivan_hr@gmail.com', password='1234')
