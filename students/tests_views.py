@@ -295,21 +295,6 @@ class SolutionViewsTest(TestCase):
         self.solution_url = 'https://github.com/syndbg/HackBulgaria/'
         self.solution = Solution.objects.create(task=self.task, user=self.student_user, repo=self.solution_url)
 
-    def test_email_field_visibility_when_partner_hr(self):
-        self.client.login(username='ivan_hr@gmail.com', password='1234')
-        response = self.client.get(
-            reverse('students:assignment', kwargs={'id': self.assignment.id}))
-        self.assertEqual(200, response.status_code)
-        self.assertContains(response, self.assignment.user.email)
-        self.assertTemplateUsed('assignment.html', response)
-
-    def test_email_field_visibility_when_non_partner_hr(self):
-        self.client.login(username='third_wheel@gmail.com', password='456')
-        response = self.client.get(
-            reverse('students:assignment', kwargs={'id': self.assignment.id}))
-        self.assertNotContains(response, self.assignment.user.email)
-        self.assertTemplateUsed('assignment.html', response)
-
     def test_add_solution_get_status(self):
         self.client.login(username='ivo_student@gmail.com', password='123')
         response = self.client.get(reverse('students:add_solution'))
@@ -362,6 +347,12 @@ class SolutionViewsTest(TestCase):
 
         self.assertEqual(before_adding + 1, after_adding)
         self.assertEqual(200, response.status_code)
+
+    def test_view_solutions(self):
+        self.client.login(username='ivo_student@gmail.com', password='123')
+        response = self.client.get(reverse('students:solutions', kwargs={'course_id': self.course.id}))
+        self.assertEqual(200, response.status_code)
+        self.assertTemplateUsed('solutions.html', response)
 
 
 class API_Tests(TestCase):
