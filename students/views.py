@@ -60,14 +60,12 @@ def assignment(request, id):
 
     if is_teacher:
         if request.method == 'POST':
-            form = AddNote(request.POST)
+            form = AddNote(request.POST, author=request.user)
             if form.is_valid():
-                submission = form.save(commit=False)
-                submission.author = request.user
-                submission.save()
+                form.save()
                 return redirect('students:assignment', id=id)
         else:
-            form = AddNote()
+            form = AddNote(author=request.user)
 
     if is_student and request.user == assignment.user:
         if assignment.course.ask_for_favorite_partner:

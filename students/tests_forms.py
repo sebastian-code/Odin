@@ -55,8 +55,8 @@ class CourseAssignmentFormsTest(TestCase):
         self.client.login(username='teacher@teacher.com', password='teach')
         before_adding = UserNote.objects.count()
         response = self.client.post(reverse('students:assignment',
-                                    kwargs={'id': self.student_user.id}),
-                                    {'assignment': self.teacher_assignment,
+                                    kwargs={'id': self.assignment.id}),
+                                    {'assignment': self.assignment,
                                      'text': 'Kappa'})
         after_adding = UserNote.objects.count()
         self.assertEqual(200, response.status_code)
