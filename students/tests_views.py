@@ -30,7 +30,6 @@ class UserViewsTest(TestCase):
         self.client.login(username='ivo_student@gmail.com', password='123')
         response = self.client.post('/login', {'username': 'ivo_student@gmail.com', 'password': '123'})
         self.assertEqual(301, response.status_code)
-        self.assertRedirects(response, reverse('students:user_profile'))
         self.assertTemplateUsed('profile.html', response)
 
     def test_login_when_not_logged_in(self):
@@ -41,7 +40,6 @@ class UserViewsTest(TestCase):
     def test_logout_when_not_logged_in(self):
         response = self.client.post('/logout')
         self.assertEqual(301, response.status_code)
-        self.assertRedirects(response, reverse('students:login'))
         self.assertTemplateUsed('login_form.html', response)
 
     def test_logout_when_logged_in(self):
@@ -135,6 +133,9 @@ class CourseAssignmentViewsTest(TestCase):
             end_time=datetime.date.today(),
             ask_for_feedback=True
         )
+        self.teacher_user = User.objects.create_user('teacher@teacher.com', 'teach')
+        self.teacher_user.status = User.TEACHER
+        self.teacher_user.save()
 
         self.student_user = User.objects.create_user('ivo_student@gmail.com', '123')
         self.student_user.first_name = 'Ivaylo'
@@ -156,6 +157,10 @@ class CourseAssignmentViewsTest(TestCase):
             user=self.student_user, course=self.course, group_time=CourseAssignment.EARLY)
         self.assignment.favourite_partners.add(self.partner_potato)
         self.third_wheel = User.objects.create_user('third_wheel@gmail.com', '456')
+
+        self.teacher_assignment = CourseAssignment.objects.create(user=self.teacher_user,
+                                                                  course=self.course,
+                                                                  group_time=CourseAssignment.EARLY)
 
     def test_vote_for_partner_form_visibility_when_not_ask_for_favorite_partner(self):
         self.client.login(username='ivo_student@gmail.com', password='123')
@@ -218,6 +223,17 @@ class CourseAssignmentViewsTest(TestCase):
             reverse('students:assignment', kwargs={'id': self.assignment.id}))
         self.assertEqual(200, response.status_code)
         self.assertTemplateUsed('assignment.html', response)
+
+    def test_assignment_when_user_is_a_teacher(self):
+        self.client.login(username='teacher@teacher.com', password='teach')
+        response = self.client.get(reverse('students:assignment', kwargs={'id': self.teacher_assignment.id}))
+        self.assertEqual(200, response.status_code)
+        self.assertTemplateUsed('assignment.html', response)
+        self.assertTrue('notes' in response.context)
+        self.assertTrue('form' in response.context)
+
+    def test_assignment_notes_visibility_when_seeing_your_own_assignment(self):
+        teacher_user = User.objects.create()
 
     def test_email_field_visibility_when_partner_hr(self):
         self.client.login(username='ivan_hr@gmail.com', password='1234')
