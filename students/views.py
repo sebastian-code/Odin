@@ -23,6 +23,7 @@ def login(request):
         return auth_views.login(request, template_name='login_form.html')
 
 
+@login_required
 def logout(request):
     auth_views.logout(request)
     return redirect('/')

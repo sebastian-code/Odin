@@ -19,6 +19,36 @@ from management.commands.generate_certificates import is_new_valid_github_accoun
 from management.commands.helpers.classes import TempCertificate, GithubSolution
 
 
+class UserViewsTest(TestCase):
+
+    def setUp(self):
+        self.student_user = User.objects.create_user('ivo_student@gmail.com', '123')
+        self.student_user.status = User.STUDENT
+        self.student_user.save()
+
+    def test_login_when_already_logged_in(self):
+        self.client.login(username='ivo_student@gmail.com', password='123')
+        response = self.client.post('/login', {'username': 'ivo_student@gmail.com', 'password': '123'})
+        self.assertEqual(301, response.status_code)
+        self.assertTemplateUsed('profile.html', response)
+
+    def test_login_when_not_logged_in(self):
+        response = self.client.post('/login', {'username': 'ivo_student@gmail.com', 'password': '123'})
+        self.assertEqual(301, response.status_code)
+        self.assertTemplateUsed('login_form.html')
+
+    def test_logout_when_not_logged_in(self):
+        response = self.client.post('/logout')
+        self.assertEqual(301, response.status_code)
+        self.assertTemplateUsed('login_form.html', response)
+
+    def test_logout_when_logged_in(self):
+        self.client.login(username='ivo_student@gmail.com', password='123')
+        response = self.client.post('/logout')
+        self.assertEqual(301, response.status_code)
+        self.assertTemplateUsed('index.html', response)
+
+
 class CheckInCaseViewsTest(TestCase):
 
     def setUp(self):
