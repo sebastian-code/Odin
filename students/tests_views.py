@@ -1,22 +1,62 @@
 import datetime
-import os
-import unittest
 
 from django.conf import settings
-from django.contrib.auth.hashers import make_password
-from django.core.management import call_command
 from django.core.urlresolvers import reverse
-from django.core.validators import ValidationError
-from django.db import IntegrityError
 from django.test import TestCase
 
 import mock
-from github import GithubException
 
 from .models import CheckIn, User, HrLoginLog, CourseAssignment, Solution, StudentStartedWorkingAt
 from courses.models import Partner, Course, Task
-from management.commands.generate_certificates import is_new_valid_github_account
-from management.commands.helpers.classes import TempCertificate, GithubSolution
+
+
+class UserViewsTest(TestCase):
+
+    def setUp(self):
+        self.student_user = User.objects.create_user('ivo_student@gmail.com', '123')
+        self.student_user.status = User.STUDENT
+        self.student_user.save()
+
+    def test_login_when_already_logged_in(self):
+        self.client.login(username='ivo_student@gmail.com', password='123')
+        response = self.client.post('/login', {'username': 'ivo_student@gmail.com', 'password': '123'})
+        self.assertEqual(301, response.status_code)
+        self.assertTemplateUsed('profile.html', response)
+
+    def test_login_when_not_logged_in(self):
+        response = self.client.post('/login', {'username': 'ivo_student@gmail.com', 'password': '123'})
+        self.assertEqual(301, response.status_code)
+        self.assertTemplateUsed('login_form.html')
+
+    def test_logout_when_not_logged_in(self):
+        response = self.client.post('/logout')
+        self.assertEqual(301, response.status_code)
+        self.assertTemplateUsed('login_form.html', response)
+
+    def test_logout_when_logged_in(self):
+        self.client.login(username='ivo_student@gmail.com', password='123')
+        response = self.client.post('/logout')
+        self.assertEqual(301, response.status_code)
+        self.assertTemplateUsed('index.html', response)
+
+    def test_user_profile(self):
+        self.client.login(username='ivo_student@gmail.com', password='123')
+        response = self.client.get(reverse('students:user_profile'))
+        self.assertEqual(200, response.status_code)
+        self.assertTemplateUsed('profile.html', response)
+
+    def test_edit_profile_http_post(self):
+        self.client.login(username='ivo_student@gmail.com', password='123')
+        response = self.client.post(reverse('students:edit_profile'))
+        self.assertEqual(302, response.status_code)
+        self.assertRedirects(response, reverse('students:user_profile'))
+        self.assertTemplateUsed('assignment.html')
+
+    def test_edit_profile_http_get(self):
+        self.client.login(username='ivo_student@gmail.com', password='123')
+        response = self.client.get(reverse('students:edit_profile'))
+        self.assertEqual(200, response.status_code)
+        self.assertTemplateUsed('edit_profile.html', response)
 
 
 class CheckInCaseViewsTest(TestCase):
@@ -53,6 +93,13 @@ class CheckInCaseViewsTest(TestCase):
         self.assertEqual(200, response.status_code)
         self.assertIsNotNone(checkin)
 
+    def test_set_checkin_when_checkin_token_differs(self):
+        response = self.client.post('/set-check-in/', {
+            'mac': self.student_user.mac,
+            'token': '456',
+        })
+        self.assertEqual(511, response.status_code)
+
     def test_double_checkin_same_day(self):
         response_first = self.client.post('/set-check-in/', {'mac': self.student_user.mac,
                                                              'token': self.checkin_settings,
@@ -84,6 +131,9 @@ class CourseAssignmentViewsTest(TestCase):
             end_time=datetime.date.today(),
             ask_for_feedback=True
         )
+        self.teacher_user = User.objects.create_user('teacher@teacher.com', 'teach')
+        self.teacher_user.status = User.TEACHER
+        self.teacher_user.save()
 
         self.student_user = User.objects.create_user('ivo_student@gmail.com', '123')
         self.student_user.first_name = 'Ivaylo'
@@ -105,6 +155,10 @@ class CourseAssignmentViewsTest(TestCase):
             user=self.student_user, course=self.course, group_time=CourseAssignment.EARLY)
         self.assignment.favourite_partners.add(self.partner_potato)
         self.third_wheel = User.objects.create_user('third_wheel@gmail.com', '456')
+
+        self.teacher_assignment = CourseAssignment.objects.create(user=self.teacher_user,
+                                                                  course=self.course,
+                                                                  group_time=CourseAssignment.EARLY)
 
     def test_vote_for_partner_form_visibility_when_not_ask_for_favorite_partner(self):
         self.client.login(username='ivo_student@gmail.com', password='123')
@@ -168,6 +222,14 @@ class CourseAssignmentViewsTest(TestCase):
         self.assertEqual(200, response.status_code)
         self.assertTemplateUsed('assignment.html', response)
 
+    def test_assignment_when_user_is_a_teacher(self):
+        self.client.login(username='teacher@teacher.com', password='teach')
+        response = self.client.get(reverse('students:assignment', kwargs={'id': self.teacher_assignment.id}))
+        self.assertEqual(200, response.status_code)
+        self.assertTemplateUsed('assignment.html', response)
+        self.assertTrue('notes' in response.context)
+        self.assertTrue('form' in response.context)
+
     def test_email_field_visibility_when_partner_hr(self):
         self.client.login(username='ivan_hr@gmail.com', password='1234')
         response = self.client.get(
@@ -221,21 +283,6 @@ class SolutionViewsTest(TestCase):
         self.solution_url = 'https://github.com/syndbg/HackBulgaria/'
         self.solution = Solution.objects.create(task=self.task, user=self.student_user, repo=self.solution_url)
 
-    def test_email_field_visibility_when_partner_hr(self):
-        self.client.login(username='ivan_hr@gmail.com', password='1234')
-        response = self.client.get(
-            reverse('students:assignment', kwargs={'id': self.assignment.id}))
-        self.assertEqual(200, response.status_code)
-        self.assertContains(response, self.assignment.user.email)
-        self.assertTemplateUsed('assignment.html', response)
-
-    def test_email_field_visibility_when_non_partner_hr(self):
-        self.client.login(username='third_wheel@gmail.com', password='456')
-        response = self.client.get(
-            reverse('students:assignment', kwargs={'id': self.assignment.id}))
-        self.assertNotContains(response, self.assignment.user.email)
-        self.assertTemplateUsed('assignment.html', response)
-
     def test_add_solution_get_status(self):
         self.client.login(username='ivo_student@gmail.com', password='123')
         response = self.client.get(reverse('students:add_solution'))
@@ -288,6 +335,12 @@ class SolutionViewsTest(TestCase):
 
         self.assertEqual(before_adding + 1, after_adding)
         self.assertEqual(200, response.status_code)
+
+    def test_view_solutions(self):
+        self.client.login(username='ivo_student@gmail.com', password='123')
+        response = self.client.get(reverse('students:solutions', kwargs={'course_id': self.course.id}))
+        self.assertEqual(200, response.status_code)
+        self.assertTemplateUsed('solutions.html', response)
 
 
 class API_Tests(TestCase):

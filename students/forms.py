@@ -56,14 +56,18 @@ class UserEditForm(forms.ModelForm):
 class AddNote(forms.ModelForm):
     text = forms.CharField(widget=PagedownWidget())
 
+    def __init__(self, *args, **kwargs):
+        self.author = kwargs.pop('author')
+        super(AddNote, self).__init__(*args, **kwargs)
+
     def save(self, *args, **kwargs):
-        return super(AddNote, self).save()
+        instance = super(AddNote, self).save(commit=False)
+        instance.author = self.author
+        instance.save()
+        return instance
 
     class Meta:
         model = UserNote
-        exclude = (
-            'author',
-        )
 
         fields = (
             'assignment',
