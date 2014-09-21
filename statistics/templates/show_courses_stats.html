@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block meta %}
+    <title>Статистики за всички курсове - HackBulgaria</title>
+{% endblock meta %}
+
+{% block content %}
+    <div class="row">
+        <h2 class="text-center">Статистики за всички курсове</h2>
+        <ul class="pricing-table">
+          <li class="bullet-item">Общо приходи: {{ total_courses_funds }} BGN</li>
+          <li class="bullet-item">Общ брой наети: {{ total_started_working_ats_count|floatformat }}</li>
+          <li class="bullet-item">Общ процент наети от курсове: {{ hired_percent|floatformat:"-2" }} %</li>
+          <li class="bullet-item">Average Cost Per Recruitment: {{ average_cost_per_recruitment|floatformat:"-2" }} BGN</li>
+        </ul>
+
+    <div class="row" data-equalizer>
+        <h3 class="text-center">Партньори</h3>
+        {% for partner in partners %}
+        <div class="medium-4 columns" data-equalizer-watch>
+            <a href="{{ partner.get_statistics_url }}">{% if partner.logo %}<img src="{{ partner.logo.url }}"/>{% endif %}
+            <p>{{ partner.name }}</p></a>
+        </div>
+      {% endfor %}
+    </div>
+
+    <hr>
+
+    <div class="row" data-equalizer>
+        <h3 class="text-center">Курсове</h3>
+        {% for course in courses %}
+        <div class="medium-4 columns" data-equalizer-watch>
+            <a href="{{ course.get_statistics_url }}">{% if course.image %}<img src="{{ course.image.url }}"/>{% endif %}
+            <p>{{ course.name }}</p></a>
+        </div>
+      {% endfor %}
+    </div>
+
+    {% if total_started_working_ats %}
+    <hr>
+    <div class="row" data-equalizer>
+        <h3 id="hired-people" class="text-center">Наети хора:</h2>
+        <ul class="medium-block-grid-4" data-equalizer-watch>
+            {% for started_working_at in total_started_working_ats %}
+            <li><img src="{{ started_working_at.assignment.user.get_avatar_url }}"/><p>{{ started_working_at.assignment.user.get_full_name }} - {{ started_working_at.partner_name }}</p></li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+{% endblock content %}
