@@ -84,8 +84,7 @@ def show_courses_stats(request):
         partner_started_working_ats = StudentStartedWorkingAt.objects.filter(partner=partner).count()
         partner_cost_per_recruitment = division_or_zero(partner.money_spent, partner_started_working_ats)
         average_cost_per_recruitment += partner_cost_per_recruitment
-        partner_course_funds = division_or_zero(partner.money_spent, Course.objects.filter(partner=partner).count())
-        total_courses_funds += partner_course_funds
+        total_courses_funds += partner.money_spent
 
     average_cost_per_recruitment = division_or_zero(average_cost_per_recruitment, len(partners))
     total_assignments = CourseAssignment.objects.filter(course__in=courses).count()

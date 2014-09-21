@@ -8,7 +8,7 @@
     <div class="row">
         <h2 class="text-center">Статистики за всички курсове</h2>
         <ul class="pricing-table">
-          <li class="bullet-item">Общо приходи: {{ total_courses_funds }} BGN</li>
+          <li class="bullet-item">Общо приходи: {{ total_courses_funds|floatformat }} BGN</li>
           <li class="bullet-item">Общ брой наети: {{ total_started_working_ats_count|floatformat }}</li>
           <li class="bullet-item">Общ процент наети от курсове: {{ hired_percent|floatformat:"-2" }} %</li>
           <li class="bullet-item">Average Cost Per Recruitment: {{ average_cost_per_recruitment|floatformat:"-2" }} BGN</li>
