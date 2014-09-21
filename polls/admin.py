@@ -21,5 +21,16 @@ class AnswerAdmin(admin.ModelAdmin):
         return instance.user.email
 
 admin.site.register(Answer, AnswerAdmin)
-admin.site.register(Question)
-admin.site.register(Choice)
+
+
+class ChoiceAdmin(admin.ModelAdmin):
+    list_display = ['question', 'text', 'is_free']
+    list_filter = ('question',)
+
+admin.site.register(Choice, ChoiceAdmin)
+
+
+class QuestionAdmin(admin.ModelAdmin):
+    list_display = ['title', 'free_text_enabled']
+
+admin.site.register(Question, QuestionAdmin)
