@@ -8,9 +8,10 @@
     <h2 class="text-center">{{ course.name }}</h2>
 
     <ul class="pricing-table">
-      <li class="bullet-item">Приходи: {{ total_course_funds }} BGN</li>
+      <li class="bullet-item">Приходи: {{ total_course_funds|floatformat }} BGN</li>
       <li class="bullet-item">Брой наети: {{ started_working_ats.count }}</li>
       <li class="bullet-item">Процент наети: {{ hired_percent|floatformat:"-2" }} %</li>
+      <li class="bullet-item">Cost Per Recruitment: {{ average_cost_per_recruitment|floatformat:"-2" }} BGN</li>
     </ul>
 
     <div class="row" data-equalizer>

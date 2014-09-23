@@ -12,6 +12,7 @@ class Course(models.Model):
     partner = models.ManyToManyField('Partner', null=True, blank=True)
     short_description = models.CharField(blank=True, max_length=300)
     show_on_index = models.BooleanField(default=False)
+    is_free = models.BooleanField(default=True)
 
     application_until = models.DateField()
     applications_url = models.URLField(null=True, blank=True)
@@ -26,6 +27,9 @@ class Course(models.Model):
 
     def __unicode__(self):
         return unicode(self.name)
+
+    def get_statistics_url(self):
+        return reverse('statistics:show_course_stats', args=[self.id])
 
 
 class Partner(models.Model):

@@ -25,7 +25,7 @@ class PartnerAdmin(SortableAdminMixin, admin.ModelAdmin):
         'twitter',
         'website',
     ]
-
+    list_filter = ('is_active',)
     list_display_links = ['name']
 
 admin.site.register(Partner, PartnerAdmin)

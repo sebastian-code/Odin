@@ -41,3 +41,6 @@ class Poll(models.Model):
         for question in self.question.all():
             result = any(choice.answer_set.filter(user=user).count() > 0 for choice in question.choice_set.all())
         return result
+
+    def get_question_list(self):
+        return '; '.join([unicode(q) for q in self.question.all()])

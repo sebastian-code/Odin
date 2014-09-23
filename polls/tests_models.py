@@ -63,3 +63,7 @@ class PollModelTest(TestCase):
         choice = Choice.objects.create(question=self.question)
         Answer.objects.create(choice=choice, user=self.student_user)
         self.assertTrue(self.poll.user_has_answered(self.student_user))
+
+    def test_get_question_list(self):
+        expected = 'Chicken or Egg?'
+        self.assertEqual(expected, self.poll.get_question_list())

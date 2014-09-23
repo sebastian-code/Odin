@@ -17,6 +17,10 @@ class CourseModelTest(TestCase):
     def test_unicode(self):
         self.assertEqual('Test Course', unicode(self.course))
 
+    def test_get_statistics_url(self):
+        expected = '/stats/courses/{}/'.format(self.course.id)
+        self.assertEqual(expected, self.course.get_statistics_url())
+
 
 class PartnerModelTest(TestCase):
     def setUp(self):
