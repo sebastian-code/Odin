@@ -1,4 +1,5 @@
 import datetime
+import mock
 
 from django.conf import settings
 from django.contrib.auth.hashers import make_password
@@ -73,6 +74,16 @@ class UserModelTest(TestCase):
         assignment2 = CourseAssignment.objects.create(
             user=self.student_user, course=self.course2, group_time=CourseAssignment.LATE)
         self.assertEqual([self.assignment, assignment2], self.student_user.get_courses_list())
+
+    def test_is_existing(self):
+        self.assertFalse(self.student_user.is_existing('referee@real-madrid.com'))
+        self.assertTrue(self.student_user.is_existing('ivo_student@gmail.com'))
+
+    @mock.patch('students.models.random')
+    def test_generate_password(self, mocked_random):
+        mocked_random.choice = mock.Mock(return_value='1')
+        expected = '111111111'
+        self.assertEqual(expected, User.generate_password())
 
 
 class CourseAssignmentModelTest(TestCase):

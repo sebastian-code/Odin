@@ -81,6 +81,7 @@ class User(AbstractUser):
     def is_existing(self, email):
         return User.objects.filter(email=email).count() > 0
 
+    @staticmethod
     def generate_password(size=9, chars=string.ascii_uppercase + string.digits):
         return ''.join(random.choice(chars) for x in range(size))
 
