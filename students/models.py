@@ -78,7 +78,8 @@ class User(AbstractUser):
     def __unicode__(self):
         return unicode(self.get_full_name())
 
-    def is_existing(self, email):
+    @staticmethod
+    def is_existing(email):
         return User.objects.filter(email=email).count() > 0
 
     @staticmethod

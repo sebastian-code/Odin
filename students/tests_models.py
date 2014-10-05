@@ -76,8 +76,8 @@ class UserModelTest(TestCase):
         self.assertEqual([self.assignment, assignment2], self.student_user.get_courses_list())
 
     def test_is_existing(self):
-        self.assertFalse(self.student_user.is_existing('referee@real-madrid.com'))
-        self.assertTrue(self.student_user.is_existing('ivo_student@gmail.com'))
+        self.assertFalse(User.is_existing('referee@real-madrid.com'))
+        self.assertTrue(User.is_existing('ivo_student@gmail.com'))
 
     @mock.patch('students.models.random')
     def test_generate_password(self, mocked_random):
