@@ -134,6 +134,10 @@ class CourseAssignment(models.Model):
     def __unicode__(self):
         return u'<{}> {} - {}'.format(self.user.get_full_name(), self.course, self.group_time)
 
+    @staticmethod
+    def is_existing(user):
+        return CourseAssignment.objects.filter(user=user).count() > 0
+
     def get_favourite_partners(self):
         return '; '.join([partner.name for partner in self.favourite_partners.all()])
 

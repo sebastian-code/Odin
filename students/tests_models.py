@@ -134,6 +134,10 @@ class CourseAssignmentModelTest(TestCase):
         self.student_user.github_account = 'https://github.com/Ivaylo-Bachvarov'
         self.assertTrue(self.assignment.has_valid_github_account())
 
+    def test_is_existing(self):
+        self.assertFalse(CourseAssignment.is_existing(self.hr_user))
+        self.assertTrue(CourseAssignment.is_existing(self.student_user))
+
 
 class StudentStartedWorkingAtModelTest(TestCase):
 
