@@ -1,32 +1,40 @@
+import string
+import random
+
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.contrib.auth.signals import user_logged_in
 
+from django_resized import ResizedImageField
+
 from courses.models import Course, Partner, Task
 from validators import validate_mac, validate_github, validate_linkedin
-
-from django_resized import ResizedImageField
 
 
 class UserManager(BaseUserManager):
 
-    def create_user(self, email, password=None):
+    def __create_user(self, email, password, is_staff, is_superuser,
+                      first_name, last_name, works_at):
         if not email:
             raise ValueError('Users must have an email address')
 
         email = self.normalize_email(email)
-        user = self.model(username=email, email=email)
+        user = self.model(username=email, email=email,
+                          is_staff=is_staff, is_superuser=is_superuser,
+                          first_name=first_name, last_name=last_name,
+                          works_at=works_at)
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, password):
-        user = self.create_user(email, password)
-        user.is_superuser = True
-        user.is_staff = True
-        user.save(using=self._db)
-        return user
+    def create_user(self, email, password=None, first_name='', last_name='', works_at=None):
+        return self.__create_user(email, password, False, False,
+                                  first_name, last_name, works_at)
+
+    def create_superuser(self, email, password, first_name='', last_name='', works_at=None):
+        return self.__create_user(email, password, True, True,
+                                  first_name, last_name, works_at)
 
 
 class User(AbstractUser):
@@ -69,6 +77,12 @@ class User(AbstractUser):
 
     def __unicode__(self):
         return unicode(self.get_full_name())
+
+    def is_existing(self, email):
+        return User.objects.filter(email=email).count() > 0
+
+    def generate_password(size=9, chars=string.ascii_uppercase + string.digits):
+        return ''.join(random.choice(chars) for x in range(size))
 
     def get_avatar_url(self):
         if not self.avatar:
