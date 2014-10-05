@@ -28,7 +28,7 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_user(self, email, password=None, first_name='', last_name='', works_at=None):
+    def create_user(self, email, password, first_name='', last_name='', works_at=None):
         return self.__create_user(email, password, False, False,
                                   first_name, last_name, works_at)
 
