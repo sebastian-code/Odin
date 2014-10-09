@@ -37,10 +37,10 @@ class Command(BaseCommand):
                 for row in csv_line:
                     email = row[0]
                     full_name = row[1].strip().split(' ')
-                    new_password = User.generate_password()
                     group_time = row[2].strip()
                     course_id = row[3].strip()
                     works_at = row[4].strip()
+                    new_password = 'You know your password!'
 
                     current_course = Course.objects.get(id=course_id)
                     if not current_course:
@@ -49,7 +49,14 @@ class Command(BaseCommand):
                     elif not User.is_existing(email):
                         first_name = full_name[0]
                         last_name = full_name[-1]
-                        User.objects.create_user(email, new_password, first_name, last_name, works_at)
+                        new_password = User.generate_password()
+                        User.objects.create_user(
+                            email,
+                            new_password,
+                            first_name,
+                            last_name,
+                            works_at
+                        )
 
                     new_user = User.objects.get(email=email)
 
