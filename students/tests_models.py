@@ -135,8 +135,8 @@ class CourseAssignmentModelTest(TestCase):
         self.assertTrue(self.assignment.has_valid_github_account())
 
     def test_is_existing(self):
-        self.assertFalse(CourseAssignment.is_existing(self.hr_user))
-        self.assertTrue(CourseAssignment.is_existing(self.student_user))
+        self.assertFalse(CourseAssignment.is_existing(self.hr_user, self.course))
+        self.assertTrue(CourseAssignment.is_existing(self.student_user, self.course))
 
 
 class StudentStartedWorkingAtModelTest(TestCase):

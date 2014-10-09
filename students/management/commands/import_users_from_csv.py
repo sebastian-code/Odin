@@ -53,7 +53,7 @@ class Command(BaseCommand):
 
                     new_user = User.objects.get(email=email)
 
-                    if not CourseAssignment.is_existing(new_user):
+                    if not CourseAssignment.is_existing(new_user, current_course):
                         CourseAssignment.objects.create(user=new_user, course=current_course, group_time=group_time)
 
                     email_text = template_text.format(full_name[0], email, new_password)

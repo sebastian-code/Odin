@@ -1,9 +1,11 @@
 import os
+import datetime
 
 from django.core.management import call_command
 from django.test import TestCase
 
-from .models import User
+from .models import User, CourseAssignment
+from courses.models import Course
 
 
 class GetCommandsTest(TestCase):
@@ -35,3 +37,51 @@ class GetCommandsTest(TestCase):
         with open(self.filename, 'r') as f:
             actual = f.read()
         self.assertEqual(expected, actual)
+
+
+class PeopleImportTest(TestCase):
+    def setUp(self):
+        self.course = Course.objects.create(
+            name='Test Course',
+            url='test-course',
+            application_until=datetime.datetime.now(),
+        )
+
+        self.filename = 'students.csv'
+        csv_file = open(self.filename, "w")
+        csv_file.write('ivo@abv.bg, Ivayo Ivov, 1, {}, ,'.format(self.course.id))
+        csv_file.close()
+
+    def tearDown(self):
+        os.remove(self.filename)
+
+    def test_import_users_from_csv(self):
+        call_command('import_users_from_csv', self.filename)
+        new_users = User.objects.filter(email='ivo@abv.bg')
+        self.assertEqual(new_users.count(), 1)
+
+    def test_import_users_from_csv_course_assignment(self):
+        call_command('import_users_from_csv', self.filename)
+        new_user = User.objects.filter(email='ivo@abv.bg').count()
+        course_assignments = CourseAssignment.objects.filter(user=new_user)
+        self.assertEqual(course_assignments.count(), 1)
+
+    def test_import_existing_user(self):
+        existing_student = User.objects.create_user('ivo@abv.bg', '123')
+        existing_course = Course.objects.create(
+            name='Old Course',
+            url='old-course',
+            application_until=datetime.datetime.now(),
+        )
+
+        self.assignment = CourseAssignment.objects.create(
+            user=existing_student,
+            course=existing_course,
+            group_time=CourseAssignment.EARLY
+        )
+
+        call_command('import_users_from_csv', self.filename)
+        new_user = User.objects.filter(email='ivo@abv.bg').count()
+        course_assignments = CourseAssignment.objects.filter(user=new_user)
+
+        self.assertEqual(course_assignments.count(), 2)
