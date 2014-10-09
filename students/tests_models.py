@@ -8,7 +8,7 @@ from django.db import IntegrityError
 from django.test import TestCase
 
 
-from .models import CheckIn, User, HrLoginLog, CourseAssignment, Solution, StudentStartedWorkingAt
+from .models import User, CourseAssignment, Solution, StudentStartedWorkingAt
 from courses.models import Partner, Course, Task
 
 
@@ -134,9 +134,11 @@ class CourseAssignmentModelTest(TestCase):
         self.student_user.github_account = 'https://github.com/Ivaylo-Bachvarov'
         self.assertTrue(self.assignment.has_valid_github_account())
 
-    def test_is_existing(self):
-        self.assertFalse(CourseAssignment.is_existing(self.hr_user, self.course))
+    def test_is_existing_when_part_of_course(self):
         self.assertTrue(CourseAssignment.is_existing(self.student_user, self.course))
+
+    def test_is_existing_when_not_part_of_course(self):
+        self.assertFalse(CourseAssignment.is_existing(self.hr_user, self.course))
 
 
 class StudentStartedWorkingAtModelTest(TestCase):
