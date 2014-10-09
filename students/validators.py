@@ -13,17 +13,20 @@ def validate_mac(mac):
 
 
 def validate_url(url, needle, message, code):
+    www_needle = '://www.{}'.format(needle)
+    needle = '://{}'.format(needle)
+
     URLValidator(url)
-    if not needle in url:
+    if not needle in url and not www_needle in url:
         raise ValidationError(message, code)
 
 
 def validate_github(url):
-    validate_url(url, '://github.com/', '{} is not a valid Github account URL'.format(url), 'invalid_github_account_url')
+    validate_url(url, 'github.com', '{} is not a valid Github account URL'.format(url), 'invalid_github_account_url')
 
 
 def validate_linkedin(url):
-    validate_url(url, '://www.linkedin.com/', '{} is not a valid Linkedin account URL'.format(url), 'invalid_linkedin_account_url')
+    validate_url(url, 'linkedin.com', '{} is not a valid Linkedin account URL'.format(url), 'invalid_linkedin_account_url')
 
 
 # Form validators
