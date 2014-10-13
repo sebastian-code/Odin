@@ -41,21 +41,20 @@ class GetCommandsTest(TestCase):
 
 class PeopleImportTest(TestCase):
 
-    @classmethod
-    def setUpClass(cls):
-        cls.course = Course.objects.create(
+    def setUp(self):
+        self.course = Course.objects.create(
             name='Test Course',
             url='test-course',
             application_until=datetime.datetime.now(),
         )
-        cls.filename = 'students.csv'
-        csv_file = open(cls.filename, "w")
-        csv_file.write('ivo@abv.bg, Ivayo Ivov, 1, {}, ,'.format(cls.course.id))
+        self.filename = 'students.csv'
+        csv_file = open(self.filename, "w")
+        csv_file.write('ivo@abv.bg, Ivayo Ivov, 1, {}, ,'.format(self.course.id))
         csv_file.close()
 
-    @classmethod
-    def tearDownClass(cls):
-        os.remove(cls.filename)
+    def tearDown(self):
+        # super().tearDown()
+        os.remove(self.filename)
 
     def test_import_users_from_csv(self):
         call_command('import_users_from_csv', self.filename)
