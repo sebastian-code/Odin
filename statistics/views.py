@@ -1,4 +1,6 @@
+from django.conf import settings
 from django.contrib.admin.views.decorators import staff_member_required
+from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
 
 from courses.models import Course, Partner
@@ -61,14 +63,23 @@ def show_companies_stats(request):
     return render(request, 'show_companies_stats.html', locals())
 
 
-# TODO: think of an use
 @staff_member_required
 def show_assignments_stats(request):
-    assignments = CourseAssignment.objects.all()
-    return render(request)
+    DEFAULT_AVATAR_URL = settings.STATIC_URL + settings.NO_AVATAR_IMG
+    assignments_without_profile_picture = CourseAssignment.objects.filter(Q(user__avatar=DEFAULT_AVATAR_URL) |
+                                                                          Q(user__avatar=None))
+    assignments_without_mac = CourseAssignment.objects.filter(user__mac=None)
+
+    total_assignments = CourseAssignment.objects.all().count()
+    total_without_mac_address = assignments_without_mac.count()
+    total_without_profile_picture = assignments_without_profile_picture.count()
+
+    total_with_mac_address = total_assignments - total_without_mac_address
+    total_with_profile_picture = total_assignments - total_without_profile_picture
+
+    return render(request, 'show_assignment_stats.html', locals())
 
 
-# TODO: think of an use
 @staff_member_required
 def show_courses_stats(request):
     courses = Course.objects.filter(is_free=True)

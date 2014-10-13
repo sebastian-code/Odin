@@ -46,11 +46,11 @@ class StatisticsViewsTest(TestCase):
         self.assertEqual(200, response.status_code)
         self.assertTemplateUsed('show_partner_company_stats.html', response)
 
-    # TODO: implement the view
     def test_show_assignments_stats(self):
-        pass
+        response = self.client.get(reverse('statistics:show_assignments_stats'))
+        self.assertEqual(200, response.status_code)
+        self.assertTemplateUsed('show_assignment_stats.html', response)
 
-    # TODO: implement the view
     def test_show_courses_stats(self):
         self.client.login(username='staff@staff.com', password='123')
         response = self.client.get(reverse('statistics:show_courses_stats'))
