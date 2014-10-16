@@ -121,6 +121,11 @@ class CourseAssignmentModelTest(TestCase):
     def test_unicode(self):
         self.assertEqual('<Ivaylo Bachvarov> Test Course - 1', unicode(self.assignment))
 
+    def test_get_absolute_url(self):
+        actual = self.assignment.get_absolute_url()
+        expected = reverse('students:assignment', args=[str(self.assignment.id)])
+        self.assertEqual(expected, actual)
+
     def test_get_favourite_partners(self):
         self.assertEqual('Potato Company', self.assignment.get_favourite_partners())
         self.assignment.favourite_partners.add(self.partner_salad)

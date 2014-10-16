@@ -1,10 +1,11 @@
 import string
 import random
 
-from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.contrib.auth.signals import user_logged_in
+from django.core.urlresolvers import reverse
+from django.db import models
 
 from django_resized import ResizedImageField
 
@@ -137,6 +138,9 @@ class CourseAssignment(models.Model):
     @staticmethod
     def is_existing(user, course):
         return CourseAssignment.objects.filter(user=user, course=course).count() > 0
+
+    def get_absolute_url(self):
+        return reverse('students:assignment', args=[str(self.id)])
 
     def get_favourite_partners(self):
         return '; '.join([partner.name for partner in self.favourite_partners.all()])

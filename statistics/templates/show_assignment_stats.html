@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block meta %}
+    <title>Статистики за всички потребители - HackBulgaria</title>
+{% endblock meta %}
+
+{% block content %}
+    <div class="row">
+        <h2 class="text-center">Статистики за всички потребители</h2>
+
+        <ul class="pricing-table">
+          <li class="bullet-item">Общо assignments: {{ total_assignments }}</li>
+          <li class="bullet-item">Общо assignments въвели MAC address: {{ total_with_mac_address }}</li>
+          <li class="bullet-item">Общо assignments с профилна снимка: {{ total_with_profile_picture }}</li>
+        </ul>
+
+    <div class="row" data-equalizer>
+        <h3 class="text-center">Assignments без MAC адреси - {{ total_without_mac_address }}</h3>
+        {% for assignment in assignments_without_mac %}
+        <div class="medium-4 columns" data-equalizer-watch>
+            <a href="{{ assignment.get_absolute_url }}">
+                <img src="{{ assignment.get_avatar_url }}"/>
+                <p>{{ assignment }}</p>
+            </a>
+        </div>
+      {% endfor %}
+    </div>
+
+    <div class="row" data-equalizer>
+        <h3 class="text-center">Assignments без профилни снимки - {{ total_without_profile_picture }}</h3>
+        {% for assignment in assignments_without_mac %}
+        <div class="medium-4 columns" data-equalizer-watch>
+            <a href="{{ assignment.get_absolute_url }}">
+                <img src="{{ assignment.get_avatar_url }}"/>
+                <p>{{ assignment }}</p>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock content %}
