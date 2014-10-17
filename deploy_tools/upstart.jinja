@@ -1,0 +1,12 @@
+description {{ DESCRIPTION }}
+
+start on net-device-up
+stop on shutdown
+
+respawn
+
+setuid {{ USER }}
+chdir {{ SOURCE_FOLDER }}
+
+#  exec ../virtualenv/bin/gunicorn --bind unix:/tmp/{{ DOMAIN }}.socket {{ APP_NAME }}.wsgi:application
+exec ../virtualenv/bin/gunicorn -c  {{ APP_NAME }}.wsgi:application

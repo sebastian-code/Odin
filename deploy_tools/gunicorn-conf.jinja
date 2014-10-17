@@ -1,0 +1,9 @@
+import multiprocessing
+
+
+bind = 'unix:/tmp/' + '{{ DOMAIN }}' + '.socket'
+workers = multiprocessing.cpu_count() * 2 + 1
+proc_name = {{ DOMAIN }} + '-gunicorn'
+
+access_log = './access.log'
+error_log = './error.log'
