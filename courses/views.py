@@ -42,8 +42,9 @@ def show_course_students(request, course_id):
 
 def show_certificate(request, assignment_id):
     certificate = get_object_or_404(Certificate, assignment=assignment_id)
-    user = certificate.assignment.user
-    course = certificate.assignment.course
+    assignment = certificate.assignment
+    user = assignment.user
+    course = assignment.course
     tasks = Task.objects.filter(course=course)
     solutions = Solution.objects.filter(task__in=tasks, user=user)
 
