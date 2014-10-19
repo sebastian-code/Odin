@@ -31,6 +31,13 @@ def logout(request):
 
 @login_required
 def user_profile(request):
+    current_user = request.user
+    is_student = current_user.status == current_user.STUDENT
+    is_hr = current_user.status == current_user.HR
+    is_teacher = current_user.status == current_user.TEACHER
+
+    assignments = CourseAssignment.objects.only('course', 'user').filter(user=current_user).select_related('course').order_by('course__name')
+    certificates = Certificate.objects.only('assignment').filter(assignment__in=assignments).select_related('assignment').order_by('assignment__course__name')
     return render(request, 'profile.html', locals())
 
 
