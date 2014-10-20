@@ -23,7 +23,7 @@
             <td><a href="{% url 'forum:show_topic' topic.id %}">{{ topic.title }}</a></td>
             <td>{{ topic.author.get_full_name }}</td>
             <td>{{ topic.date|date:"d-m-Y" }}</td>
-            <td>{{ topic.comment_set.count }}</td>
+            <td>{{ topic.comments_count }}</td>
         </tr>
     {% endfor %}
     </tbody>

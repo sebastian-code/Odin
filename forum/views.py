@@ -16,9 +16,9 @@ def show_categories(request):
 
 def show_category(request, category_id):
     category = get_object_or_404(Category, pk=category_id)
-    topics = reversed(
-        Topic.objects.filter(category=category).prefetch_related('author', 'comment_set'))
-
+    topics = Topic.objects.filter(category=category).select_related('author').order_by('date').reverse()
+    for topic in topics:
+        topic.comments_count = Comment.objects.filter(topic=topic).count()
     return render(request, 'show_category.html', locals())
 
 
