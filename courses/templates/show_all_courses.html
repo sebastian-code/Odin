@@ -4,6 +4,8 @@
     <title>Курсове по програмиране - HackBulgaria</title>
 {% endblock meta %}
 
+
+# TODO: Fix image sources
 {% block content %}
 <h3 class="text-center">Предстоящи</h3>
 {% if upcoming_courses %}
@@ -12,8 +14,8 @@
         <div class="medium-4 columns">
             <div class="panel text-center">
                 <h5>{{ course.name }}</h5>
-                <a href="/course/{{ course.url }}/"><img class="small-6" style="height: 250px;" src="{{MEDIA_URL}}{{ course.image }}"></a>
-                <a href="/course/{{ course.url }}/" class="button small-12" style="margin-top: 20px" >Повече информация</a>
+                <a href="{% url 'courses:show_course' course.url %}"><img class="small-6" style="height: 250px;" src="{{MEDIA_URL}}{{ course.image }}"></a>
+                <a href="{% url 'courses:show_course' course.url %}" class="button small-12" style="margin-top: 20px" >Повече информация</a>
             </div>
         </div>
     {% endfor %}
@@ -32,8 +34,8 @@
             <div class="medium-4 columns">
                 <div class="panel text-center">
                     <h5>{{ course.name }}</h5>
-                    <a href="/course/{{ course.url }}/"><img class="small-6" style="height: 250px;" src="{{MEDIA_URL}}{{ course.image }}"></a>
-                    <a href="/course/{{ course.url }}/" class="button small-12" style="margin-top: 20px" >Повече информация</a>
+                    <a href="{% url 'courses:show_course' course.url %}"><img class="small-6" style="height: 250px;" src="{{MEDIA_URL}}{{ course.image }}"></a>
+                    <a href="{% url 'courses:show_course' course.url %}" class="button small-12" style="margin-top: 20px" >Повече информация</a>
                 </div>
             </div>
         {% endfor %}
@@ -53,8 +55,8 @@
         <div class="medium-4 columns">
             <div class="panel text-center">
                 <h5>{{ course.name }}</h5>
-                <a href="/course/{{ course.url }}/"><img class="small-6" style="height: 250px;" src="{{MEDIA_URL}}{{ course.image }}"></a>
-                <a href="/course/{{ course.url }}/" class="button small-12" style="margin-top: 20px" >Повече информация</a>
+                <a href="{% url 'courses:show_course' course.url %}"><img class="small-6" style="height: 250px;" src="{{MEDIA_URL}}{{ course.image }}"></a>
+                <a href="{% url 'courses:show_course' course.url %}" class="button small-12" style="margin-top: 20px" >Повече информация</a>
             </div>
         </div>
     {% endfor %}

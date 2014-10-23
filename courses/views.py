@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
 
-from students.models import CourseAssignment, User, Solution
+from students.models import CourseAssignment, User, Solution, UserNote
 from .models import Course, Partner, Certificate, Task
 
 
@@ -29,21 +29,25 @@ def show_all_partners(request):
 
 @login_required
 def show_course_students(request, course_id):
-    assignments = CourseAssignment.objects.filter(course=course_id, user__status=User.STUDENT).select_related('user')
-    is_teacher_or_hr = request.user.status == User.HR or request.user.status == User.TEACHER
-    if request.user.hr_of:
-        interested_in_me = CourseAssignment.objects.filter(
+    current_user = request.user
+    assignments = CourseAssignment.objects.only('id', 'user', 'course').filter(course=course_id, user__status=User.STUDENT).select_related('user')
+    is_teacher_or_hr = current_user.status == User.HR or current_user.status == User.TEACHER
+    if current_user.hr_of:
+        assignments_interested_in_me = CourseAssignment.objects.filter(
             course=course_id,
-            favourite_partners=request.user.hr_of,
+            favourite_partners=current_user.hr_of,
             user__status=User.STUDENT
         )
+    for assignment in assignments:
+        assignment.notes_count = UserNote.objects.filter(assignment=assignment).count()
     return render(request, 'show_course_students.html', locals())
 
 
 def show_certificate(request, assignment_id):
     certificate = get_object_or_404(Certificate, assignment=assignment_id)
-    user = certificate.assignment.user
-    course = certificate.assignment.course
+    assignment = certificate.assignment
+    user = assignment.user
+    course = assignment.course
     tasks = Task.objects.filter(course=course)
     solutions = Solution.objects.filter(task__in=tasks, user=user)
 

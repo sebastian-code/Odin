@@ -110,7 +110,7 @@ class CoursesViewsTest(TestCase):
         self.client.login(username='ivo_student@gmail.com', password='123')
         response = self.client.get(
             reverse('courses:show_course_students', kwargs={'course_id': self.course.id}))
-        self.assertTrue('interested_in_me' in response.context)
+        self.assertTrue('assignments_interested_in_me' in response.context)
 
 
 class CertificateViewsTest(TestCase):

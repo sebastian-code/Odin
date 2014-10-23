@@ -2,11 +2,11 @@
 
 {% block content %}
 <div class="row">
-    {% if interested_in_me %}
+    {% if assignments_interested_in_me %}
         <h3>
-            Хора, които проявяват интерес към {{ request.user.hr_of }}
+            Хора, които проявяват интерес към {{ current_user.hr_of }}
         </h3>
-            {% for assignment in interested_in_me %}
+            {% for assignment in assignments_interested_in_me %}
             <div class="medium-4 columns">
                 <div class="panel text-center">
                     <h5>{{ assignment.user.get_full_name }}</h5>
@@ -15,7 +15,7 @@
                     </a>
                     {% if is_teacher_or_hr %}
                         <hr>
-                        <a href="{% url 'students:assignment' assignment.id  %}" class="button tiny">Notes: {{ assignment.usernote_set.count }}</a>
+                        <a href="{% url 'students:assignment' assignment.id  %}" class="button tiny">Notes: {{ assignment.notes_count }}</a>
                     {% endif %}
                 </div>
             </div>
@@ -25,10 +25,10 @@
         <h3>
             Всички хора от курса:
         </h3>
-    {% endif%}
+    {% endif %}
 
     {% for assignment in assignments %}
-        {% if assignment not in interested_in_me or not interested_in_me %}
+        {% if assignment not in assignments_interested_in_me or not assignments_interested_in_me %}
         <div class="medium-4 columns">
             <div class="panel text-center">
                 <h5>{{ assignment.user.get_full_name }}</h5>
@@ -37,7 +37,7 @@
                 </a>
                 {% if is_teacher_or_hr %}
                     <hr>
-                    <a href="{% url 'students:assignment' assignment.id  %}" class="button tiny">Notes: {{ assignment.usernote_set.count }}</a>
+                    <a href="{% url 'students:assignment' assignment.id  %}" class="button tiny">Notes: {{ assignment.notes_count }}</a>
                 {% endif %}
             </div>
         </div>
