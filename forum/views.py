@@ -23,18 +23,18 @@ def show_category(request, category_id):
 
 
 def show_topic(request, topic_id):
+    current_user = request.user
     topic = get_object_or_404(Topic, pk=topic_id)
-    comments = Comment.objects.filter(topic=topic).order_by('id').select_related('author')
+    comments = Comment.objects.filter(topic=topic).select_related('author').order_by('id')
 
-    data = request.POST if request.POST else None
+    data = request.POST or None
     form = AddCommentForm(data, author=request.user, topic=topic)
 
-    if request.method == 'POST' and request.user.is_authenticated():
+    if request.method == 'POST' and current_user.is_authenticated():
         if form.is_valid():
             comment = form.save()
-            subscribe_to_topic(request.user, topic)
+            subscribe_to_topic(current_user, topic)
             send_topic_subscribe_email(topic, comment)
-
             return redirect('forum:show_topic', topic_id=topic_id)
 
     return render(request, 'show_topic.html', locals())
@@ -59,7 +59,7 @@ def subscribe(request, topic_id):
 @login_required
 def add_topic(request, category_id):
     category = get_object_or_404(Category, pk=category_id)
-    data = request.POST if request.POST else None
+    data = request.POST or None
     form = AddTopicForm(data, author=request.user, category=category)
 
     if request.method == 'POST':
