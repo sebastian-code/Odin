@@ -10,12 +10,12 @@
 
         <ul class="pricing-table">
           <li class="bullet-item">Общо assignments: {{ total_assignments }}</li>
-          <li class="bullet-item">Общо assignments въвели MAC address: {{ total_with_mac_address }}</li>
-          <li class="bullet-item">Общо assignments с профилна снимка: {{ total_with_profile_picture }}</li>
+          <li class="bullet-item">Общо assignments без въведен MAC address: {{ total_without_mac_address }}</li>
+          <li class="bullet-item">Общо assignments без профилна снимка: {{ total_without_profile_picture }}</li>
         </ul>
 
     <div class="row" data-equalizer>
-        <h3 class="text-center">Assignments без MAC адреси - {{ total_without_mac_address }}</h3>
+        <h3 class="text-center">Assignments без MAC адреси</h3>
         {% for assignment in assignments_without_mac %}
         <div class="medium-4 columns" data-equalizer-watch>
             <a href="{{ assignment.get_absolute_url }}">
@@ -27,7 +27,7 @@
     </div>
 
     <div class="row" data-equalizer>
-        <h3 class="text-center">Assignments без профилни снимки - {{ total_without_profile_picture }}</h3>
+        <h3 class="text-center">Assignments без профилни снимки</h3>
         {% for assignment in assignments_without_profile_picture %}
         <div class="medium-4 columns" data-equalizer-watch>
             <a href="{{ assignment.get_absolute_url }}">

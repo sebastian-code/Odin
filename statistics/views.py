@@ -74,9 +74,6 @@ def show_all_assignments_stats(request):
     total_assignments = CourseAssignment.objects.all().count()
     total_without_mac_address = assignments_without_mac.count()
     total_without_profile_picture = assignments_without_profile_picture.count()
-
-    total_with_mac_address = total_assignments - total_without_mac_address
-    total_with_profile_picture = total_assignments - total_without_profile_picture
     return render(request, 'show_assignment_stats.html', locals())
 
 
@@ -84,15 +81,12 @@ def show_all_assignments_stats(request):
 def show_active_assignments_stats(request):
     DEFAULT_AVATAR_URL = settings.STATIC_URL + settings.NO_AVATAR_IMG
     CURRENT_DATE = date.today()
-    assignments_without_profile_picture = CourseAssignment.objects.filter(user__avatar='', course__end_time__gt=CURRENT_DATE).select_related('user')
     assignments_without_mac = CourseAssignment.objects.filter(user__mac=None,  course__end_time__gt=CURRENT_DATE).select_related('user')
+    assignments_without_profile_picture = CourseAssignment.objects.filter(user__avatar='', course__end_time__gt=CURRENT_DATE).select_related('user')
 
     total_assignments = CourseAssignment.objects.all().count()
     total_without_mac_address = assignments_without_mac.count()
     total_without_profile_picture = assignments_without_profile_picture.count()
-
-    total_with_mac_address = total_assignments - total_without_mac_address
-    total_with_profile_picture = total_assignments - total_without_profile_picture
     return render(request, 'show_assignment_stats.html', locals())
 
 
@@ -106,9 +100,6 @@ def show_expired_assignments_stats(request):
     total_assignments = CourseAssignment.objects.all().count()
     total_without_mac_address = assignments_without_mac.count()
     total_without_profile_picture = assignments_without_profile_picture.count()
-
-    total_with_mac_address = total_assignments - total_without_mac_address
-    total_with_profile_picture = total_assignments - total_without_profile_picture
     return render(request, 'show_assignment_stats.html', locals())
 
 
