@@ -20,7 +20,7 @@
         <div class="medium-4 columns" data-equalizer-watch>
             <a href="{{ assignment.get_absolute_url }}">
                 <img src="{{ assignment.get_avatar_url }}"/>
-                <p>{{ assignment }}</p>
+                <p>{{ assignment }} - {{ assignment.user.email }}</p>
             </a>
         </div>
       {% endfor %}
@@ -28,11 +28,11 @@
 
     <div class="row" data-equalizer>
         <h3 class="text-center">Assignments без профилни снимки - {{ total_without_profile_picture }}</h3>
-        {% for assignment in assignments_without_mac %}
+        {% for assignment in assignments_without_profile_picture %}
         <div class="medium-4 columns" data-equalizer-watch>
             <a href="{{ assignment.get_absolute_url }}">
                 <img src="{{ assignment.get_avatar_url }}"/>
-                <p>{{ assignment }}</p>
+                <p>{{ assignment }} - {{ assignment.user.email }}</p>
             </a>
         </div>
         {% endfor %}
