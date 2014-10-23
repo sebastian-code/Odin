@@ -7,23 +7,27 @@ from fabric.context_managers import settings
 from fabric.contrib.files import append, exists, upload_template
 
 
+def __create_folders_dict(app_settings):
+    site_folder = '/home/{}/sites/{}'.format(env.user, app_settings['HOST'])
+    source_folder = site_folder + '/source'
+    virtualenv_folder = source_folder + '/../virtualenv'
+    return {'site': site_folder, 'source': source_folder, 'virtualenv': virtualenv_folder}
+
+
 def __generate_dict_from_ini_file_section(section):
     config_parser = ConfigParser()
     config_parser.read('fabfile_settings.ini')
-
-    ## Alternative with different API calls. Not sure if I should delete it yet.
-    # dictionary = {}
-    # for option in config_parser.options(section):
-    #     dictionary[option.upper()] = config_parser.get(section, option)
     return {option.upper(): value for option, value in config_parser.items(section)}
 
 
 def provision():
     app_settings = __generate_dict_from_ini_file_section('APP')
-    site_folder = '/home/{}/sites/{}'.format(env.user, env.host or app_settings['HOST'])
+    db_settings = __generate_dict_from_ini_file_section('DB')
+    folders = __create_folders_dict(app_settings)
+
     linux_packages = app_settings['LINUX_PACKAGES']
     python_packages = app_settings['PYTHON_PACKAGES']
-    db_settings = __generate_dict_from_ini_file_section('DB')
+    site_folder = folders['site']
 
     _create_directory_structure_if_neccessary(site_folder)
     _install_requirements_if_neccessary(linux_packages, python_packages)
@@ -53,16 +57,21 @@ def _create_db_cluster_database_and_user_with_privileges(db_settings):
 
 def deploy():
     app_settings = __generate_dict_from_ini_file_section('APP')
-    site_folder = '/home/{}/sites/{}'.format(env.user, env.host or app_settings['HOST'])
-    source_folder = site_folder + '/source'
+    django_settings = _create_settings_context()
+    folders = __create_folders_dict(app_settings)
+
+    source_folder = folders['source']
+    site_folder = folders['site']
+    virtualenv_folder = folders['virtualenv']
 
     _create_directory_structure_if_neccessary(site_folder)
     _get_latest_source(source_folder, app_settings)
-    _set_settings(source_folder)
-    _create_or_update_virtualenv(source_folder, app_settings)
+    _set_settings(source_folder, django_settings)
+    _create_or_update_virtualenv(source_folder, virtualenv_folder, app_settings)
     with cd(source_folder):
         _initialize_database()
         _update_static_files()
+    _create_and_reload_nginx_conf(source_folder, django_settings)
 
 
 def _get_latest_source(source_folder, app_settings):
@@ -76,55 +85,37 @@ def _get_latest_source(source_folder, app_settings):
         run('git reset --hard {}'.format(current_commit))
 
 
-def _initialize_database():
-    run('../virtualenv/bin/python manage.py syncdb --all --noinput')
-    run('../virtualenv/bin/python manage.py migrate --fake --noinput')
-
-
-def update():
-    app_settings = __generate_dict_from_ini_file_section('APP')
-    site_folder = '/home/{}/sites/{}'.format(env.user, env.host or app_settings['HOST'])
-    source_folder = site_folder + '/source'
-
-    _get_latest_source(source_folder, app_settings)
-    _update_static_files()
-    _update_database()
-
-
-def _set_settings(source_folder):
+def _set_settings(source_folder, django_settings):
     template_path = 'local_settings_template.jinja'
     local_settings_path = source_folder + '/odin/local_settings.py'
-    settings_context = _create_settings_context()
 
     upload_template(filename=template_path, destination=local_settings_path,
-                    use_jinja=True, context=settings_context)
-    run('cat {}'.format(local_settings_path))
+                    use_jinja=True, context=django_settings)
     BASE_DIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
     STATIC_ROOT = os.path.join(BASE_DIR, '../static')
 
     settings_path = source_folder + '/odin/settings.py'
-    append(settings_path, 'BASE_DIR = \'{}\''.format(BASE_DIR))
-    append(settings_path, 'STATIC_ROOT = \'{}\''.format(STATIC_ROOT))
+    append(settings_path, '\nBASE_DIR = \'{}\''.format(BASE_DIR))
+    append(settings_path, '\nSTATIC_ROOT = \'{}\''.format(STATIC_ROOT))
 
 
 def _create_settings_context():
     context = __generate_dict_from_ini_file_section('DJANGO')
 
-    if not context['ALLOWED_HOSTS']:
+    if not len(context['ALLOWED_HOSTS']) > 0:
         container_ip = run('ifconfig eth0 | grep \'inet addr:\' | cut -d: -f2 | awk \'{ print $1}\'')
         context['ALLOWED_HOSTS'] = [container_ip, ]
     if not context['SECRET_KEY']:
-        context['SECRET_KEY'] = _generate_secret_key()
+        context['SECRET_KEY'] = __generate_secret_key()
     return context
 
 
-def _generate_secret_key():
+def __generate_secret_key():
     chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'
     return ''.join(random.SystemRandom().choice(chars) for _ in range(50))
 
 
-def _create_or_update_virtualenv(source_folder, app_settings):
-    virtualenv_folder = source_folder + '/../virtualenv'
+def _create_or_update_virtualenv(source_folder, virtualenv_folder, app_settings):
     if not exists(virtualenv_folder + '/bin/pip'):
         run('virtualenv --python={} {}'.format(app_settings['PYTHON_VERSION'], virtualenv_folder))
     run('{}/bin/pip install -r {}/requirements/stable.pip'.format(virtualenv_folder, source_folder))
@@ -132,6 +123,36 @@ def _create_or_update_virtualenv(source_folder, app_settings):
 
 def _update_static_files():
     run('../virtualenv/bin/python manage.py collectstatic --noinput')
+
+
+def _create_and_reload_nginx_conf(source_folder, django_settings):
+    template_path = source_folder + '/deploy_tools/nginx.jinja'
+    config_path = '/etc/nginx/sites-available/{}'.format(django_settings['DOMAIN'])
+    link_path = '/etc/nginx/sites-enabled/{}'.format(django_settings['DOMAIN'])
+
+    run('pwd')
+    django_settings['USER'] = env.user
+    upload_template(filename=template_path, destination=config_path,
+                    use_jinja=True, context=django_settings)
+    sudo('ln -s {} {}'.format(config_path, link_path))
+    sudo('service nginx reload')
+
+
+def update():
+    app_settings = __generate_dict_from_ini_file_section('APP')
+    folders = __create_folders_dict(app_settings)
+
+    source_folder = folders['source']
+
+    _get_latest_source(source_folder, app_settings)
+    with cd(source_folder):
+        _update_static_files()
+        _update_database()
+
+
+def _initialize_database():
+    run('../virtualenv/bin/python manage.py syncdb --all --noinput')
+    run('../virtualenv/bin/python manage.py migrate --fake --noinput')
 
 
 def _update_database():
