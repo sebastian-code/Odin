@@ -66,8 +66,7 @@ def show_companies_stats(request):
 @staff_member_required
 def show_assignments_stats(request):
     DEFAULT_AVATAR_URL = settings.STATIC_URL + settings.NO_AVATAR_IMG
-    assignments_without_profile_picture = CourseAssignment.objects.filter(Q(user__avatar=DEFAULT_AVATAR_URL) |
-                                                                          Q(user__avatar=None)).select_related('user')
+    assignments_without_profile_picture = CourseAssignment.objects.filter(user__avatar='').select_related('user')
     assignments_without_mac = CourseAssignment.objects.filter(user__mac=None).select_related('user')
 
     total_assignments = CourseAssignment.objects.all().count()
