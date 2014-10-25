@@ -13,9 +13,35 @@ from students.models import CheckIn, User, HrLoginLog, CourseAssignment, Solutio
 class UserViewsTest(TestCase):
 
     def setUp(self):
+        self.course = Course.objects.create(
+            name='Test Course',
+            url='test-course',
+            application_until=datetime.datetime.now(),
+            end_time=datetime.date.today(),
+            ask_for_feedback=False
+        )
+        self.teacher_user = User.objects.create_user('teacher@teacher.com', 'teach')
+        self.teacher_user.status = User.TEACHER
+        self.teacher_user.save()
+
         self.student_user = User.objects.create_user('ivo_student@gmail.com', '123')
         self.student_user.status = User.STUDENT
         self.student_user.save()
+
+        self.partner_potato = Partner.objects.create(name='Potato Company', description='Potato company')
+        self.partner_salad = Partner.objects.create(name='Salad Company', description='Salad Company')
+
+        self.hr_user = User.objects.create_user('ivan_hr@gmail.com', '1234')
+        self.hr_user.status = User.HR
+        self.hr_user.hr_of = self.partner_potato
+        self.hr_user.save()
+
+        self.student_assignment = CourseAssignment.objects.create(
+            user=self.student_user, course=self.course, group_time=CourseAssignment.EARLY)
+        self.teacher_assignment = CourseAssignment.objects.create(
+            user=self.teacher_user, course=self.course, group_time=CourseAssignment.EARLY)
+        self.hr_assignment = CourseAssignment.objects.create(
+            user=self.hr_user, course=self.course, group_time=CourseAssignment.EARLY)
 
     def test_login_when_already_logged_in(self):
         self.client.login(username='ivo_student@gmail.com', password='123')
@@ -39,11 +65,25 @@ class UserViewsTest(TestCase):
         self.assertEqual(301, response.status_code)
         self.assertTemplateUsed('index.html', response)
 
-    def test_user_profile(self):
+    def test_user_profile_correct_url_and_template_used(self):
         self.client.login(username='ivo_student@gmail.com', password='123')
         response = self.client.get(reverse('students:user_profile'))
         self.assertEqual(200, response.status_code)
         self.assertTemplateUsed('profile.html', response)
+
+    def test_user_profile_has_submitted_solutions_button_when_teacher(self):
+        self.client.login(username='teacher@teacher.com', password='teach')
+        response = self.client.get(reverse('students:user_profile'))
+
+        submitted_solutions_url = reverse('courses:show_submitted_solutions', self.course.pk)
+        self.assertIn(submitted_solutions_url, response)
+
+    def test_user_profile_has_show_course_students_button_when_hr(self):
+        self.client.login(username='ivo_hr@gmail.com', password='1234')
+        response = self.client.get(reverse('students:user_profile'))
+
+        show_course_students_url = reverse('courses:show_course_students', self.course.pk)
+        self.assertIn(show_course_students_url, response)
 
     def test_edit_profile_http_post(self):
         self.client.login(username='ivo_student@gmail.com', password='123')
