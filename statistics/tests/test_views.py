@@ -2,7 +2,6 @@ import datetime
 
 from django.core.urlresolvers import reverse
 from django.test import TestCase
-from django.test.client import Client
 
 from courses.models import Course, Partner
 from students.models import User
