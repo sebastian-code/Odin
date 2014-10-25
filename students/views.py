@@ -178,7 +178,6 @@ def solutions(request, course_id):
     weeks = sorted(set(map(lambda task: task.week, tasks)))
     solutions = Solution.objects.filter(task__in=tasks, user=request.user).select_related('task')
 
-    # Zips user's solutions with tasks
     solutions_by_task = {}
     for solution in solutions:
         solutions_by_task[solution.task] = solution
