@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+
+{% block meta %}
+    <title>Предадени задачи за {{ course }}</title>
+{% endblock meta %}
+
+{% block content %}
+    <h3>{{ course }}</h3>
+    <dl class="accordion" data-accordion>
+
+    {% for week in weeks %}
+        <dd class="accordion-navigation">
+        <a href="#panel{{ week }}">Week {{ week }}</a>
+        <div id="panel{{ week }}" class="content">
+        <div class="tabs-content">
+
+        <dl class="accordion" data-accordion>
+
+        {% for task in tasks %}
+            {% if task.week = week %}
+                <dd class="accordion-navigation">
+                <a href="#panel{{ task.pk }}">Task {{ task }} <span class="label"><strong>Deadline</strong>: {{ task.deadline}}</span></a>
+                <div id="panel{{ task.pk     }}" class="content">
+                <div class="tabs-content">
+                <dl class="accordion" data-accordion>
+
+                {% for solution in task.solution_set.all %}
+                    <p>{{ solution.user }} - <a href="{{ task.solution.repo }}"><span class ="label">{{ task.solution.repo }}</span></a></p>
+                {% endfor %}
+
+                </dl>
+                </div>
+                </div>
+                </dd>
+            {% endif %}
+        {% endfor %}
+
+        </dl>
+        </div>
+        </div>
+        </dd>
+    {% endfor %}
+
+    </dl>
+{% endblock content %}
