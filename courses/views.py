@@ -82,4 +82,4 @@ def show_submitted_solutions(request, course_id):
         if task in solutions_by_task:
             task.solution = solutions_by_task[task]
 
-    return render(request, 'submitted_solutions.html', locals())
+    return render(request, 'show_submitted_solutions.html', locals())
