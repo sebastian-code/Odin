@@ -2,7 +2,7 @@ import datetime
 
 from django.test import TestCase
 
-from .models import Course, Certificate, Partner, Task
+from courses.models import Course, Certificate, Partner, Task
 from students.models import CourseAssignment, User
 
 
