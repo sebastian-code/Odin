@@ -1,7 +1,6 @@
-from django.test import TestCase, client
-from django.core.urlresolvers import reverse
+from django.test import TestCase
 
-from .models import Faq
+from faq.models import Faq
 
 
 class FaqModelTest(TestCase):
