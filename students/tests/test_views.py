@@ -75,14 +75,14 @@ class UserViewsTest(TestCase):
         self.client.login(username='teacher@teacher.com', password='teach')
         response = self.client.get(reverse('students:user_profile'))
 
-        submitted_solutions_url = reverse('courses:show_submitted_solutions', self.course.pk)
+        submitted_solutions_url = reverse('courses:show_submitted_solutions', kwargs={'course_id': self.course.pk})
         self.assertIn(submitted_solutions_url, response)
 
     def test_user_profile_has_show_course_students_button_when_hr(self):
         self.client.login(username='ivo_hr@gmail.com', password='1234')
         response = self.client.get(reverse('students:user_profile'))
 
-        show_course_students_url = reverse('courses:show_course_students', self.course.pk)
+        show_course_students_url = reverse('courses:show_submitted_solutions', kwargs={'course_id': self.course.pk})
         self.assertIn(show_course_students_url, response)
 
     def test_edit_profile_http_post(self):

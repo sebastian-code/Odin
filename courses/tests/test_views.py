@@ -114,19 +114,19 @@ class CoursesViewsTest(TestCase):
 
     def test_show_submitted_solutions_when_student(self):
         self.client.login(username='ivo_student@gmail.com', password='123')
-        response = self.client.get(reverse('courses:show_submitted_solutions', self.course.pk))
+        response = self.client.get(reverse('courses:show_submitted_solutions', kwargs={'course_id': self.course.pk}))
         self.assertEqual(403, response.status_code)
         self.assertTemplateNotUsed(response, 'show_submitted_solutions.html')
 
     def test_show_submitted_solutions_when_hr(self):
         self.client.login(username='ivo_hr@gmail.com', password='123')
-        response = self.client.get(reverse('courses:show_submitted_solutions', self.course.pk))
+        response = self.client.get(reverse('courses:show_submitted_solutions', kwargs={'course_id': self.course.pk}))
         self.assertEqual(403, response.status_code)
         self.assertTemplateNotUsed(response, 'show_submitted_solutions.html')
 
     def test_show_submitted_solutions_when_teacher(self):
         self.client.login(username='ivo_teacher@gmail.com', password='123')
-        response = self.client.get(reverse('courses:show_submitted_solutions', self.course.pk))
+        response = self.client.get(reverse('courses:show_submitted_solutions', kwargs={'course_id': self.course.pk}))
         self.assertEqual(200, response.status_code)
         self.assertTemplateUsed(response, 'show_submitted_solutions.html')
 
