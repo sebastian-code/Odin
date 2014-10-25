@@ -6,8 +6,8 @@ from django.test import TestCase
 
 import mock
 
-from .models import CheckIn, User, HrLoginLog, CourseAssignment, Solution, StudentStartedWorkingAt
 from courses.models import Partner, Course, Task
+from students.models import CheckIn, User, HrLoginLog, CourseAssignment, Solution, StudentStartedWorkingAt
 
 
 class UserViewsTest(TestCase):

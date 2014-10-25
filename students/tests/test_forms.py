@@ -1,15 +1,10 @@
 import datetime
 
-from django.contrib.auth.hashers import make_password
-from django.core.management import call_command
 from django.core.urlresolvers import reverse
-from django.core.validators import ValidationError
-from django.db import IntegrityError
 from django.test import TestCase
 
-
-from .models import CheckIn, User, UserNote, HrLoginLog, CourseAssignment, Solution, StudentStartedWorkingAt
-from courses.models import Partner, Course, Task
+from courses.models import Partner, Course
+from students.models import User, UserNote, CourseAssignment
 
 
 class CourseAssignmentFormsTest(TestCase):
