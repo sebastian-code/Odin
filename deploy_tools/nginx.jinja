@@ -3,9 +3,8 @@ error_log /tmp/{{ DOMAIN }}-nginx.error.log
 
 
 server {
-    listen   80;
-    listen   [::]:80;
-    listen   443 default ssl;
+    listen 80;
+    listen 443 default ssl;
 
     server_name {{ DOMAIN }};
 
