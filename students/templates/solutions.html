@@ -10,8 +10,8 @@
     <dl class="accordion" data-accordion>
         {% for week in weeks %}
             <dd class="accordion-navigation">
-                <a href="#panel{{ week }}">{{ week }}</a>
-                <div id="panel{{ week }}" class="content">
+                <a href="#panel{{ week.pk }}">{{ week }}</a>
+                <div id="panel{{ week.pk }}" class="content">
                     <div class="tabs-content">
                         {% for task in tasks %}
                             {% if task.week == week %}
