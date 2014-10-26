@@ -33,7 +33,6 @@ class UserViewsTest(TestCase):
 
         self.hr_user = User.objects.create_user('ivan_hr@gmail.com', '1234')
         self.hr_user.status = User.HR
-        self.hr_user.hr_of = self.partner_potato
         self.hr_user.save()
 
         self.student_assignment = CourseAssignment.objects.create(
@@ -82,7 +81,7 @@ class UserViewsTest(TestCase):
         self.client.login(username='ivan_hr@gmail.com', password='1234')
         response = self.client.get(reverse('students:user_profile'))
 
-        show_course_students_url = reverse('courses:show_submitted_solutions', kwargs={'course_id': self.course.pk})
+        show_course_students_url = reverse('courses:show_course_students', kwargs={'course_id': self.course.pk})
         self.assertContains(response, show_course_students_url)
 
     def test_edit_profile_http_post(self):
