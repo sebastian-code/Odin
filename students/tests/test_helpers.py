@@ -2,10 +2,10 @@ import datetime
 
 from django.test import TestCase
 
-from .models import User, CourseAssignment, Solution
 from courses.models import Course, Task
-from management.commands.generate_certificates import is_new_valid_github_account
-from management.commands.helpers.classes import TempCertificate, GithubSolution
+from students.management.commands.generate_certificates import is_new_valid_github_account
+from students.management.commands.helpers.classes import TempCertificate, GithubSolution
+from students.models import User, CourseAssignment, Solution
 
 
 class GenerateCertificateTest(TestCase):

@@ -1,11 +1,8 @@
-import datetime
-
 from django.test import TestCase
 from django.core.urlresolvers import reverse
 
-from models import Question, Choice, Answer, Poll
-from courses.models import Course
-from students.models import CourseAssignment, User
+from polls.models import Question, Choice, Poll
+from students.models import User
 
 
 class PollViewsTest(TestCase):

@@ -7,9 +7,8 @@ from django.core.urlresolvers import reverse
 from django.db import IntegrityError
 from django.test import TestCase
 
-
-from .models import User, CourseAssignment, Solution, StudentStartedWorkingAt
 from courses.models import Partner, Course, Task
+from students.models import User, CourseAssignment, Solution, StudentStartedWorkingAt
 
 
 class UserManagerModelTest(TestCase):

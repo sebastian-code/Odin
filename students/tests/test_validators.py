@@ -2,7 +2,7 @@ import unittest
 
 from django.core.validators import ValidationError
 
-from validators import validate_mac, validate_url, validate_github, validate_linkedin
+from students.validators import validate_mac, validate_url, validate_github, validate_linkedin
 
 
 class ValidatorsTest(unittest.TestCase):

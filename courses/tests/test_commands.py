@@ -3,11 +3,11 @@ import datetime
 from django.test import TestCase
 from django.utils import timezone
 
-import mock
 from github import Repository
+import mock
 
-from .management.commands import generate_tasks
-from .models import Course, Task
+from courses.management.commands import generate_tasks
+from courses.models import Course, Task
 
 
 class TaskGenerationTest(TestCase):

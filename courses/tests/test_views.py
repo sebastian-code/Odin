@@ -3,7 +3,7 @@ import datetime
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 
-from .models import Course, Partner, Task, Certificate
+from courses.models import Course, Partner, Task, Certificate
 from students.models import User, CourseAssignment, Solution
 
 
@@ -111,6 +111,24 @@ class CoursesViewsTest(TestCase):
         response = self.client.get(
             reverse('courses:show_course_students', kwargs={'course_id': self.course.id}))
         self.assertTrue('assignments_interested_in_me' in response.context)
+
+    def test_show_submitted_solutions_when_student(self):
+        self.client.login(username='ivo_student@gmail.com', password='123')
+        response = self.client.get(reverse('courses:show_submitted_solutions', kwargs={'course_id': self.course.pk}))
+        self.assertEqual(403, response.status_code)
+        self.assertTemplateNotUsed(response, 'show_submitted_solutions.html')
+
+    def test_show_submitted_solutions_when_hr(self):
+        self.client.login(username='ivo_hr@gmail.com', password='123')
+        response = self.client.get(reverse('courses:show_submitted_solutions', kwargs={'course_id': self.course.pk}))
+        self.assertEqual(403, response.status_code)
+        self.assertTemplateNotUsed(response, 'show_submitted_solutions.html')
+
+    def test_show_submitted_solutions_when_teacher(self):
+        self.client.login(username='ivo_teacher@gmail.com', password='123')
+        response = self.client.get(reverse('courses:show_submitted_solutions', kwargs={'course_id': self.course.pk}))
+        self.assertEqual(200, response.status_code)
+        self.assertTemplateUsed(response, 'show_submitted_solutions.html')
 
 
 class CertificateViewsTest(TestCase):

@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from helpers import division_or_zero
+from statistics.helpers import division_or_zero
 
 
 class HelpersTest(TestCase):

@@ -2,6 +2,7 @@ from datetime import date
 
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from django.http import HttpResponseForbidden
 from django.shortcuts import render, get_object_or_404
 
 from students.models import CourseAssignment, User, Solution, UserNote
@@ -51,7 +52,6 @@ def show_certificate(request, assignment_id):
     tasks = Task.objects.filter(course=course)
     solutions = Solution.objects.filter(task__in=tasks, user=user)
 
-    # Zips solutions with tasks
     solutions_by_task = {}
     for solution in solutions:
         solutions_by_task[solution.task.id] = solution
@@ -61,3 +61,25 @@ def show_certificate(request, assignment_id):
             task.solution = solutions_by_task[task.id]
 
     return render(request, 'show_certificate.html', locals())
+
+
+def show_submitted_solutions(request, course_id):
+    current_user = request.user
+
+    if current_user.status != User.TEACHER:
+        return HttpResponseForbidden()
+
+    course = get_object_or_404(Course, pk=course_id)
+    tasks = Task.objects.filter(course=course).select_related('solution').order_by('name')
+    weeks = sorted(set(map(lambda task: task.week, tasks)))
+    solutions = Solution.objects.filter(task__in=tasks).select_related('task')
+
+    solutions_by_task = {}
+    for solution in solutions:
+        solutions_by_task[solution.task] = solution
+
+    for task in tasks:
+        if task in solutions_by_task:
+            task.solution = solutions_by_task[task]
+
+    return render(request, 'show_submitted_solutions.html', locals())

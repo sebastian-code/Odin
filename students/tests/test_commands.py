@@ -1,11 +1,9 @@
 import os
-import datetime
 
 from django.core.management import call_command
 from django.test import TestCase
 
-from .models import User, CourseAssignment
-from courses.models import Course
+from students.models import User
 
 
 class GetCommandsTest(TestCase):
@@ -38,7 +36,7 @@ class GetCommandsTest(TestCase):
             actual = f.read()
         self.assertEqual(expected, actual)
 
-# 
+#
 # class PeopleImportTest(TestCase):
 #
 #     @classmethod

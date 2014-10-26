@@ -3,8 +3,8 @@ from django.test import TestCase
 from django.core import mail
 from django.core.urlresolvers import reverse
 
+from forum.models import Category, Topic, Comment
 from students.models import User
-from .models import Category, Topic, Comment
 
 
 class ForumViewsTest(TestCase):

@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from .models import Category, Topic, Comment
+from forum.models import Category, Topic
 from students.models import User
 
 

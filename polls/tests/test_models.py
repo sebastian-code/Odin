@@ -2,9 +2,9 @@ import datetime
 
 from django.test import TestCase
 
-from models import Question, Choice, Answer, Poll
 from courses.models import Course
-from students.models import CourseAssignment, User
+from polls.models import Question, Choice, Answer, Poll
+from students.models import User
 
 
 class QuestionModelTest(TestCase):
