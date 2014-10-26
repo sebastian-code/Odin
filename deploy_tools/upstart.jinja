@@ -8,5 +8,7 @@ respawn
 setuid {{ USER }}
 chdir {{ SOURCE_FOLDER }}
 
-#  exec ../virtualenv/bin/gunicorn --bind unix:/tmp/{{ DOMAIN }}.socket {{ APP_NAME }}.wsgi:application
-exec ../virtualenv/bin/gunicorn -c  {{ APP_NAME }}.wsgi:application
+script
+    . ../virtualenv/bin/activate
+    gunicorn -c {{ APP_NAME }}/gunicorn-conf.py {{ APP_NAME }}.wsgi:application
+end script
