@@ -61,13 +61,23 @@ def get_formatted_task_name(raw_task_name):
     return output
 
 
+def get_formatted_dir_name(dir_name):
+    # Splits dir name by digit and capitalizes dir name
+    # Ex week6 = Week 6, exam3 = Exam 3
+    regex_output = re.findall(r'(\w+?)(\d+)', dir_name)[0]
+    return '{} {}'.format(regex_output[0].capitalize(), regex_output[1])
+
+
 def create_db_task(course, tree_element, is_exam):
     dir_task_names = get_dir_and_task_names(tree_element.path)
+
     task_github_url = get_formatted_task_url(course.git_repository, dir_task_names, is_exam)
     task_name = get_formatted_task_name(dir_task_names['raw_task'])
+    dir_name = get_formatted_dir_name(dir_task_names['dir'])
     deadline = get_deadline()
 
-    obj, created = Task.objects.get_or_create(name=task_name, description=task_github_url, course=course, is_exam=is_exam, week=dir_task_names['dir'], defaults={'deadline': deadline})
+
+    obj, created = Task.objects.get_or_create(name=task_name, description=task_github_url, course=course, is_exam=is_exam, week=dir_name, defaults={'deadline': deadline})
     if created:
         return 'Created task {} - {}'.format(task_name, task_github_url)
 

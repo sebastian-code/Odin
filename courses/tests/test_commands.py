@@ -77,6 +77,15 @@ class TaskGenerationTest(TestCase):
         expected = '<1> A Set of Functional Problems'
         self.assertEqual(expected, generate_tasks.get_formatted_task_name(raw_task_name))
 
+    def test_get_formatted_dir_name(self):
+        raw_dir_week = 'week5'
+        raw_dir_exam = 'exam2'
+
+        expected_dir_week = 'Week 5'
+        expected_dir_exam = 'Exam 2'
+        self.assertEqual(expected_dir_week, generate_tasks.get_formatted_dir_name(raw_dir_week))
+        self.assertEqual(expected_dir_exam, generate_tasks.get_formatted_dir_name(raw_dir_exam))
+
     def test_create_db_task(self):
         course = Course.objects.create(
             name='Test Course',
