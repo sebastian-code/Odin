@@ -10,6 +10,7 @@ clean:
 	find . -name '*.pyc' -exec rm {} \;
 
 pip-update:
+	PIP_REQUIRE_VIRTUALENV=true
 	pip freeze --local | grep -v '^\-e' | cut -d = -f 1  | xargs pip install -U
 
 deploy-update:
