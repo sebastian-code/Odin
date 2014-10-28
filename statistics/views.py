@@ -2,7 +2,6 @@ from datetime import date
 
 from django.conf import settings
 from django.contrib.admin.views.decorators import staff_member_required
-from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
 
 from courses.models import Course, Partner
