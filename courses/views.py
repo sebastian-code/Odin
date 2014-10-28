@@ -63,6 +63,7 @@ def show_certificate(request, assignment_id):
     return render(request, 'show_certificate.html', locals())
 
 
+@login_required
 def show_submitted_solutions(request, course_id):
     current_user = request.user
 
