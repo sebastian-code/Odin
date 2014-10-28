@@ -26,7 +26,7 @@
                 <dl class="accordion" data-accordion>
 
                 {% for solution in task.solution_set.all %}
-                    <p>{{ solution.user }} - <a href="{{ solution.repo }}"><span class ="label">{{ solution.repo }}</span></a></p>
+                    <p><a href="{% url 'students:assignment' solution.get_assignment.id %}">{{ solution.user }}</a> - <a href="{{ solution.repo }}"><span class ="label">{{ solution.repo }}</span></a></p>
                 {% endfor %}
 
                 </dl>

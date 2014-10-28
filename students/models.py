@@ -183,6 +183,9 @@ class Solution(models.Model):
     user = models.ForeignKey(User)
     repo = models.URLField()
 
+    def get_assignment(self):
+        return CourseAssignment.objects.get(user=self.user)
+
     def __parse_github_url(self, github_url):
         github_url_split = github_url.split('/')[3:]
         # Ex: https://github.com/syndbg/HackBulgaria/tree/master/Core-Java-1
