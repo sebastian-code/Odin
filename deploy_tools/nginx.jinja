@@ -4,16 +4,31 @@ error_log /tmp/{{ DOMAIN }}-nginx.error.log
 
 server {
     listen 80;
-    listen 443 default ssl;
+    listen 443 ssl spdy;
+
+    spdy_headers_comp 2;
 
     server_name {{ DOMAIN }};
 
-    ssl_certificate /etc/nginx/ssl/{{ DOMAIN }}.crt;
+    ssl_certificate /etc/nginx/ssl/{{ DOMAIN }}.chained.crt;
     ssl_certificate_key /etc/nginx/ssl/{{ DOMAIN }}.key;
 
+    ssl_dhparam /etc/nginx/ssl/dhparam.pem;
+    ssl_prefer_server_ciphers on;
+
+    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+
+    # Best security
+    ssl_ciphers 'AES256+EECDH:AES256+EDH:!aNULL';
+
+    # Best compatibility
+    # ssl_ciphers ECDH+AESGCddM:DH+AESGCM:ECDH+AES256:DH+AES256:ECDH+AES128:DH+AES:RSA+AESGCM:RSA+AES:!aNULL:!MD5:!DSS:!AES256;
+
+    ssl_session_cache shared:SSL:15m;
+    ssl_session_timeout 15m;
 
     if ($ssl_protocol = "") {
-            return 301 https://$server_name$request_uri;
+        return 301 https://$server_name$request_uri;
     }
 
     gzip on;
@@ -23,9 +38,15 @@ server {
     gzip_min_length 1100;
     gzip_buffers 16 8k;
     gzip_types text/plain text/html text/css application/x-javascript text/xml application/xml application/xml+rss text/javascript;
-
-    gzip_disable "MSIE [1-6].(?!.*SV!)";
     gzip_vary on;
+    gzip_disable "MSIE [1-6].(?!.*SV!)";
+
+    ssl_stapling on;
+    ssl_stapling_verify on;
+    ssl_trusted_certificate /etc/nginx/ssl/trustchain.crt;
+
+    resolver 208.67.222.222 208.67.220.220 valid=300s;
+    resolver_timeout 10s;
 
     location /static {
         alias /home/{{ USER }}/sites/{{ DOMAIN }}/static;
@@ -36,5 +57,9 @@ server {
         proxy_set_header Host $host;
         proxy_set_header User-Agent $http_user_agent;
         proxy_set_header X-Real-IP $remote_addr;
+        # Alternative to force https
+        # proxy_set_header X-Forwarded-Proto 'https';
+        add_header Strict-Transport-Security "max-age=31536000";
+        add_header X-Content-Type-Options nosniff;
     }
 }
