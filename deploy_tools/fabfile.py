@@ -140,14 +140,18 @@ def _create_and_reload_nginx_conf(source_folder, django_settings):
 
 def update():
     app_settings = __generate_dict_from_ini_file_section('APP')
+    django_settings = __generate_dict_from_ini_file_section('DJANGO')
+    GUNICORN_UPSTART_JOB = 'gunicorn-{}'.format(django_settings['DOMAIN'])
     folders = __create_folders_dict(app_settings)
 
     source_folder = folders['source']
 
-    _get_latest_source(source_folder, app_settings)
     with cd(source_folder):
+        run('git pull --rebase origin master --quiet')
         _update_static_files()
         _update_database()
+        sudo('service nginx reload')
+        sudo('restart {}'.format(GUNICORN_UPSTART_JOB))
 
 
 def _initialize_database():
