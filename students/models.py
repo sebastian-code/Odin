@@ -184,7 +184,7 @@ class Solution(models.Model):
     repo = models.URLField()
 
     def get_assignment(self):
-        return CourseAssignment.objects.get(user=self.user)
+        return CourseAssignment.objects.get(user=self.user, course=self.task.course)
 
     def __parse_github_url(self, github_url):
         github_url_split = github_url.split('/')[3:]
