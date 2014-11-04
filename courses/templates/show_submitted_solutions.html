@@ -11,8 +11,8 @@
 
     {% for week in weeks %}
         <dd class="accordion-navigation">
-        <a href="#panel{{ week.pk }}">{{ week }}</a>
-        <div id="panel{{ week.pk }}" class="content">
+        <a href="#panel{{ forloop.counter0 }}">{{ week }}</a>
+        <div id="panel{{ forloop.counter0 }}" class="content">
         <div class="tabs-content">
 
         <dl class="accordion" data-accordion>
