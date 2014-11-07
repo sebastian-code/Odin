@@ -14,7 +14,7 @@ before_script:
   - psql -c 'CREATE DATABASE testdb;' -U postgres
 
 script:
-  - python manage.py syncdb --all --noinput
+  - python manage.py makemigrations --noinput
   - python manage.py migrate --fake
   - coverage run --source='.' manage.py test
 
