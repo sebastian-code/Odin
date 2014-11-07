@@ -1,8 +1,6 @@
 from django import forms
-from django.core.exceptions import ValidationError
-from django.utils.translation import ugettext as _
 
-from models import Choice, Answer
+from .models import Answer
 
 
 class AddPollAnswerForm(forms.Form):
