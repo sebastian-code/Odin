@@ -6,8 +6,10 @@ from django.contrib.auth import views
 admin.autodiscover()
 
 urlpatterns = patterns('',
+    url(r'^grappelli/', include('grappelli.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^adminfiles/', include('adminfiles.urls')),
+
     url(r'^pages/', include('django.contrib.flatpages.urls')),
     url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {
         'document_root': settings.MEDIA_ROOT}),

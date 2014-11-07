@@ -14,6 +14,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # Application definition
 
 INSTALLED_APPS = (
+    # must be initialized before admin
+    'grappelli',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -25,7 +27,6 @@ INSTALLED_APPS = (
 
     'adminfiles',
     'adminsortable',
-    'corsheaders',
     'debug_toolbar',
     'markdown_deux',
     'pagedown',
@@ -49,8 +50,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
-    'corsheaders.middleware.CorsMiddleware',
 )
 
 ROOT_URLCONF = 'odin.urls'
