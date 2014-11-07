@@ -30,7 +30,6 @@ INSTALLED_APPS = (
     'debug_toolbar',
     'markdown_deux',
     'pagedown',
-    'sorl.thumbnail',
     'south',
     'tinymce',
 
