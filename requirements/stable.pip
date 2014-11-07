@@ -18,5 +18,6 @@ easy-thumbnails==2.1
 markdown2==2.2.2
 netaddr==0.7.12
 psycopg2==2.5.3
+sorl-thumbnail==11.12
 sqlparse==0.1.11
 wsgiref==0.1.2
