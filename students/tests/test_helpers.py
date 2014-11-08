@@ -43,11 +43,13 @@ class TempCertificateTest(TestCase):
         self.temp_certificate = TempCertificate(self.assignment)
 
     def test_set_start_time(self):
-        self.assertEqual(self.start_time, self.temp_certificate.start_time)
+        expected_datetime = datetime.datetime.combine(self.start_time, datetime.datetime.min.time())
+        self.assertEqual(expected_datetime, self.temp_certificate.start_time)
 
     def test_set_end_time(self):
-        expected = self.end_time + datetime.timedelta(days=31)
-        self.assertEqual(expected, self.temp_certificate.end_time)
+        raw_date = self.end_time + datetime.timedelta(days=31)
+        expected_datetime = datetime.datetime.combine(raw_date, datetime.datetime.min.time())
+        self.assertEqual(expected_datetime, self.temp_certificate.end_time)
 
     def test_get_total_commits(self):
         self.assertEqual(0, self.temp_certificate.get_total_commits())
