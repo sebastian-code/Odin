@@ -145,7 +145,9 @@ def update():
     folders = __create_folders_dict(app_settings)
 
     source_folder = folders['source']
+    virtualenv_folder = folders['virtualenv']
 
+    _create_or_update_virtualenv(source_folder, virtualenv_folder, app_settings)
     with cd(source_folder):
         run('git pull --rebase origin master --quiet')
         _update_static_files()
