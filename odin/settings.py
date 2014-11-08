@@ -92,14 +92,6 @@ TINYMCE_DEFAULT_CONFIG = {
     'height': 400,
 }
 
-AWESOME_AVATAR = {
-    'width': 150,
-    'height': 150,
-
-    'save_quality': 90,
-    'save_format': 'png',
-}
-
 try:
     if 'TRAVIS' in os.environ:
         from travis_settings import *
