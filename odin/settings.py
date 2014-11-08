@@ -12,7 +12,6 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 # Application definition
-
 INSTALLED_APPS = (
     # must be initialized before admin
     'grappelli',
@@ -87,8 +86,11 @@ MEDIA_URL = '/media/'
 
 TINYMCE_DEFAULT_CONFIG = {
     'plugins': "table,spellchecker,paste,searchreplace",
-    'width': 900,
-    'height': 400,
+    'theme': 'advanced',
+    'cleanup_on_startup': True,
+    'custom_undo_redo_levels': 10,
+    # 'width': 900,
+    # 'height': 400,
 }
 
 TINYMCE_COMPRESSOR = True
