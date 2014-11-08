@@ -2,7 +2,7 @@ from django.conf import settings
 from courses.models import WeeklyCommit, Certificate
 
 from github import Github, GithubException
-from datetime import date, timedelta
+from datetime import datetime, timedelta
 
 
 class TempCertificate:
@@ -20,11 +20,11 @@ class TempCertificate:
 
     def __set_start_time(self):
         start_time = self.assignment.course.start_time
-        return date(year=start_time.year, month=start_time.month, day=start_time.day)
+        return datetime(year=start_time.year, month=start_time.month, day=start_time.day)
 
     def __set_end_time(self):
         end_time = self.assignment.course.end_time + timedelta(days=31)
-        return date(year=end_time.year, month=end_time.month, day=end_time.day)
+        return datetime(year=end_time.year, month=end_time.month, day=end_time.day)
 
     def get_total_commits(self):
         return reduce(lambda x, y: x + y, map(lambda x: x.commits_count, self.weekly_commits), 0)
