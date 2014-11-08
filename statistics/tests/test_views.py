@@ -46,16 +46,19 @@ class StatisticsViewsTest(TestCase):
         self.assertTemplateUsed('show_partner_company_stats.html', response)
 
     def test_show_all_assignments_stats(self):
+        self.client.login(username='staff@staff.com', password='123')
         response = self.client.get(reverse('statistics:show_all_assignments_stats'))
         self.assertEqual(200, response.status_code)
         self.assertTemplateUsed('show_assignment_stats.html', response)
 
     def test_show_active_assignments_stats(self):
+        self.client.login(username='staff@staff.com', password='123')
         response = self.client.get(reverse('statistics:show_active_assignments_stats'))
         self.assertEqual(200, response.status_code)
         self.assertTemplateUsed('show_assignment_stats.html', response)
 
     def test_show_expired_assignments_stats(self):
+        self.client.login(username='staff@staff.com', password='123')
         response = self.client.get(reverse('statistics:show_expired_assignments_stats'))
         self.assertEqual(200, response.status_code)
         self.assertTemplateUsed('show_assignment_stats.html', response)
