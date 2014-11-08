@@ -14,7 +14,7 @@ class Command(BaseCommand):
         arg_course_id = args[0]
         assignments = CourseAssignment.objects.filter(course__id=arg_course_id)
         for assignment in assignments:
-            solutions = Solution.objects.filter(user=assignment.user, task__course__id=arg_course_id)
+            solutions = Solution.objects.select_related('task').filter(user=assignment.user, task__course__id=arg_course_id)
             if assignment.has_valid_github_account() and solutions:
                 generate_certificate(assignment, solutions)
 
@@ -34,7 +34,7 @@ def generate_certificate(assignment, solutions):
             #     temp_certificate.add_cheated_solution(solution)
             #     continue
             solution_github_repo.update_commits_count(temp_certificate.start_time, temp_certificate.end_time)
-            if not solution_github_repo.is_fork() and solution_github_repo.commits > 0:
+            if not solution_github_repo.is_fork() and solution_github_repo.commits_count > 0:
                 api_stats = solution_github_repo.get_stats()
                 temp_certificate.update_stats(api_stats)
                 temp_certificate.save_weekly_commit_in_db(solution_github_repo)
