@@ -29,7 +29,6 @@ INSTALLED_APPS = (
     'adminsortable',
     'debug_toolbar',
     'markdown_deux',
-    'pagedown',
     'tinymce',
 
     'courses',

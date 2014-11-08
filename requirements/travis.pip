@@ -12,7 +12,6 @@ django-debug-toolbar==1.2.2
 django-filebrowser==3.5.7
 django-grappelli==2.6.2
 django-markdown-deux==1.0.5
-django-pagedown==0.1.0
 django-resized==0.2.4
 django-tinymce==1.5.3
 docopt==0.6.2
