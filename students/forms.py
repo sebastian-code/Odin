@@ -1,7 +1,7 @@
 from django import forms
 from django.utils.translation import ugettext as _
 
-from pagedown.widgets import PagedownWidget
+from tinymce.widgets import TinyMCE
 
 from .models import User, UserNote, CourseAssignment, Solution, StudentStartedWorkingAt
 from courses.models import Partner
@@ -11,9 +11,6 @@ class UserEditForm(forms.ModelForm):
     new_password1 = forms.CharField(widget=forms.PasswordInput, required=False)
     new_password2 = forms.CharField(widget=forms.PasswordInput, required=False)
     avatar_clear = forms.BooleanField(required=False)
-
-    def __init__(self, *args, **kwargs):
-        super(UserEditForm, self).__init__(*args, **kwargs)
 
     def save(self, *args, **kwargs):
         instance = super(UserEditForm, self).save(commit=False)
@@ -53,17 +50,15 @@ class UserEditForm(forms.ModelForm):
 
 
 class AddNote(forms.ModelForm):
-    text = forms.CharField(widget=PagedownWidget())
+    text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}))
 
     def __init__(self, *args, **kwargs):
         self.author = kwargs.pop('author')
         super(AddNote, self).__init__(*args, **kwargs)
 
     def save(self, *args, **kwargs):
-        instance = super(AddNote, self).save(commit=False)
-        instance.author = self.author
-        instance.save()
-        return instance
+        self.instance.author = self.author
+        return super(AddNote, self).save()
 
     class Meta:
         model = UserNote
@@ -102,10 +97,8 @@ class AddSolutionForm(forms.ModelForm):
         super(AddSolutionForm, self).__init__(*args, **kwargs)
 
     def save(self, *args, **kwargs):
-        instance = super(AddSolutionForm, self).save(commit=False)
-        instance.user = self.user
-        instance.save()
-        return instance
+        self.instance.user = self.user
+        return super(AddSolutionForm, self).save()
 
     class Meta:
         model = Solution
