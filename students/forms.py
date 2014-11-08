@@ -1,6 +1,5 @@
 from django import forms
 from django.utils.translation import ugettext as _
-from django.core.exceptions import ValidationError
 
 from pagedown.widgets import PagedownWidget
 
