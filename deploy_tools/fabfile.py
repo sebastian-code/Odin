@@ -69,7 +69,7 @@ def deploy():
     _set_settings(source_folder, django_settings)
     _create_or_update_virtualenv(source_folder, virtualenv_folder, app_settings)
     with cd(source_folder):
-        _initialize_database()
+        _initialize_or_update_database()
         _update_static_files()
     _create_and_reload_nginx_conf(source_folder, django_settings)
 
@@ -149,15 +149,11 @@ def update():
     with cd(source_folder):
         run('git pull --rebase origin master --quiet')
         _update_static_files()
-        _update_database()
+        _initialize_or_update_database()
         sudo('service nginx reload')
         sudo('restart {}'.format(GUNICORN_UPSTART_JOB))
 
 
-def _initialize_database():
-    run('../virtualenv/bin/python manage.py syncdb --all --noinput')
-    run('../virtualenv/bin/python manage.py migrate --fake --noinput')
-
-
-def _update_database():
+def _initialize_or_update_database():
+    run('../virtualenv/bin/python manage.py makemigrations --noinput')
     run('../virtualenv/bin/python manage.py migrate --noinput')
