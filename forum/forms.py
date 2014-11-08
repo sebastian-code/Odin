@@ -1,12 +1,12 @@
 from django import forms
 
-from pagedown.widgets import PagedownWidget
+from tinymce.widgets import TinyMCE
 
 from .models import Topic, Comment
 
 
 class AddTopicForm(forms.ModelForm):
-    text = forms.CharField(widget=PagedownWidget())
+    text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}))
 
     def __init__(self, *args, **kwargs):
         self.author = kwargs.pop('author')
@@ -26,7 +26,7 @@ class AddTopicForm(forms.ModelForm):
 
 
 class AddCommentForm(forms.ModelForm):
-    text = forms.CharField(widget=PagedownWidget())
+    text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}))
 
     def __init__(self, *args, **kwargs):
         self.author = kwargs.pop('author')
