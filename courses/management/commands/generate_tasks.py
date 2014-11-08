@@ -10,6 +10,32 @@ from datetime import timedelta
 from courses.models import Course, Task
 
 
+class Command(BaseCommand):
+    args = '<course_id>'
+    help = '''
+        Generates tasks from <course_id>'s github repository.
+    '''
+
+    def handle(self, *args, **options):
+        arg_course_id = args[0]
+        course = Course.objects.get(id=arg_course_id)
+        course_github_url = course.git_repository
+        if '://github.com/' in course_github_url:
+            github_parameters = get_user_and_repo_names(course_github_url)
+            api_repo = get_api_repo(github_parameters)
+            api_repo_tree = api_repo.get_git_tree(sha='master', recursive=True)
+            # filters tree elements by depth of 2, when base is considered 0
+            blob_tree_elements = filter(
+                lambda x: 'README.md' in x.path and x.path.count('/') > 1 and x.type == 'blob', api_repo_tree.tree)
+            for element in blob_tree_elements:
+                if is_exam_task(element):
+                    print(create_db_task(course, element, is_exam=True))
+                elif is_weekly_task(element):
+                    print(create_db_task(course, element, is_exam=False))
+        else:
+            print 'No github repo set for course <{}>'.format(course.name)
+
+
 def get_api_repo(github_parameters):
     github_client = Github(settings.GITHUB_OATH_TOKEN)
     return github_client.get_user(github_parameters['user']).get_repo(github_parameters['repo_name'])
@@ -80,29 +106,3 @@ def create_db_task(course, tree_element, is_exam):
     obj, created = Task.objects.get_or_create(name=task_name, description=task_github_url, course=course, is_exam=is_exam, week=dir_name, defaults={'deadline': deadline})
     if created:
         return 'Created task {} - {}'.format(task_name, task_github_url)
-
-
-class Command(BaseCommand):
-    args = '<course_id>'
-    help = '''
-        Generates tasks from <course_id>'s github repository.
-    '''
-
-    def handle(self, *args, **options):
-        arg_course_id = args[0]
-        course = Course.objects.get(id=arg_course_id)
-        course_github_url = course.git_repository
-        if '://github.com/' in course_github_url:
-            github_parameters = get_user_and_repo_names(course_github_url)
-            api_repo = get_api_repo(github_parameters)
-            api_repo_tree = api_repo.get_git_tree(sha='master', recursive=True)
-            # filters tree elements by depth of 2, when base is considered 0
-            blob_tree_elements = filter(
-                lambda x: 'README.md' in x.path and x.path.count('/') > 1 and x.type == 'blob', api_repo_tree.tree)
-            for element in blob_tree_elements:
-                if is_exam_task(element):
-                    print(create_db_task(course, element, is_exam=True))
-                elif is_weekly_task(element):
-                    print(create_db_task(course, element, is_exam=False))
-        else:
-            print 'No github repo set for course <{}>'.format(course.name)
