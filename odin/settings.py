@@ -84,13 +84,14 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Examples: "http://example.com/media/", "http://media.example.com/"
 MEDIA_URL = '/media/'
 
-DJANGO_WYSIWYG_FLAVOR = "tinymce_advanced"
 
 TINYMCE_DEFAULT_CONFIG = {
     'plugins': "table,spellchecker,paste,searchreplace",
     'width': 900,
     'height': 400,
 }
+
+TINYMCE_COMPRESSOR = True
 
 try:
     if 'TRAVIS' in os.environ:
