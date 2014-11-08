@@ -14,11 +14,9 @@ class AddTopicForm(forms.ModelForm):
         super(AddTopicForm, self).__init__(*args, **kwargs)
 
     def save(self, *args, **kwargs):
-        instance = super(AddTopicForm, self).save(commit=False)
-        instance.author = self.author
-        instance.category = self.category
-        instance.save(*args, **kwargs)
-        return instance
+        self.instance.author = self.author
+        self.instance.category = self.category
+        return super(AddTopicForm, self).save()
 
     class Meta:
         model = Topic
@@ -31,15 +29,12 @@ class AddCommentForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.author = kwargs.pop('author')
         self.topic = kwargs.pop('topic')
-        super(AddCommentForm, self).__init__(*args, **kwargs)\
-
+        super(AddCommentForm, self).__init__(*args, **kwargs)
 
     def save(self, *args, **kwargs):
-        instance = super(AddCommentForm, self).save(commit=False)
-        instance.author = self.author
-        instance.topic = self.topic
-        instance.save(*args, **kwargs)
-        return instance
+        self.instance.author = self.author
+        self.instance.topic = self.topic
+        return super(AddCommentForm, self).save()
 
     class Meta:
         model = Comment
