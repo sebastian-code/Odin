@@ -3,7 +3,6 @@ from django.conf import settings
 from django.contrib import admin
 from django.contrib.auth import views
 
-admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^grappelli/', include('grappelli.urls')),
