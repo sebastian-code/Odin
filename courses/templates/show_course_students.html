@@ -16,6 +16,7 @@
                     {% if is_teacher_or_hr %}
                         <hr>
                         <a href="{% url 'students:assignment' assignment.id  %}" class="button tiny">Notes: {{ assignment.notes_count }}</a>
+                        <a href="{% url 'students:assignment_solutions' assignment.id  %}" class="button tiny">Решения</a>
                     {% endif %}
                 </div>
             </div>
@@ -38,6 +39,7 @@
                 {% if is_teacher_or_hr %}
                     <hr>
                     <a href="{% url 'students:assignment' assignment.id  %}" class="button tiny">Notes: {{ assignment.notes_count }}</a>
+                    <a href="{% url 'students:assignment_solutions' assignment.id  %}" class="button tiny">Решения</a>
                 {% endif %}
             </div>
         </div>
