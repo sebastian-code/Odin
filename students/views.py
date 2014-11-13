@@ -189,6 +189,26 @@ def solutions(request, course_id):
     return render(request, 'solutions.html', locals())
 
 
+@login_required
+def assignment_solutions(request, id):
+    assignment = get_object_or_404(CourseAssignment, pk=id)
+    course = assignment.course
+    user = assignment.user
+    tasks = Task.objects.select_related('solution').filter(course=course).order_by('name')
+    weeks = sorted(set(map(lambda task: task.week, tasks)))
+    solutions = Solution.objects.filter(task__in=tasks, user=user).select_related('task')
+
+    solutions_by_task = {}
+    for solution in solutions:
+        solutions_by_task[solution.task] = solution
+
+    for task in tasks:
+        if task in solutions_by_task:
+            task.solution = solutions_by_task[task]
+
+    return render(request, 'assignment_solutions.html', locals())
+
+
 @csrf_exempt
 @login_required
 @require_http_methods(['POST'])
