@@ -4,7 +4,7 @@ from django.conf.urls import patterns, url
 urlpatterns = patterns('students.views',
     url(r'^login/$', 'login', name='login'),
     url(r'^assignment/(?P<id>[0-9]+)/$', 'assignment', name='assignment'),
-    url(r'^assignment/(?P<id>[0-9]+)/solutions/$', 'assignment_solutions', name='assignment_solution'),
+    url(r'^assignment/(?P<id>[0-9]+)/solutions/$', 'assignment_solutions', name='assignment_solutions'),
     url(r'^solutions/(?P<course_id>[0-9]+)/$', 'solutions', name='solutions'),
     url(r'^add-solution/$', 'add_solution', name='add_solution'),
     url(r'^accounts/profile/$', 'user_profile', name='user_profile'),
