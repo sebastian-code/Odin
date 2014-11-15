@@ -98,7 +98,7 @@ class CoursesViewsTest(TestCase):
     def test_show_course_students(self):
         self.client.login(username='ivo_student@gmail.com', password='123')
         response = self.client.get(
-            reverse('courses:show_course_students', kwargs={'course_id': self.course.id}))
+            reverse('courses:show_course_students', kwargs={'course_url': self.course.url}))
         self.assertEqual(200, response.status_code)
         self.assertFalse('interested_in_me' in response.context)
         self.assertTemplateUsed('show_course_students.html', response)
@@ -109,7 +109,7 @@ class CoursesViewsTest(TestCase):
         self.student_user.save()
         self.client.login(username='ivo_student@gmail.com', password='123')
         response = self.client.get(
-            reverse('courses:show_course_students', kwargs={'course_id': self.course.id}))
+            reverse('courses:show_course_students', kwargs={'course_url': self.course.url}))
         self.assertTrue('assignments_interested_in_me' in response.context)
 
     def test_show_submitted_solutions_when_student(self):
