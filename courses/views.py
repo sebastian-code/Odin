@@ -29,13 +29,14 @@ def show_all_partners(request):
 
 
 @login_required
-def show_course_students(request, course_id):
+def show_course_students(request, course_url):
     current_user = request.user
-    assignments = CourseAssignment.objects.only('id', 'user', 'course').filter(course=course_id, user__status=User.STUDENT).select_related('user')
+    course = get_object_or_404(Course, url=course_url)
+    assignments = CourseAssignment.objects.only('id', 'user', 'course').filter(course=course, user__status=User.STUDENT).select_related('user')
     is_teacher_or_hr = current_user.status == User.HR or current_user.status == User.TEACHER
     if current_user.hr_of:
         assignments_interested_in_me = CourseAssignment.objects.filter(
-            course=course_id,
+            course=course,
             favourite_partners=current_user.hr_of,
             user__status=User.STUDENT
         )
