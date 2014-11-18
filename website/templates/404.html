@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+
+{% block content %}
+<div class="text-center" id="page-not-found">
+    <img src="{% static 'img/404.gif' %}" alt="" />
+    <p>Go back to the <a href="/">homepage</a></p>
+</div>
+
+
+{% endblock content %}

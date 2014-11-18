@@ -172,8 +172,8 @@ def api_checkins(request):
 
 
 @login_required
-def solutions(request, course_id):
-    course = get_object_or_404(Course, pk=course_id)
+def solutions(request, course_url):
+    course = get_object_or_404(Course, url=course_url)
     tasks = Task.objects.select_related('solution').filter(course=course).order_by('name')
     weeks = sorted(set(map(lambda task: task.week, tasks)))
     solutions = Solution.objects.filter(task__in=tasks, user=request.user).select_related('task')

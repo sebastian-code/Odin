@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+
+{% block content %}
+<div class="text-center" id="server-error">
+    <img src="{% static 'img/500.gif' %}" alt="Server Error" />
+    Go back to the <a href="/">homepage</a> or open an issue at <a href="https://github.com/HackBulgaria/Odin/issues">Github</a>. Or you prefer to walk the dinasour?
+    <iframe width="640" height="480" src="//www.youtube-nocookie.com/embed/vgiDcJi534Y" frameborder="0" allowfullscreen></iframe>
+</div>
+{% endblock content %}

@@ -74,14 +74,14 @@ class UserViewsTest(TestCase):
         self.client.login(username='teacher@teacher.com', password='teach')
         response = self.client.get(reverse('students:user_profile'))
 
-        submitted_solutions_url = reverse('courses:show_submitted_solutions', kwargs={'course_id': self.course.pk})
+        submitted_solutions_url = reverse('courses:show_submitted_solutions', kwargs={'course_url': self.course.url})
         self.assertContains(response, submitted_solutions_url)
 
     def test_user_profile_has_show_course_students_button_when_hr(self):
         self.client.login(username='ivan_hr@gmail.com', password='1234')
         response = self.client.get(reverse('students:user_profile'))
 
-        show_course_students_url = reverse('courses:show_course_students', kwargs={'course_id': self.course.pk})
+        show_course_students_url = reverse('courses:show_course_students', kwargs={'course_url': self.course.url})
         self.assertContains(response, show_course_students_url)
 
     def test_edit_profile_http_post(self):
@@ -159,6 +159,7 @@ class CheckInCaseViewsTest(TestCase):
         after_log = HrLoginLog.objects.count()
 
         self.assertEqual(before_log + 1, after_log)
+
 
 class CourseAssignmentViewsTest(TestCase):
 
@@ -377,7 +378,7 @@ class SolutionViewsTest(TestCase):
 
     def test_view_solutions(self):
         self.client.login(username='ivo_student@gmail.com', password='123')
-        response = self.client.get(reverse('students:solutions', kwargs={'course_id': self.course.id}))
+        response = self.client.get(reverse('students:solutions', kwargs={'course_url': self.course.url}))
         self.assertEqual(200, response.status_code)
         self.assertTemplateUsed('solutions.html', response)
 
