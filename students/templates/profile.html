@@ -36,7 +36,7 @@
                                 <a href="{% url 'courses:show_course_students' assignment.course.url %}">Всички записали курса</a>
                                 {% elif is_teacher %}
                                 <i class="foundicon-inbox"></i>
-                                <a href="{% url 'courses:show_submitted_solutions' assignment.course.pk %}">Всички предадени задачи</a>
+                                <a href="{% url 'courses:show_submitted_solutions' assignment.course.url %}">Всички предадени задачи</a>
                                 {% endif %}
                             </li>
                         {% endfor %}
