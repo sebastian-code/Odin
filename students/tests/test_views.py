@@ -378,7 +378,7 @@ class SolutionViewsTest(TestCase):
 
     def test_view_solutions(self):
         self.client.login(username='ivo_student@gmail.com', password='123')
-        response = self.client.get(reverse('students:solutions', kwargs={'course_id': self.course.id}))
+        response = self.client.get(reverse('students:solutions', kwargs={'course_url': self.course.url}))
         self.assertEqual(200, response.status_code)
         self.assertTemplateUsed('solutions.html', response)
 
