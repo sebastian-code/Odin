@@ -74,7 +74,7 @@ class UserViewsTest(TestCase):
         self.client.login(username='teacher@teacher.com', password='teach')
         response = self.client.get(reverse('students:user_profile'))
 
-        submitted_solutions_url = reverse('courses:show_submitted_solutions', kwargs={'course_id': self.course.pk})
+        submitted_solutions_url = reverse('courses:show_submitted_solutions', kwargs={'course_url': self.course.url})
         self.assertContains(response, submitted_solutions_url)
 
     def test_user_profile_has_show_course_students_button_when_hr(self):
@@ -159,6 +159,7 @@ class CheckInCaseViewsTest(TestCase):
         after_log = HrLoginLog.objects.count()
 
         self.assertEqual(before_log + 1, after_log)
+
 
 class CourseAssignmentViewsTest(TestCase):
 

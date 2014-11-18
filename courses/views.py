@@ -65,13 +65,13 @@ def show_certificate(request, assignment_id):
 
 
 @login_required
-def show_submitted_solutions(request, course_id):
+def show_submitted_solutions(request, course_url):
     current_user = request.user
 
     if current_user.status != User.TEACHER:
         return HttpResponseForbidden()
 
-    course = get_object_or_404(Course, pk=course_id)
+    course = get_object_or_404(Course, url=course_url)
     tasks = Task.objects.filter(course=course).select_related('solution').order_by('name')
     weeks = sorted(set(map(lambda task: task.week, tasks)))
     solutions = Solution.objects.filter(task__in=tasks).select_related('task')
