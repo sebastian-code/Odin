@@ -63,14 +63,13 @@
         {% if current_user.is_authenticated %}
             {% if topic in current_user.subscribed_topics.all %}
             <div id="unsubscribe-text">
-                    <button class="button tiny" id="unsubscribe" data-topic-id="{{ topic.id }}">Отпиши ме</button>
+                    <button class="button tiny" id="unsubscribe">Отпиши ме</button>
                     Оставяйки коментар в темата, ще започнеш да получаваш email за всеки нов коментар. Ако не искаш - натисни този бутон.
                 </div>
             {% else %}
                 <div id="subscribe-text">
-                    Абонирай се към тази тема, за да получаваш email за всеки коментар.
-
-                    <button class="button tiny" id="subscribe" data-topic-id="{{ topic.id }}">Абонирай ме</button>
+                    Абонирай се към тази тема, за да получаваш email за всеки коментар
+                    <button class="button tiny" id="subscribe">Абонирай ме</button>
                 </div>
             {% endif %}
         {% endif %}
@@ -82,22 +81,16 @@
 {% block jsfooter %}
     <script>
         $('#unsubscribe').on("click", function() {
-            var topicId = $(this).data("topic-id");
-
-            $.get( "/unsubscribe/" + topicId + "/", function(data) {
-
-            }).done(function() {
-                $("#unsubscribe-text").hide("slow");
+            $.get("{% url 'forum:unsubscribe' topic.id %}", function(data) {
+                }).done(function() {
+                    $("#unsubscribe-text").hide("slow");
             });
         });
 
         $('#subscribe').on("click", function() {
-            var topicId = $(this).data("topic-id");
-
-            $.get( "/subscribe/" + topicId + "/", function(data) {
-
-            }).done(function() {
-                $("#subscribe-text").hide("slow");
+            $.get("{% url 'forum:subscribe' topic.id %}", function(data) {
+                }).done(function() {
+                    $("#subscribe-text").hide("slow");
             });
         });
     </script>
