@@ -3,17 +3,14 @@
 {% block content %}
   <div class="row">
     <div class="large-12 columns text-center">
-      <img src="{{ STATIC_URL }}/img/HackBG-logo.png" alt="Hack Bulgaria" style="padding-top: 20px;">
+      <img src="{{ STATIC_URL }}img/HackBG-logo.png" alt="Hack Bulgaria" style="padding-top: 20px;">
       <p>
         <h2>Курсове по програмиране, в които писането на код е задължение, а лекциите са за домашно.</h2>
       </p>
     </div>
   </div>
 
-<hr/>
-
-
-<!-- Three-up Content Blocks -->
+  <hr/>
 
   <div class="row">
     {% for course in courses %}
