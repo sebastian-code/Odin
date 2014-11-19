@@ -53,24 +53,29 @@
         {% endfor %}
         {% if current_user.is_authenticated %}
             <h3>Нов отговор:</h3>
-            <form action="" method="POST">
+            <form method="POST">
                 {% csrf_token %}
                 {{ form.text }}
+                {% if form.errors %}
+                <div data-alert class="alert-box warning round" id="has-error">
+                      {{ form.text.errors }}
+                      <a href="#" class="close">&times;</a>
+                </div>
+                {% endif %}
                 <button>Пускай</button>
             </form>
-        {% endif %}
-
-        {% if current_user.is_authenticated %}
-            {% if topic in current_user.subscribed_topics.all %}
-            <div id="unsubscribe-text">
-                    <button class="button tiny" id="unsubscribe">Отпиши ме</button>
-                    Оставяйки коментар в темата, ще започнеш да получаваш email за всеки нов коментар. Ако не искаш - натисни този бутон.
-                </div>
-            {% else %}
-                <div id="subscribe-text">
-                    Абонирай се към тази тема, за да получаваш email за всеки коментар
-                    <button class="button tiny" id="subscribe">Абонирай ме</button>
-                </div>
+            {% if current_user.is_authenticated %}
+                {% if topic in current_user.subscribed_topics.all %}
+                <div id="unsubscribe-text">
+                        <button class="button tiny" id="unsubscribe">Отпиши ме</button>
+                        Оставяйки коментар в темата, ще започнеш да получаваш email за всеки нов коментар. Ако не искаш - натисни този бутон.
+                    </div>
+                {% else %}
+                    <div id="subscribe-text">
+                        <button class="button tiny" id="subscribe">Абонирай ме</button>
+                        Абонирай се към тази тема, за да получаваш email за всеки коментар
+                    </div>
+                {% endif %}
             {% endif %}
         {% endif %}
     </div>
@@ -79,6 +84,7 @@
 {% endblock content %}
 
 {% block jsfooter %}
+    <script charset="utf-8" src="/static/js/form.js"></script>
     <script>
         $('#unsubscribe').on("click", function() {
             $.get("{% url 'forum:unsubscribe' topic.id %}", function(data) {
