@@ -63,15 +63,14 @@
         {% if current_user.is_authenticated %}
             {% if topic in current_user.subscribed_topics.all %}
             <div id="unsubscribe-text">
+                    <button class="button tiny" id="unsubscribe" data-topic-id="{{ topic.id }}">Отпиши ме</button>
                     Оставяйки коментар в темата, ще започнеш да получаваш email за всеки нов коментар. Ако не искаш - натисни този бутон.
-
-                    <button class="button tiny" id="unsubscribe" data-topic-id="{{ topic.id }}">Unsubscribe</button>
                 </div>
             {% else %}
                 <div id="subscribe-text">
                     Абонирай се към тази тема, за да получаваш email за всеки коментар.
 
-                    <button class="button tiny" id="subscribe" data-topic-id="{{ topic.id }}">Subscribe</button>
+                    <button class="button tiny" id="subscribe" data-topic-id="{{ topic.id }}">Абонирай ме</button>
                 </div>
             {% endif %}
         {% endif %}
