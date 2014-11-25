@@ -99,7 +99,7 @@
                             <dd><a href="#comments">Коментари във форума</a></dd>
                         {% endif %}
                         {% if certificate %}
-                            <dd><a href="{{ certificate.get_absolute_url }}" target="_blank">Сертификат от курса</a></dd>
+                            <dd><a id="certificate_url" href="{{ certificate.get_absolute_url }}" target="_blank">Сертификат</a></dd>
                         {% endif %}
                     </dl>
 
@@ -200,6 +200,14 @@
             });
 
             defaultState();
+        });
+    </script>
+    <script charset="utf-8">
+        $(document).ready(function () {
+            var certificate_element = $('#certificate_url');
+            certificate_element.on('click', function () {
+                window.location = certificate_element.attr('href');
+            });
         });
     </script>
 {% endblock jsfooter %}
