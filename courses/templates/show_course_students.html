@@ -30,19 +30,26 @@
 
     {% for assignment in assignments %}
         {% if assignment not in assignments_interested_in_me or not assignments_interested_in_me %}
-        <div class="medium-4 columns">
-            <div class="panel text-center">
-                <h5>{{ assignment.user.get_full_name }}</h5>
+        <div class="medium-12 columns">
+            <div class="medium-3 columns">
                 <a href="{% url 'students:assignment' assignment.id  %}">
-                    <img style="height: 200px; width: 200px;" src="{{ assignment.user.get_avatar_url }}" class="th">
+                    <img style="width: 200px;" src="{# {{ assignment.user.get_avatar_url }} #}" class="th">
                 </a>
+            </div>
+
+            <div class="medium-9 columns">
+                <h4>{{ assignment.user.get_full_name }}</h4>
+                    <p class="general foundicon-mail"> {{ assignment.user.email }}</p>
+                    <p class="fi-social-github"> {{ assignment.user.github_account }}</p>
+                <ul>
+                    <li></li>
+                </ul>
                 {% if is_teacher_or_hr %}
-                    <hr>
                     <a href="{% url 'students:assignment' assignment.id  %}" class="button tiny">Notes: {{ assignment.notes_count }}</a>
-                    <a href="{% url 'students:assignment_solutions' assignment.id  %}" class="button tiny">Решения</a>
                 {% endif %}
             </div>
         </div>
+        <hr>
         {% endif %}
     {% endfor %}
 </div>
