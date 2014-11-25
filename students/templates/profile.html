@@ -18,16 +18,18 @@
                     <ol>
                         {% for assignment in assignments %}
                             <li>
-                                <a href="{% url 'students:assignment' assignment.pk %}">{{ assignment.course }}</a> -
                                 {% if is_student %}
-                                <i class="foundicon-paper-clip"></i>
-                                <a href="{% url 'students:solutions' assignment.course.url %}">Предай задачи</a>
+                                    <a href="{% url 'students:assignment' assignment.pk %}">{{ assignment.course }}</a>
+                                    <span class="foundicon-paper-clip"></span>
+                                    <a href="{% url 'students:solutions' assignment.course.url %}">Предай задачи</a>
                                 {% elif is_hr %}
-                                <i class="foundicon-address-book"></i>
-                                <a href="{% url 'courses:show_course_students' assignment.course.url %}">Всички записали курса</a>
+                                    {{ assignment.course }}
+                                    <span class="foundicon-address-book"></span>
+                                    <a href="{% url 'courses:show_course_students' assignment.course.url %}">Всички записали курса</a>
                                 {% elif is_teacher %}
-                                <i class="foundicon-inbox"></i>
-                                <a href="{% url 'courses:show_submitted_solutions' assignment.course.url %}">Всички предадени задачи</a>
+                                    {{ assignment.course }}
+                                    <span class="foundicon-inbox"></span>
+                                    <a href="{% url 'courses:show_submitted_solutions' assignment.course.url %}">Всички предадени задачи</a>
                                 {% endif %}
                             </li>
                         {% endfor %}
