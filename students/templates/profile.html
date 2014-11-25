@@ -10,9 +10,7 @@
                 </div>
                 <div class="medium-9 columns">
                     <h1>{{ user.get_full_name }}</h1>
-                    {% if user %}
-                        <a href="{% url 'students:edit_profile' %}">Редактирай профила</a>
-                    {% endif %}
+                    <a href="{% url 'students:edit_profile' %}">Редактирай профила</a>
                 </div>
                 <div class="medium-12 columns">
                     <h5>Курсове:</h5>
