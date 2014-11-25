@@ -72,12 +72,6 @@
                     </p>
                     {% endif %}
 
-                    {% if certificate %}
-                    <p>
-                        <a href="{{ certificate.get_absolute_url }}" target="_blank">Сертификат от курса</a>
-                    </p>
-                    {% endif %}
-
                     <hr>
 
                     {% if is_student and user == assignment.user %}
@@ -103,6 +97,9 @@
                         {% else %}
                             <dd class="active"><a href="#notes">Notes</a></dd>
                             <dd><a href="#comments">Коментари във форума</a></dd>
+                        {% endif %}
+                        {% if certificate %}
+                            <dd><a href="{{ certificate.get_absolute_url }}" target="_blank">Сертификат от курса</a></dd>
                         {% endif %}
                     </dl>
 
