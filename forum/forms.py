@@ -1,8 +1,11 @@
+# -*- coding: utf-8 -*-
 from django import forms
 
 from tinymce.widgets import TinyMCE
 
 from .models import Topic, Comment
+
+EMPTY_COMMENT_ERROR = u'Празни коментари не са позволени'
 
 
 class AddTopicForm(forms.ModelForm):
@@ -24,7 +27,7 @@ class AddTopicForm(forms.ModelForm):
 
 
 class AddCommentForm(forms.ModelForm):
-    text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}))
+    # text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}))
 
     def __init__(self, *args, **kwargs):
         self.author = kwargs.pop('author')
@@ -38,4 +41,14 @@ class AddCommentForm(forms.ModelForm):
 
     class Meta:
         model = Comment
-        exclude = ['author', 'topic']
+        fields = ('text',)
+        widgets = {
+            'text': TinyMCE(attrs={
+                'cols': 10,
+                'rows': 10,
+                'placeholder': 'Вашият отговор!',
+            }),
+        }
+        error_messages = {
+            'text': {'required': EMPTY_COMMENT_ERROR}
+        }
