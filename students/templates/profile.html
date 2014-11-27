@@ -28,7 +28,7 @@
                                     <a href="{% url 'courses:show_course_students' assignment.course.url %}"><span class="foundicon-address-book"></span> Всички записали курса</a>
                                 {% elif is_teacher %}
                                     {{ assignment.course }}
-
+                                    <a href="{% url 'courses:show_course_students' assignment.course.url %}"><span class="foundicon-address-book"></span> Всички записали курса, </a>
                                     <a href="{% url 'courses:show_submitted_solutions' assignment.course.url %}"><span class="foundicon-inbox"></span> Всички предадени задачи</a>
                                 {% endif %}
                             </li>
