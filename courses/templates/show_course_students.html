@@ -31,25 +31,49 @@
     {% for assignment in assignments %}
         {% if assignment not in assignments_interested_in_me or not assignments_interested_in_me %}
         <div class="medium-12 columns">
-            <div class="medium-3 columns">
-                <a href="{% url 'students:assignment' assignment.id  %}">
-                    <img style="width: 200px;" src="{# {{ assignment.user.get_avatar_url }} #}" class="th">
-                </a>
-            </div>
+            <div class="panel">
+                <div class="row">
+                    <div class="medium-3 columns">
+                        <a href="{% url 'students:assignment' assignment.id  %}">
+                            <img style="width: 200px;" src="{# {{ assignment.user.get_avatar_url }} #}" class="th">
+                        </a>
+                    </div>
 
-            <div class="medium-9 columns">
-                <h4>{{ assignment.user.get_full_name }}</h4>
-                    <p class="general foundicon-mail"> {{ assignment.user.email }}</p>
-                    <p class="fi-social-github"> {{ assignment.user.github_account }}</p>
-                <ul>
-                    <li></li>
-                </ul>
-                {% if is_teacher_or_hr %}
-                    <a href="{% url 'students:assignment' assignment.id  %}" class="button tiny">Notes: {{ assignment.notes_count }}</a>
-                {% endif %}
+                    <div class="medium-9 columns">
+                        <h4>{{ assignment.user.get_full_name }}</h4>
+                            <p class="general foundicon-mail"> {{ assignment.user.email }}</p>
+                            {% if assignment.user.github_account %}
+                                <p data-dropdown="social-github"> {{ assignment.user.github_account }}</p>
+                            {% endif %}
+                        {% if assignment.user.get_courses_list|length > 1 %}
+                            Други изкарани курсове
+                            <ul>
+                            {% for student_course in assignment.user.get_courses_list %}
+                                {% if assignment != student_course  %}
+                                    <li>{{ student_course.course.name }}</li>
+                                {% endif %}
+                            {% endfor %}
+                            </ul>
+                        {% endif %}
+
+                        {% if is_teacher_or_hr %}
+                            {% if assignment.notes_count > 0 %}
+                                <a href="#" id="notes-button" class="button tiny">Notes: {{ assignment.notes_count }}</a>
+                            {% else %}
+                                <a href="#" id="notes-button" class="button tiny disabled">Notes: {{ assignment.notes_count }}</a>
+                            {% endif %}
+
+                            <hr>
+                            {% for note in assignment.usernote_set.all %}
+                                <strong>{{ note.author }}:</strong>
+                                <p>{{ note.text }}</p>
+                                <hr>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
             </div>
         </div>
-        <hr>
         {% endif %}
     {% endfor %}
 </div>
