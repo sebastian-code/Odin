@@ -3,6 +3,16 @@
 This fabfile script will automate the provision, deployment and update.
 It gets most of the settings from `fabfile_settings.ini`.
 
+## How to deploy updates
+
+The deployment workflow, when you have new updates, is the following:
+
+1. Commit & push your changes to Odin's remote in the proper branch
+2. Make Pull Request, and get your changes to master.
+3. Go to the base folder of Odin and run the following command: `make deploy-update`
+4. You will have to fill the two variables in the `Makefile` - `{{ USERNAME }}` and `{{ HOST }}`
+5. This will fetch the latest master to the production server
+
 
 ## Requirements:
 
