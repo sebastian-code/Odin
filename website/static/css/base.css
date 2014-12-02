@@ -61,3 +61,7 @@
     float: right; 
     margin-top: -45px;
 }
+
+#notes-button {
+    margin: 0;
+}

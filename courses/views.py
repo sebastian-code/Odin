@@ -32,7 +32,11 @@ def show_all_partners(request):
 def show_course_students(request, course_url):
     current_user = request.user
     course = get_object_or_404(Course, url=course_url)
-    assignments = CourseAssignment.objects.only('id', 'user', 'course').filter(course=course, user__status=User.STUDENT).select_related('user')
+    assignments = CourseAssignment.objects.only('id', 'user', 'course').filter(
+        course=course,
+        user__status=User.STUDENT
+    ).select_related('user', 'certificate').prefetch_related('usernote_set', 'usernote_set__author')
+
     is_teacher_or_hr = current_user.status == User.HR or current_user.status == User.TEACHER
     if current_user.hr_of:
         assignments_interested_in_me = CourseAssignment.objects.filter(
@@ -40,8 +44,7 @@ def show_course_students(request, course_url):
             favourite_partners=current_user.hr_of,
             user__status=User.STUDENT
         )
-    for assignment in assignments:
-        assignment.notes_count = UserNote.objects.filter(assignment=assignment).count()
+
     return render(request, 'show_course_students.html', locals())
 
 

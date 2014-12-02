@@ -2,48 +2,72 @@
 
 {% block content %}
 <div class="row">
-    {% if assignments_interested_in_me %}
-        <h3>
-            Хора, които проявяват интерес към {{ current_user.hr_of }}
-        </h3>
-            {% for assignment in assignments_interested_in_me %}
-            <div class="medium-4 columns">
-                <div class="panel text-center">
-                    <h5>{{ assignment.user.get_full_name }}</h5>
-                    <a href="{% url 'students:assignment' assignment.id  %}">
-                        <img style="height: 200px; width: 200px;" src="{{ assignment.user.get_avatar_url }}" class="th">
-                    </a>
-                    {% if is_teacher_or_hr %}
-                        <hr>
-                        <a href="{% url 'students:assignment' assignment.id  %}" class="button tiny">Notes: {{ assignment.notes_count }}</a>
-                        <a href="{% url 'students:assignment_solutions' assignment.id  %}" class="button tiny">Решения</a>
-                    {% endif %}
-                </div>
-            </div>
-            {% endfor %}
-        <hr>
-
-        <h3>
-            Всички хора от курса:
-        </h3>
-    {% endif %}
-
     {% for assignment in assignments %}
         {% if assignment not in assignments_interested_in_me or not assignments_interested_in_me %}
-        <div class="medium-4 columns">
-            <div class="panel text-center">
-                <h5>{{ assignment.user.get_full_name }}</h5>
-                <a href="{% url 'students:assignment' assignment.id  %}">
-                    <img style="height: 200px; width: 200px;" src="{{ assignment.user.get_avatar_url }}" class="th">
-                </a>
-                {% if is_teacher_or_hr %}
-                    <hr>
-                    <a href="{% url 'students:assignment' assignment.id  %}" class="button tiny">Notes: {{ assignment.notes_count }}</a>
-                    <a href="{% url 'students:assignment_solutions' assignment.id  %}" class="button tiny">Решения</a>
-                {% endif %}
+        <div class="medium-12 columns">
+            <div class="panel">
+                <div class="row">
+                    <div class="medium-3 columns">
+                        <a href="{% url 'students:assignment' assignment.id  %}">
+                            <img style="width: 200px;" src="{{ assignment.user.get_avatar_url }}" class="th">
+                        </a>
+                    </div>
+                    
+                    <div class="medium-9 columns">
+                    {% if assignment.certificate %}
+                        <a target="_blank" href="{% url 'courses:show_certificate' assignment.id %}"><span class="fi-trophy" style="float:right; font-size:30px;"> </span></a>
+                    {% endif %}
+                        <h4>{{ assignment.user.get_full_name }}</h4>
+                            <ul style="list-style: none; margin-left:0px;">
+                                <li class="fi-mail"> {{ assignment.user.email }}</li>
+                                {% if assignment.user.github_account %}
+                                    <li class="fi-social-github"> {{ assignment.user.github_account }}</li>
+                                {% else %}
+                                    <li lass="fi-social-github">Няма GitHub регистрация!</li> 
+                                {% endif %}
+                            </ul>
+
+                        {% if assignment.user.get_courses_list|length > 1 %}
+                            Други изкарани курсове:
+                            <ul>
+                            {% for student_course in assignment.user.get_courses_list %}
+                                {% if assignment != student_course  %}
+                                    <li>{{ student_course.course.name }}</li>
+                                {% endif %}
+                            {% endfor %}
+                            </ul>
+                        {% endif %}
+
+                        {% if is_teacher_or_hr %}
+                            {% if assignment.usernote_set %}
+                                <a href="" class="notes-button button tiny">Notes: {{ assignment.usernote_set.count }}</a>
+                            {% else %}
+                                <a href="" class="button tiny disabled">Notes: {{ assignment.usernote_set.count }}</a>
+                            {% endif %}
+
+                            <div class="notes" style="display:none;">
+                                {% for note in assignment.usernote_set.all %}
+                                    <strong>{{ note.author }}:</strong> 
+                                    <small>{{ note.post_time|date:"d m Y" }}</small>
+                                    <p>{{ note.text }}</p>
+                                    <hr>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
         </div>
         {% endif %}
     {% endfor %}
 </div>
 {% endblock content %}
+
+
+{% block jsfooter %}
+    <script>
+        $(".notes-button").click(function() {
+            $(this).parent().find('.notes').toggle()
+        });
+    </script>
+{% endblock jsfooter %}
