@@ -65,10 +65,10 @@
                         {% endif %}
 
                         {% if is_teacher_or_hr %}
-                            {% if assignment.notes_count %}
-                                <a href="" class="notes-button button tiny">Notes: {{ assignment.notes_count }}</a>
+                            {% if assignment.usernote_set %}
+                                <a href="" class="notes-button button tiny">Notes: {{ assignment.usernote_set.count }}</a>
                             {% else %}
-                                <a href="" class="button tiny disabled">Notes: {{ assignment.notes_count }}</a>
+                                <a href="" class="button tiny disabled">Notes: {{ assignment.usernote_set.count }}</a>
                             {% endif %}
 
                             <div class="notes" style="display:none;">
