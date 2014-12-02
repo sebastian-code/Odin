@@ -57,18 +57,20 @@
                         {% endif %}
 
                         {% if is_teacher_or_hr %}
-                            {% if assignment.notes_count > 0 %}
-                                <a href="#" id="notes-button" class="button tiny">Notes: {{ assignment.notes_count }}</a>
+                            {% if assignment.notes_count %}
+                                <a href="#" class="notes-button button tiny">Notes: {{ assignment.notes_count }}</a>
                             {% else %}
-                                <a href="#" id="notes-button" class="button tiny disabled">Notes: {{ assignment.notes_count }}</a>
+                                <a href="#" class="button tiny disabled">Notes: {{ assignment.notes_count }}</a>
                             {% endif %}
 
+                            <div class="notes" style="display:none;">
                             <hr>
-                            {% for note in assignment.usernote_set.all %}
-                                <strong>{{ note.author }}:</strong>
-                                <p>{{ note.text }}</p>
-                                <hr>
-                            {% endfor %}
+                                {% for note in assignment.usernote_set.all %}
+                                    <strong>{{ note.author }}:</strong>
+                                    <p>{{ note.text }}</p>
+                                    <hr>
+                                {% endfor %}
+                            </div>
                         {% endif %}
                     </div>
                 </div>
@@ -78,3 +80,12 @@
     {% endfor %}
 </div>
 {% endblock content %}
+
+
+{% block jsfooter %}
+    <script>
+        $(".notes-button").click(function() {
+            $(this).parent().find('.notes').toggle()
+        });
+    </script>
+{% endblock jsfooter %}
