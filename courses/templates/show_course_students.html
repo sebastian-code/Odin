@@ -40,9 +40,9 @@
 
                         {% if is_teacher_or_hr %}
                             {% if assignment.usernote_set.all %}
-                                <a href="" class="notes-button button tiny">Notes: {{ assignment.usernote_set.count }}</a>
+                                <a class="notes-button button tiny">Notes: {{ assignment.usernote_set.count }}</a>
                             {% else %}
-                                <a href="" class="button tiny disabled">Notes: {{ assignment.usernote_set.count }}</a>
+                                <a class="button tiny disabled">Notes: {{ assignment.usernote_set.count }}</a>
                             {% endif %}
 
                             <div class="notes" style="display:none;">
@@ -68,7 +68,6 @@
     <script>
         $(".notes-button").click(function(event) {
             $(this).parent().find('.notes').toggle()
-            event.preventDefault();
         });
     </script>
 {% endblock jsfooter %}
