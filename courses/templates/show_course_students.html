@@ -66,8 +66,9 @@
 
 {% block jsfooter %}
     <script>
-        $(".notes-button").click(function() {
+        $(".notes-button").click(function(event) {
             $(this).parent().find('.notes').toggle()
+            event.preventDefault();
         });
     </script>
 {% endblock jsfooter %}
