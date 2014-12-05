@@ -75,7 +75,12 @@ def show_submitted_solutions(request, course_url):
         return HttpResponseForbidden()
 
     course = get_object_or_404(Course, url=course_url)
-    tasks = Task.objects.filter(course=course).select_related('solution').order_by('name')
+
+    tasks = Task.objects.filter(course=course).prefetch_related(
+        'solution_set__assignment',
+        'solution_set__user'
+    ).order_by('name')
+
     weeks = sorted(set(map(lambda task: task.week, tasks)))
     solutions = Solution.objects.filter(task__in=tasks).select_related('task')
 

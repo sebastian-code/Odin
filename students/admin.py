@@ -71,7 +71,8 @@ class SolutionAdmin(admin.ModelAdmin):
     list_display = [
         'task',
         'user',
-        'repo'
+        'repo',
+        'assignment'
     ]
     list_display_links = ['repo']
     list_filter = ('task__course', 'user')

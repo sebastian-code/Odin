@@ -181,6 +181,7 @@ class CheckIn(models.Model):
 class Solution(models.Model):
     task = models.ForeignKey(Task)
     user = models.ForeignKey(User)
+    assignment = models.ForeignKey(CourseAssignment)
     repo = models.URLField()
 
     def get_assignment(self):
@@ -201,3 +202,4 @@ class Solution(models.Model):
 
     class Meta:
         unique_together = (('user', 'task'),)
+ 
