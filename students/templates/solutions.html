@@ -29,9 +29,9 @@
                                             <div class="small-1 columns">
                                                 <span class="postfix radius status-info">
                                                     {% if task.solution.repo %}
-                                                        <i class='foundicon-checkmark'></i>
+                                                        <i class='fi-check'></i>
                                                     {% else %}
-                                                        <i class='foundicon-remove'></i>
+                                                        <i class='fi-x'></i>
                                                     {% endif %}
                                                 </span>
                                             </div>
@@ -66,10 +66,10 @@
                     }
                 })
                 .done(function(data) {
-                    $current.parents("div.collapse").find("span").html("<i class='foundicon-checkmark'></i>")
+                    $current.parents("div.collapse").find("span").html("<i class='fi-check'></i>")
                 })
                 .fail(function() {
-                    $current.parents("div.collapse").find("span").html("<i class='foundicon-remove'></i>")
+                    $current.parents("div.collapse").find("span").html("<i class='fi-x'></i>")
                 })
             });
         });

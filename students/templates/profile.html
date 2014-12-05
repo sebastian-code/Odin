@@ -21,15 +21,15 @@
                                 {% if is_student %}
                                     <a href="{% url 'students:assignment' assignment.pk %}">{{ assignment.course }}</a>
 
-                                    <a href="{% url 'students:solutions' assignment.course.url %}"><span class="foundicon-paper-clip"></span> Предай задачи</a>
+                                    <a href="{% url 'students:solutions' assignment.course.url %}"><span class="fi-paperclip"></span> Предай задачи</a>
                                 {% elif is_hr %}
                                     {{ assignment.course }}
 
-                                    <a href="{% url 'courses:show_course_students' assignment.course.url %}"><span class="foundicon-address-book"></span> Всички записали курса</a>
+                                    <a href="{% url 'courses:show_course_students' assignment.course.url %}"><span class="fi-address-book"></span> Всички записали курса</a>
                                 {% elif is_teacher %}
                                     {{ assignment.course }}
-                                    <a href="{% url 'courses:show_course_students' assignment.course.url %}"><span class="foundicon-address-book"></span> Всички записали курса, </a>
-                                    <a href="{% url 'courses:show_submitted_solutions' assignment.course.url %}"><span class="foundicon-inbox"></span> Всички предадени задачи</a>
+                                    <a href="{% url 'courses:show_course_students' assignment.course.url %}"><span class="fi-address-book"></span> Всички записали курса, </a>
+                                    <a href="{% url 'courses:show_submitted_solutions' assignment.course.url %}"><span class="fi-archive"></span> Всички предадени задачи</a>
                                 {% endif %}
                             </li>
                         {% endfor %}
@@ -45,9 +45,9 @@
                     {% endif %}
 
                     <h5>Контакти:</h5>
-                    <ul>
-                        <li>LinkedIn: <a href="{{ user.linkedin_account }}">{{ user.linkedin_account }}</a></li>
-                        <li>GitHub: <a href="{{ user.github_account }}">{{ user.github_account }}</a></li>
+                    <ul style="list-style-type: none;">
+                        <li class="fi-social-linkedin"> <a href="{{ user.linkedin_account }}">{{ user.linkedin_account }}</a></li>
+                        <li class="fi-social-github"> <a href="{{ user.github_account }}">{{ user.github_account }}</a></li>
                     </ul>
                 </div>
             </div>
