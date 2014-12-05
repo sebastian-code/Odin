@@ -12,7 +12,7 @@
                             <img style="width: 200px;" src="{{ assignment.user.get_avatar_url }}" class="th">
                         </a>
                     </div>
-                    
+
                     <div class="medium-9 columns">
                     {% if assignment.certificate %}
                         <a target="_blank" href="{% url 'courses:show_certificate' assignment.id %}"><span class="fi-trophy" style="float:right; font-size:30px;"> </span></a>
@@ -23,7 +23,7 @@
                                 {% if assignment.user.github_account %}
                                     <li class="fi-social-github"> {{ assignment.user.github_account }}</li>
                                 {% else %}
-                                    <li lass="fi-social-github">Няма GitHub регистрация!</li> 
+                                    <li lass="fi-social-github">Няма GitHub регистрация!</li>
                                 {% endif %}
                             </ul>
 
@@ -47,7 +47,7 @@
 
                             <div class="notes" style="display:none;">
                                 {% for note in assignment.usernote_set.all %}
-                                    <strong>{{ note.author }}:</strong> 
+                                    <strong>{{ note.author }}:</strong>
                                     <small>{{ note.post_time|date:"d m Y" }}</small>
                                     <p>{{ note.text }}</p>
                                     <hr>
@@ -65,9 +65,5 @@
 
 
 {% block jsfooter %}
-    <script>
-        $(".notes-button").click(function(event) {
-            $(this).parent().find('.notes').toggle()
-        });
-    </script>
+    <script src="{{ STATIC_URL }}js/courseStudents.js"></script>
 {% endblock jsfooter %}
