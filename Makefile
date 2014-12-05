@@ -1,7 +1,7 @@
 # You should consider overriding or inheriting these,
 # from the .ini file
-SSH_USERNAME = {{ USERNAME }}
-SSH_HOST = {{ HOST }}
+SSH_USERNAME = odin
+SSH_HOST = hackbulgaria.com
 FAB_FOLDER = deploy_tools
 
 clean:
