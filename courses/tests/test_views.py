@@ -162,7 +162,7 @@ class CertificateViewsTest(TestCase):
 
         self.solution1 = Solution.objects.create(
             task=self.task1,
-            user=self.student_user
+            assignment=self.assignment
         )
 
         self.certificate = Certificate.objects.create(
