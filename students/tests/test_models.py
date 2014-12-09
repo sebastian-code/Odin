@@ -210,22 +210,6 @@ class SolutionTest(TestCase):
         self.solution_url = 'https://github.com/syndbg/HackBulgaria/'
         self.solution = Solution.objects.create(task=self.task, assignment=self.assignment, repo=self.solution_url)
 
-    def test_get_assignment(self):
-        self.assertEqual(self.solution.get_assignment(), self.assignment)
-
-    def test_get_assignment_when_more_than_one_assignment(self):
-        other_course = Course.objects.create(
-            name='Other',
-            url='other-course',
-            application_until=datetime.datetime.now())
-        other_assignment = CourseAssignment.objects.create(
-            course=other_course,
-            user=self.student_user,
-            group_time=CourseAssignment.EARLY)
-        solution_assignment = self.solution.get_assignment()
-        self.assertEqual(solution_assignment, self.assignment)
-        self.assertNotEqual(solution_assignment, other_assignment)
-
     def test_get_user_github_username(self):
         self.assertEqual('Ivaylo-Bachvarov', self.solution.get_user_github_username())
 

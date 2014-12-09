@@ -184,9 +184,6 @@ class Solution(models.Model):
     assignment = models.ForeignKey(CourseAssignment)
     repo = models.URLField()
 
-    def get_assignment(self):
-        return CourseAssignment.objects.get(user=self.user, course=self.task.course)
-
     def __parse_github_url(self, github_url):
         github_url_split = github_url.split('/')[3:]
         # Ex: https://github.com/syndbg/HackBulgaria/tree/master/Core-Java-1
@@ -202,4 +199,3 @@ class Solution(models.Model):
 
     class Meta:
         unique_together = (('user', 'task'),)
- 
