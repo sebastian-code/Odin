@@ -5,6 +5,7 @@ South==1.0.1
 argparse==1.2.1
 django-admin-sortable2==0.3.1
 django-adminfiles==1.0.1
+django-debug-panel==0.8.0
 django-debug-toolbar==1.2.2
 django-filebrowser==3.5.7
 django-grappelli==2.6.2

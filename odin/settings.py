@@ -29,6 +29,7 @@ INSTALLED_APPS = (
     'debug_toolbar',
     'markdown_deux',
     'tinymce',
+    'debug_panel',
 
     'courses',
     'faq',
@@ -46,6 +47,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_panel.middleware.DebugPanelMiddleware',
 )
 
 ROOT_URLCONF = 'odin.urls'
