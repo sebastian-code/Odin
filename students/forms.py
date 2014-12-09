@@ -93,11 +93,11 @@ class VoteForPartner(forms.ModelForm):
 class AddSolutionForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
-        self.user = kwargs.pop('user')
+        self.assignment = kwargs.pop('assignment')
         super(AddSolutionForm, self).__init__(*args, **kwargs)
 
     def save(self, *args, **kwargs):
-        self.instance.user = self.user
+        self.instance.assignment = self.assignment
         return super(AddSolutionForm, self).save()
 
     class Meta:

@@ -213,15 +213,16 @@ def assignment_solutions(request, id):
 @login_required
 @require_http_methods(['POST'])
 def add_solution(request):
+    assignment = CourseAssignment.objects.get(user=request.user)
     solution = Solution.objects.filter(
-        user=request.user,
+        assignment=assignment,
         task=request.POST['task'],
     ).first()
 
     if solution:
-        form = AddSolutionForm(request.POST, instance=solution, user=request.user)
+        form = AddSolutionForm(request.POST, instance=solution, assignment=assignment)
     else:
-        form = AddSolutionForm(request.POST, user=request.user)
+        form = AddSolutionForm(request.POST, assignment=assignment)
 
     if form.is_valid():
         form.save()
