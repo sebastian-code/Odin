@@ -321,7 +321,7 @@ class SolutionViewsTest(TestCase):
         self.task_url = 'https://github.com/HackBulgaria/Frontend-JavaScript-1/tree/master/week1/2-jQuery-Gauntlet'
         self.task = Task.objects.create(course=self.course, description=self.task_url, name='<2> jQuery-Gauntlet')
         self.solution_url = 'https://github.com/syndbg/HackBulgaria/'
-        self.solution = Solution.objects.create(task=self.task, user=self.student_user, repo=self.solution_url)
+        self.solution = Solution.objects.create(task=self.task, assignment=self.assignment, repo=self.solution_url)
 
     def test_add_solution_get_status(self):
         self.client.login(username='ivo_student@gmail.com', password='123')
