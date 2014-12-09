@@ -73,7 +73,7 @@ class WeeklyCommit(models.Model):
 
 
 class Certificate(models.Model):
-    assignment = models.OneToOneField('students.CourseAssignment')
+    assignment = models.OneToOneField('students.CourseAssignment', null=True)
     issues_closed = models.IntegerField(default=0)
     issues_opened = models.IntegerField(default=0)
     total_commits = models.IntegerField(default=0)
