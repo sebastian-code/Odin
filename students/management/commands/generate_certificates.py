@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 
-from students.models import CourseAssignment, Solution
+from students.models import CourseAssignment, Solution, User
 from .helpers.classes import TempCertificate, GithubSolution
 
 
@@ -12,7 +12,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         arg_course_id = args[0]
-        assignments = CourseAssignment.objects.filter(course__id=arg_course_id)
+        assignments = CourseAssignment.objects.filter(course__id=arg_course_id).exclude(User__status=User.HR)
         for assignment in assignments:
             solutions = Solution.objects.select_related('task').filter(user=assignment.user, task__course__id=arg_course_id)
             if assignment.has_valid_github_account() and solutions:

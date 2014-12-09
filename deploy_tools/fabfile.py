@@ -151,7 +151,7 @@ def update():
     with cd(source_folder):
         run('git pull --rebase origin master --quiet')
         _update_static_files()
-        _initialize_or_update_database()
+        run('../virtualenv/bin/python manage.py migrate --noinput')
         sudo('service nginx reload')
         sudo('restart {}'.format(GUNICORN_UPSTART_JOB))
 
