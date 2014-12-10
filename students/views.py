@@ -10,7 +10,7 @@ from django.http import HttpResponse
 from django.db import IntegrityError
 from django.conf import settings
 
-from .forms import UserEditForm, AddNote, VoteForPartner, AddSolutionForm, GiveFeedbackForm, ChangeAssignmentActivity
+from .forms import UserEditForm, AddNote, VoteForPartner, AddSolutionForm, GiveFeedbackForm
 from .models import CourseAssignment, UserNote, User, CheckIn, Task, Solution
 from courses.models import Course, Certificate
 from forum.models import Comment
