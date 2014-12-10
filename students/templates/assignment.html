@@ -53,14 +53,19 @@
                 <div class="medium-3 columns" style="padding-bottom: 20px;">
                     <img src="{{ assignment.user.get_avatar_url }}" class="th">
                 </div>
-                <h2>{{ assignment.course }} и {{ assignment.user.get_full_name }}</h2>
-
-                {% if is_teacher %}
-                    <div class="switch">
-                      <input id="exampleCheckboxSwitch" type="checkbox">
-                      <label for="exampleCheckboxSwitch"></label>
-                    </div> 
-                {% endif %}
+                <h3>
+                    {{ assignment.course }} и {{ assignment.user.get_full_name }}
+                    {% if is_teacher %}
+                        <span class="switch tiny radius">
+                          <input id="activity_switch" type="checkbox"  data-send-to="{% url 'students:toggle_assignment_activity' assignment.id %}"
+                            {% if assignment.is_attending %}
+                                checked 
+                            {% endif %}
+                          >
+                          <label for="activity_switch"></label>
+                        </span> 
+                    {% endif %}
+                </h3>
 
                 <div>
                     {% if is_teacher or is_hr %}
@@ -220,18 +225,10 @@
             // {% if assignment.is_attending %}
             //     $changeAssignmentActivity.toggle();
             // {% endif %}
-            $changeAssignmentActivity.change(function (event) {
-                var id = $changeAssignmentActivity.data('id'),
-                    sendTo = $changeAssignmentActivity.data('send-to');
-
-                var deferred = $.post(sendTo, {id: id});
-                deferred.done(function () {
-                    $current.parents("div#activity").find("span").html("<i class=\"foundicon-checkmark\"></i>");
-                });
-                deferred.fail(function () {
-                    $changeAssignmentActivity.parents("div#activity").find("span").html("<i class=\"foundicon-remove\"></i>");
-                });
-             });
+            $changeAssignmentActivity.on("change", function(event) {
+                var sendTo = $changeAssignmentActivity.data('send-to');
+                $.post(sendTo);
+            });
         });
     </script>
 {% endblock jsfooter %}

@@ -230,6 +230,7 @@ def add_solution(request):
     return HttpResponse(status=422)
 
 
+@csrf_exempt
 @login_required
 @require_http_methods(['POST'])
 def toggle_assignment_activity(request, id):
