@@ -10,7 +10,7 @@ from django.http import HttpResponse
 from django.db import IntegrityError
 from django.conf import settings
 
-from .forms import UserEditForm, AddNote, VoteForPartner, AddSolutionForm, GiveFeedbackForm
+from .forms import UserEditForm, AddNote, VoteForPartner, AddSolutionForm, GiveFeedbackForm, ChangeAssignmentActivity
 from .models import CourseAssignment, UserNote, User, CheckIn, Task, Solution
 from courses.models import Course, Certificate
 from forum.models import Comment
@@ -228,3 +228,17 @@ def add_solution(request):
         return HttpResponse(status=200)
 
     return HttpResponse(status=422)
+
+
+@login_required
+@require_http_methods(['POST'])
+def toggle_assignment_activity(request, id):
+    assignment = get_object_or_404(CourseAssignment, pk=id)
+    user = request.user
+    user_course_list = map(lambda x: x.course, user.courseassignment_set.all())
+    if user.status != User.TEACHER or assignment.course not in user_course_list:
+        return HttpResponse(status=403)
+
+    assignment.is_attending = not assignment.is_attending
+    assignment.save()
+    return HttpResponse(status=200)

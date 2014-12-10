@@ -55,6 +55,13 @@
                 </div>
                 <h2>{{ assignment.course }} и {{ assignment.user.get_full_name }}</h2>
 
+                {% if is_teacher %}
+                    <div class="switch">
+                      <input id="exampleCheckboxSwitch" type="checkbox">
+                      <label for="exampleCheckboxSwitch"></label>
+                    </div> 
+                {% endif %}
+
                 <div>
                     {% if is_teacher or is_hr %}
                     <p>
@@ -204,10 +211,27 @@
     </script>
     <script charset="utf-8">
         $(document).ready(function () {
-            var certificate_element = $('#certificate_url');
-            certificate_element.on('click', function () {
-                window.location = certificate_element.attr('href');
+            var certificate = $('#certificate_url');
+            certificate.on('click', function () {
+                window.location = certificate.attr('href');
             });
+
+            var $changeAssignmentActivity = $('#activity_switch');
+            // {% if assignment.is_attending %}
+            //     $changeAssignmentActivity.toggle();
+            // {% endif %}
+            $changeAssignmentActivity.change(function (event) {
+                var id = $changeAssignmentActivity.data('id'),
+                    sendTo = $changeAssignmentActivity.data('send-to');
+
+                var deferred = $.post(sendTo, {id: id});
+                deferred.done(function () {
+                    $current.parents("div#activity").find("span").html("<i class=\"foundicon-checkmark\"></i>");
+                });
+                deferred.fail(function () {
+                    $changeAssignmentActivity.parents("div#activity").find("span").html("<i class=\"foundicon-remove\"></i>");
+                });
+             });
         });
     </script>
 {% endblock jsfooter %}

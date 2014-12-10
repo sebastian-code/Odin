@@ -69,6 +69,16 @@ class AddNote(forms.ModelForm):
         )
 
 
+class ChangeAssignmentActivity(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(ChangeAssignmentActivity, self).__init__(*args, **kwargs)
+
+    class Meta:
+        model = CourseAssignment
+        fields = ('is_attending',)
+
+
 class VoteForPartner(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):

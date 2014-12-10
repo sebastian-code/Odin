@@ -284,6 +284,23 @@ class CourseAssignmentViewsTest(TestCase):
         self.assertNotContains(response, self.assignment.user.email)
         self.assertTemplateUsed('assignment.html', response)
 
+    def test_toggle_assignment_activity(self):
+        self.client.login(username='teacher@teacher.com', password='teach')
+        response = self.client.post(reverse('students:toggle_assignment_activity', kwargs={'id': self.teacher_assignment.id}))
+        assignment = CourseAssignment.objects.get(id=self.teacher_assignment.id)
+
+        self.assertEqual(200, response.status_code)
+        self.assertFalse(assignment.is_attending)
+
+    def test_toggle_assignment_activity_not_teacher(self):
+        self.client.login(username='ivo_student@gmail.com', password='123')
+        response = self.client.post(reverse('students:toggle_assignment_activity', kwargs={'id': self.teacher_assignment.id}))
+        assignment = CourseAssignment.objects.get(id=self.teacher_assignment.id)
+
+
+        self.assertEqual(403, response.status_code)
+        self.assertTrue(assignment.is_attending)
+
 
 class SolutionViewsTest(TestCase):
 
