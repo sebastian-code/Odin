@@ -57,13 +57,13 @@
                     {{ assignment.course }} и {{ assignment.user.get_full_name }}
                     {% if is_teacher %}
                         <span class="switch tiny radius">
-                          <input id="activity_switch" type="checkbox"  data-send-to="{% url 'students:toggle_assignment_activity' assignment.id %}"
+                          <input id="activity_switch" type="checkbox" data-assignment-id={{ assignment.id }}  data-send-to="{% url 'students:toggle_assignment_activity' %}"
                             {% if assignment.is_attending %}
-                                checked 
+                                checked
                             {% endif %}
                           >
                           <label for="activity_switch"></label>
-                        </span> 
+                        </span>
                     {% endif %}
                 </h3>
 
