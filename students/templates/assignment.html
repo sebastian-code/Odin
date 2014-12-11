@@ -222,12 +222,10 @@
             });
 
             var $changeAssignmentActivity = $('#activity_switch');
-            // {% if assignment.is_attending %}
-            //     $changeAssignmentActivity.toggle();
-            // {% endif %}
             $changeAssignmentActivity.on("change", function(event) {
                 var sendTo = $changeAssignmentActivity.data('send-to');
-                $.post(sendTo);
+                var assignmentId = $changeAssignmentActivity.data('assignment-id');
+                $.post(sendTo, {id: assignmentId});
             });
         });
     </script>
