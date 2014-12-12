@@ -9,7 +9,13 @@
                 <div class="row">
                     <div class="medium-3 columns">
                         <a href="{% url 'students:assignment' assignment.id  %}">
-                            <img style="width: 200px;" src="{{ assignment.user.get_avatar_url }}" class="th">
+                            <img style="width: 200px;" src="{{ assignment.user.get_avatar_url }}"
+                            {% if not assignment.is_attending %}
+                                class="th not_attending"
+                            {% else %}
+                                class="th"
+                            {% endif %}
+                            >
                         </a>
                     </div>
 
@@ -17,15 +23,20 @@
                     {% if assignment.certificate %}
                         <a target="_blank" href="{% url 'courses:show_certificate' assignment.id %}"><span class="fi-trophy" style="float:right; font-size:30px;"> </span></a>
                     {% endif %}
-                        <h4>{{ assignment.user.get_full_name }}</h4>
-                            <ul style="list-style: none; margin-left:0px;">
-                                <li class="fi-mail"> {{ assignment.user.email }}</li>
-                                {% if assignment.user.github_account %}
-                                    <li class="fi-social-github"> {{ assignment.user.github_account }}</li>
-                                {% else %}
-                                    <li lass="fi-social-github">Няма GitHub регистрация!</li>
-                                {% endif %}
-                            </ul>
+                        <h4>
+                            {{ assignment.user.get_full_name }} 
+                            {% if not assignment.is_attending %}
+                                <small>- Не завършил</small> 
+                            {% endif %}
+                        </h4>
+                        <ul style="list-style: none; margin-left:0px;">
+                            <li class="fi-mail"> {{ assignment.user.email }}</li>
+                            {% if assignment.user.github_account %}
+                                <li class="fi-social-github"> {{ assignment.user.github_account }}</li>
+                            {% else %}
+                                <li class="fi-social-github">Няма GitHub регистрация!</li> 
+                            {% endif %}
+                        </ul>
 
                         {% if assignment.user.get_courses_list|length > 1 %}
                             Други изкарани курсове:

@@ -65,3 +65,8 @@
 #notes-button {
     margin: 0;
 }
+
+.not_attending {
+    -webkit-filter: opacity(.2);
+    filter: opacity(.2);
+}
