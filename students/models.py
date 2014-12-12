@@ -65,6 +65,7 @@ class User(AbstractUser):
     linkedin_account = models.URLField(validators=[validate_linkedin], null=True, blank=True)
     mac = models.CharField(validators=[validate_mac], max_length=17, null=True, blank=True)
     subscribed_topics = models.ManyToManyField('forum.Topic', blank=True)
+    token = models.TextField(blank=True, default='')
     works_at = models.CharField(null=True, blank=True, max_length='40')
 
     AbstractUser._meta.get_field('email')._unique = True

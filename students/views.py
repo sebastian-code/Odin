@@ -1,14 +1,20 @@
 import datetime
 import json
 
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect, render, get_object_or_404
-from django.views.decorators.http import require_http_methods
-from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth import views as auth_views
-from django.http import HttpResponse
-from django.db import IntegrityError
 from django.conf import settings
+from django.core.urlresolvers import reverse
+from django.contrib.auth import SESSION_KEY, BACKEND_SESSION_KEY
+from django.contrib.auth import views as auth_views
+
+from django.contrib.auth.decorators import login_required
+from django.contrib.sessions.backends.db import SessionStore
+from django.db import IntegrityError
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import redirect, render, get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
+
+import requests
 
 from .forms import UserEditForm, AddNote, VoteForPartner, AddSolutionForm, GiveFeedbackForm
 from .models import CourseAssignment, UserNote, User, CheckIn, Task, Solution
@@ -21,6 +27,37 @@ def login(request):
         return redirect('students:user_profile')
     else:
         return auth_views.login(request, template_name='login_form.html')
+
+
+def github_login(request):
+    code = request.GET['code']
+    client_id = 'e637efdaf3a19fee44da'
+    client_secret = '7f33718cc80520877d2625c6813318206595697b'
+    payload = {'code': code, 'client_id': client_id, 'client_secret': client_secret}
+    headers = {'Accept': 'application/json'}
+    github_response = requests.post('https://github.com/login/oauth/access_token', params=payload, headers=headers)
+    json_response = json.loads(github_response.text)
+    access_token = json_response['access_token']
+    try:
+        user = User.objects.get(token=access_token)
+        #force an auth. Don't do this at home
+        session = SessionStore()
+        session[SESSION_KEY] = user.pk
+        session[BACKEND_SESSION_KEY] = 'django.contrib.auth.backends.ModelBackend'
+        session.save()
+        response = HttpResponseRedirect(reverse('students:user_profile'))
+        print(session.session_key)
+        response.set_cookie(
+            key=settings.SESSION_COOKIE_NAME,
+            value=session.session_key,
+            path='/',
+            max_age=3600,
+        )
+        return response
+    except User.DoesNotExist:
+        print('User not in our system')
+        return HttpResponse(status=403)
+    return HttpResponse(status=500)
 
 
 @login_required
