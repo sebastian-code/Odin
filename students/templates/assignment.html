@@ -79,16 +79,20 @@
                         {% endif %}
 
                         {% if assignment.user.github_account %}
-                            <li class="fi-social-github"> {{ assignment.user.github_account }}</li>
+                            <li class="fi-social-github"> 
+                                <a target="_blank" href="{{ assignment.user.github_account }}">{{ assignment.user.github_account }}</a>
+                            </li>
                         {% else %}
                             <li lass="fi-social-github">Няма GitHub регистрация!</li> 
                         {% endif %}
                     </ul>
 
                     {% if is_teacher or is_hr %}
-                    <p>
-                        <a href="{{ assignment.after_course_works_at.website }}" target="_blank">След курса започна работа в: {{ assignment.user.after_course_works_at }}</a>
-                    </p>
+                        {% if assignment.after_course_works_at %}
+                            <p>
+                                След курса започна работа в: <a href="{{ assignment.after_course_works_at.website }}" target="_blank">{{ assignment.user.after_course_works_at }}</a>
+                            </p>
+                        {% endif %}
                     {% endif %}
 
                     <hr>
@@ -126,13 +130,10 @@
                       <div class="content active" id="notes">
                           {% if is_teacher or is_hr %}
                               {% for note in notes %}
-                              <p class="large-12 columns">
-                                  <strong>{{ note.author.get_full_name }}</strong>:
-                                  <br>
+                                  <strong>{{ note.author.get_full_name }}</strong>
                                   <small>{{ note.post_time|date:"d-m-Y" }}</small>
                                   <br>{{ note.text | markdown }}
                                   <hr>
-                              </p>
                               {% endfor %}
                           {% endif %}
                           {% if is_teacher %}
@@ -140,7 +141,7 @@
                               <form method="POST">
                                   {% csrf_token %} {{form.text}}
                                   <input type="hidden" name="assignment" value="{{ assignment.id }}">
-                                  <button>Дайте коментар!</button>
+                                  <button>Пусни коментара</button>
                               </form>
                           {% endif %}
                       </div>
