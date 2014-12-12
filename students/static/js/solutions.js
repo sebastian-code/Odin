@@ -3,7 +3,7 @@
 $(document).ready(function() {
     $(".task-sender").change(function(ev) {
         var $current = $(this),
-            repo = $current.val()
+            repo = $current.val(),
             task = $current.data("task"),
             sendTo = $current.data("send-to");
 
