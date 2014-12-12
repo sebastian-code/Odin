@@ -2,8 +2,8 @@
 {% load markdown_deux_tags %}
 
 {% block meta %}
-{{ form.media }}
-<link rel="stylesheet" href="{{ STATIC_URL }}css/assignment.css" />
+    {{ form.media }}
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/assignment.css" />
 {% endblock meta %}
 
 {% block content %}
@@ -55,9 +55,12 @@
                 </div>
                 <h3>
                     {{ assignment.course }} и {{ assignment.user.get_full_name }}
+                    <span style="float: right;">
+                        
                     {% if is_teacher %}
-                        <span class="switch tiny radius">
-                          <input id="activity_switch" type="checkbox" data-assignment-id={{ assignment.id }}  data-send-to="{% url 'students:toggle_assignment_activity' %}"
+                        <span class="switch tiny radius has-tip" data-tooltip aria-haspopup="true" title="Завършил успешно курса?">
+                            <input id="activity_switch" type="checkbox" data-assignment-id={{ assignment.id }}  data-send-to="{% url 'students:toggle_assignment_activity' %}"
+
                             {% if assignment.is_attending %}
                                 checked
                             {% endif %}
@@ -65,18 +68,22 @@
                           <label for="activity_switch"></label>
                         </span>
                     {% endif %}
+                    </span>
                 </h3>
+                
 
                 <div>
-                    {% if is_teacher or is_hr %}
-                    <p>
-                        <a href="mailto:{{ assignment.user.email }}" target="_blank" id="email">Email акаунт: {{ assignment.user.email }}</a>
-                    </p>
-                    {% endif %}
+                    <ul style="list-style: none; margin-left:0px;">
+                        {% if is_teacher or is_hr %}
+                            <li class="fi-mail"> {{ assignment.user.email }}</li>
+                        {% endif %}
 
-                    <p>
-                        <a href="{{ assignment.user.github_account }}" target="_blank">GitHub акаунт: {{ assignment.user.github_account }}</a>
-                    </p>
+                        {% if assignment.user.github_account %}
+                            <li class="fi-social-github"> {{ assignment.user.github_account }}</li>
+                        {% else %}
+                            <li lass="fi-social-github">Няма GitHub регистрация!</li> 
+                        {% endif %}
+                    </ul>
 
                     {% if is_teacher or is_hr %}
                     <p>
@@ -216,7 +223,9 @@
     </script>
     <script charset="utf-8">
         $(document).ready(function () {
-            var certificate = $('#certificate_url');
+            var certificate = $('#certificate_url'),
+                $changeAssignmentActivity = $('#activity_switch');
+            
             certificate.on('click', function () {
                 window.location = certificate.attr('href');
             });
