@@ -5,7 +5,7 @@ from django.db.models import Q
 from django.http import HttpResponseForbidden
 from django.shortcuts import render, get_object_or_404
 
-from students.models import CourseAssignment, User, Solution, UserNote
+from students.models import CourseAssignment, User, Solution
 from .models import Course, Partner, Certificate, Task
 
 
