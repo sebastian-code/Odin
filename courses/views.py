@@ -5,6 +5,7 @@ from django.db.models import Q
 from django.http import HttpResponseForbidden
 from django.shortcuts import render, get_object_or_404
 
+from statistics.helpers import division_or_zero
 from students.models import CourseAssignment, User, Solution
 from .models import Course, Partner, Certificate, Task
 
@@ -63,7 +64,7 @@ def show_certificate(request, assignment_id):
     for task in tasks:
         if task.id in solutions_by_task:
             task.solution = solutions_by_task[task.id]
-
+    percent = division_or_zero(tasks.count(), solutions.count()) * 100
     return render(request, 'show_certificate.html', locals())
 
 
