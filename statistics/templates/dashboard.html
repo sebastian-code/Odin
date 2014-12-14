@@ -40,15 +40,5 @@
 {% endblock content %}
 
 {% block jsfooter %}
-<script>
-    $(function(){
-      $('select').on('change', function (event) {
-          var url = $(this).val();
-          if (url) {
-              window.location = url;
-          }
-          return false;
-      });
-    });
-</script>
+<script script="{{ STATIC_URL }}js/dashboard.js"></script>
 {% endblock jsfooter %}

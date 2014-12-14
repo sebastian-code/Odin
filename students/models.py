@@ -129,6 +129,7 @@ class CourseAssignment(models.Model):
     cv = models.FileField(blank=True, null=True, upload_to='cvs')
     favourite_partners = models.ManyToManyField(Partner)
     group_time = models.SmallIntegerField(choices=GROUP_TIME_CHOICES)
+    is_attending = models.BooleanField(default=True)
     points = models.PositiveIntegerField(default=0)
     user = models.ForeignKey(User)
 

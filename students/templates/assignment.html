@@ -2,8 +2,8 @@
 {% load markdown_deux_tags %}
 
 {% block meta %}
-{{ form.media }}
-<link rel="stylesheet" href="{{ STATIC_URL }}css/assignment.css" />
+    {{ form.media }}
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/assignment.css" />
 {% endblock meta %}
 
 {% block content %}
@@ -53,23 +53,46 @@
                 <div class="medium-3 columns" style="padding-bottom: 20px;">
                     <img src="{{ assignment.user.get_avatar_url }}" class="th">
                 </div>
-                <h2>{{ assignment.course }} и {{ assignment.user.get_full_name }}</h2>
+                <h3>
+                    {{ assignment.course }} и {{ assignment.user.get_full_name }}
+                    <span style="float: right;">
+                        
+                    {% if is_teacher %}
+                        <span class="switch tiny radius has-tip" data-tooltip aria-haspopup="true" title="Завършил успешно курса?">
+                            <input id="activity_switch" type="checkbox" data-assignment-id={{ assignment.id }}  data-send-to="{% url 'students:toggle_assignment_activity' %}"
+
+                            {% if assignment.is_attending %}
+                                checked
+                            {% endif %}
+                          >
+                          <label for="activity_switch"></label>
+                        </span>
+                    {% endif %}
+                    </span>
+                </h3>
+                
 
                 <div>
-                    {% if is_teacher or is_hr %}
-                    <p>
-                        <a href="mailto:{{ assignment.user.email }}" target="_blank" id="email">Email акаунт: {{ assignment.user.email }}</a>
-                    </p>
-                    {% endif %}
+                    <ul style="list-style: none; margin-left:0px;">
+                        {% if is_teacher or is_hr %}
+                            <li class="fi-mail"> {{ assignment.user.email }}</li>
+                        {% endif %}
 
-                    <p>
-                        <a href="{{ assignment.user.github_account }}" target="_blank">GitHub акаунт: {{ assignment.user.github_account }}</a>
-                    </p>
+                        {% if assignment.user.github_account %}
+                            <li class="fi-social-github"> 
+                                <a target="_blank" href="{{ assignment.user.github_account }}">{{ assignment.user.github_account }}</a>
+                            </li>
+                        {% else %}
+                            <li lass="fi-social-github">Няма GitHub регистрация!</li> 
+                        {% endif %}
+                    </ul>
 
                     {% if is_teacher or is_hr %}
-                    <p>
-                        <a href="{{ assignment.after_course_works_at.website }}" target="_blank">След курса започна работа в: {{ assignment.user.after_course_works_at }}</a>
-                    </p>
+                        {% if assignment.after_course_works_at %}
+                            <p>
+                                След курса започна работа в: <a href="{{ assignment.after_course_works_at.website }}" target="_blank">{{ assignment.user.after_course_works_at }}</a>
+                            </p>
+                        {% endif %}
                     {% endif %}
 
                     <hr>
@@ -107,13 +130,10 @@
                       <div class="content active" id="notes">
                           {% if is_teacher or is_hr %}
                               {% for note in notes %}
-                              <p class="large-12 columns">
-                                  <strong>{{ note.author.get_full_name }}</strong>:
-                                  <br>
+                                  <strong>{{ note.author.get_full_name }}</strong>
                                   <small>{{ note.post_time|date:"d-m-Y" }}</small>
                                   <br>{{ note.text | markdown }}
                                   <hr>
-                              </p>
                               {% endfor %}
                           {% endif %}
                           {% if is_teacher %}
@@ -121,7 +141,7 @@
                               <form method="POST">
                                   {% csrf_token %} {{form.text}}
                                   <input type="hidden" name="assignment" value="{{ assignment.id }}">
-                                  <button>Дайте коментар!</button>
+                                  <button>Пусни коментара</button>
                               </form>
                           {% endif %}
                       </div>
@@ -145,68 +165,21 @@
 {% endblock content %}
 
 {% block jsfooter %}
-    <script type="text/javascript" charset="utf-8">
-        $(function() {
-            var $partnerNameContainer = $("#partner-name-input-container"),
-                $partnerSelectionContainer = $("#partner-selection-container"),
-                $cantFindPartnerButton = $("#cant-find-partner"),
-                $backButton = $("#back-to-partners-list");
-
-            function hideAll(elements) {
-                elements.forEach(function($el) {
-                    $el.hide();
-                });
-            }
-
-            function showAll(elements) {
-                elements.forEach(function($el) {
-                    $el.show();
-                });
-            }
-
-            function defaultState() {
-                var toShow = [],
-                    toHide = [$partnerNameContainer, $backButton];
-
-                showAll(toShow);
-                hideAll(toHide);
-            }
-
-            function pickPartnerFromListState() {
-                var toShow = [$cantFindPartnerButton, $partnerSelectionContainer],
-                    toHide = [$backButton, $partnerNameContainer];
-
-                showAll(toShow);
-                hideAll(toHide);
-            }
-
-            function cantFindPartnerState() {
-                var toShow = [$backButton, $partnerNameContainer],
-                    toHide = [$cantFindPartnerButton, $partnerSelectionContainer];
-
-                showAll(toShow);
-                hideAll(toHide);
-            }
-
-
-            $cantFindPartnerButton.on("click", function(event) {
-                event.preventDefault();
-                cantFindPartnerState();
-            });
-
-            $backButton.on("click", function(event) {
-                event.preventDefault();
-                pickPartnerFromListState();
-            });
-
-            defaultState();
-        });
-    </script>
+    <script type="text/javascript" charset="utf-8" script="{{ STATIC_URL }}js/partners.js"></script>
     <script charset="utf-8">
         $(document).ready(function () {
-            var certificate_element = $('#certificate_url');
-            certificate_element.on('click', function () {
-                window.location = certificate_element.attr('href');
+            var certificate = $('#certificate_url'),
+                $changeAssignmentActivity = $('#activity_switch');
+            
+            certificate.on('click', function () {
+                window.location = certificate.attr('href');
+            });
+
+            var $changeAssignmentActivity = $('#activity_switch');
+            $changeAssignmentActivity.on("change", function(event) {
+                var sendTo = $changeAssignmentActivity.data('send-to');
+                var assignmentId = $changeAssignmentActivity.data('assignment-id');
+                $.post(sendTo, {id: assignmentId});
             });
         });
     </script>

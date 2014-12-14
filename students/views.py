@@ -228,3 +228,20 @@ def add_solution(request):
         return HttpResponse(status=200)
 
     return HttpResponse(status=422)
+
+
+@csrf_exempt
+@login_required
+@require_http_methods(['POST'])
+def toggle_assignment_activity(request):
+    assignment_id = request.POST['id']
+    assignment = get_object_or_404(CourseAssignment.objects.select_related('user'), pk=assignment_id)
+    user = request.user
+    user_courses = (user.course for user in user.courseassignment_set.all())
+    # user_course_list = map(lambda x: x.course, user.courseassignment_set.all())
+    if user.status != User.TEACHER or assignment.course not in user_courses:
+        return HttpResponse(status=403)
+
+    assignment.is_attending = not assignment.is_attending
+    assignment.save()
+    return HttpResponse(status=200)

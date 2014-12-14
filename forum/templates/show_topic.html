@@ -85,19 +85,5 @@
 
 {% block jsfooter %}
     <script charset="utf-8" src="/static/js/form.js"></script>
-    <script>
-        $('#unsubscribe').on("click", function() {
-            $.get("{% url 'forum:unsubscribe' topic.id %}", function(data) {
-                }).done(function() {
-                    $("#unsubscribe-text").hide("slow");
-            });
-        });
-
-        $('#subscribe').on("click", function() {
-            $.get("{% url 'forum:subscribe' topic.id %}", function(data) {
-                }).done(function() {
-                    $("#subscribe-text").hide("slow");
-            });
-        });
-    </script>
+    <script script="{{ STATIC_URL }}js/forumSubscribe.js"></script>
 {% endblock jsfooter %}
