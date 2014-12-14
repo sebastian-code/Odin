@@ -10,8 +10,11 @@
     </head>
     <body>
         <div id="social-holder">
-            <div class="fb-share-button" data-href="" data-layout="button_count"></div>
-            <div><a href="https://twitter.com/share" class="twitter-share-button">Tweet</a></div>
+            <ul style="list-style-type: none;">
+                <li><a href="https://twitter.com/share" class="twitter-share-button">Tweet</a></li>
+                <li><div class="g-plusone" data-size="medium"></div></li>
+                <li><div class="fb-share-button" data-href="" data-layout="button_count"></div></li>
+            </ul>
         </div>
         <a href="http://{{ request.get_host }}/">
             <img id="logo" src="{{ STATIC_URL }}img/HackBG-certificates-logo.png" alt="HackBulgaria Logo">
@@ -46,5 +49,13 @@
     <div id="fb-root"></div>
     <script src="{{ STATIC_URL }}js/facebook.js"></script>
     <script src="{{ STATIC_URL }}js/twitter.js"></script>
+    <!-- <script type="text/javascript">
+        window.___gcfg = {
+            lang: 'en-US',
+            parsetags: 'onload'
+        };
+    </script>
+    -->
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
     </body>
 </html>
