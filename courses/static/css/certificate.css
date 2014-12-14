@@ -70,13 +70,14 @@ legend {
     letter-spacing: 2.2px;
 }
 
-#fb-holder {
-    height: 35px;
+#percent {
+    color: #E8AA19;
 }
 
-.fb-share-button {
+#social-holder {
     padding: 10px;
     float: left;
+    /*height: 35px;*/
 }
 
 .code-sent {

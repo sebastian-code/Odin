@@ -9,13 +9,15 @@
 
     </head>
     <body>
-        <div id="fb-holder">
-            <div class="fb-share-button" data-href="" data-width="50"></div>
+        <div id="fb-root"></div>
+        <div id="social-holder">
+            <div class="fb-share-button" data-href="" data-layout="button_count"></div>
+            <div><a href="https://twitter.com/share" class="twitter-share-button">Tweet</a></div>
         </div>
         <a href="http://{{ request.get_host }}/">
             <img id="logo" src="{{ STATIC_URL }}img/HackBG-certificates-logo.png" alt="HackBulgaria Logo">
         </a>
-        <h2 id="title">Certificate for being awesome in <a href="{% url 'courses:show_course' course.url %}">{{ course.name }}</a></h2>
+        <h2 id="title">Certificate for being <span id="percent">{{ percent }}%</span> awesome in <a href="{% url 'courses:show_course' course.url %}">{{ course.name }}</a></h2>
         <div>
             <p id="name"><a href="{{ user.github_account }}">{{ user }}</a></p>
         </div>
@@ -42,8 +44,7 @@
                 {% endfor %}
             </fieldset>
         </div>
-    <div id="fb-root"></div>
-    </body>
+
 
     <script>(function(d, s, id) {
       var js, fjs = d.getElementsByTagName(s)[0];
@@ -51,5 +52,8 @@
       js = d.createElement(s); js.id = id;
       js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v2.0";
       fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));</script>
+    }(document, 'script', 'facebook-jssdk'));
+    </script>
+    <script src="twitter.js"></script>
+    </body>
 </html>

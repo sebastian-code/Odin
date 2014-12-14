@@ -64,7 +64,7 @@ def show_certificate(request, assignment_id):
     for task in tasks:
         if task.id in solutions_by_task:
             task.solution = solutions_by_task[task.id]
-    percent = division_or_zero(tasks.count(), solutions.count()) * 100
+    percent = round(division_or_zero(solutions.count(), tasks.count()) * 100, 2)
     return render(request, 'show_certificate.html', locals())
 
 
