@@ -32,15 +32,15 @@
         <li><a target="_blank" href="http://blog.hackbulgaria.com/">Блог</a></li>
         {% if user.is_authenticated %}
             {% if is_hr %}
-              <li><a href="{% url 'students:user_profile' %}">HR панел</a></li>
+              <li><a href="{% url 'students:user_profile' %}"><strong>HR панел</strong></a></li>
             {% elif is_teacher %}
-              <li><a href="{% url 'students:user_profile' %}">Учителски панел</a></li>
+              <li><a href="{% url 'students:user_profile' %}"><strong>Учителски панел</strong></a></li>
             {% else %}
-              <li><a href="{% url 'students:user_profile' %}">Профил</a></li>
+              <li><a href="{% url 'students:user_profile' %}"><strong>Профил</strong></a></li>
             {% endif %}
           <li><a href="{% url 'students:logout' %}">Изход</a></li>
         {% else %}
-          <li><a href="{% url 'students:login' %}">Вход</a></li>
+          <li><a href="{% url 'students:login' %}"><strong>Вход</strong></a></li>
         {% endif %}
       </ul>
     </section>
