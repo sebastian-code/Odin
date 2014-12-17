@@ -108,6 +108,15 @@ class User(AbstractUser):
             log = HrLoginLog(user=user)
             log.save()
 
+    def is_teacher(self):
+        return self.status == self.TEACHER
+
+    def is_hr(self):
+        return self.status == self.HR
+
+    def is_student(self):
+        return self.status == self.STUDENT
+
     user_logged_in.connect(log_hr_login)
 
 

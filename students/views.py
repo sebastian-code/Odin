@@ -32,9 +32,6 @@ def logout(request):
 @login_required
 def user_profile(request):
     current_user = request.user
-    is_student = current_user.status == current_user.STUDENT
-    is_hr = current_user.status == current_user.HR
-    is_teacher = current_user.status == current_user.TEACHER
 
     assignments = CourseAssignment.objects.only('course', 'user').filter(user=current_user).select_related('course').order_by('course__name')
     certificates = Certificate.objects.only('assignment').filter(assignment__in=assignments).select_related('assignment').order_by('assignment__course__name')
@@ -55,17 +52,15 @@ def edit_profile(request):
 
 @login_required
 def assignment(request, id):
+    current_user = request.user
     assignment = get_object_or_404(CourseAssignment.objects.select_related('user', 'course'), pk=id)
     certificate = Certificate.objects.filter(assignment=assignment).first()
     comments = Comment.objects.filter(author=assignment.user).select_related('topic').order_by('topic')
-    is_hr = request.user.status == User.HR
-    is_student = request.user.status == User.STUDENT
-    is_teacher = request.user.status == User.TEACHER
 
-    if is_teacher or is_hr:
+    if current_user.is_teacher() or current_user.is_hr():
         notes = UserNote.objects.filter(assignment=id).select_related('author')
 
-    if is_teacher:
+    if current_user.is_teacher():
         if request.method == 'POST':
             form = AddNote(request.POST, author=request.user)
             if form.is_valid():
@@ -74,7 +69,7 @@ def assignment(request, id):
         else:
             form = AddNote(author=request.user)
 
-    if is_student and request.user == assignment.user:
+    if current_user.is_student() and current_user == assignment.user:
         if assignment.course.ask_for_favorite_partner:
             vote_form = VoteForPartner(instance=assignment, assignment=assignment)
             if request.method == 'POST':
@@ -239,7 +234,7 @@ def toggle_assignment_activity(request):
     user = request.user
     user_courses = (user.course for user in user.courseassignment_set.all())
     # user_course_list = map(lambda x: x.course, user.courseassignment_set.all())
-    if user.status != User.TEACHER or assignment.course not in user_courses:
+    if not user.is_teacher() or assignment.course not in user_courses:
         return HttpResponse(status=403)
 
     assignment.is_attending = not assignment.is_attending
