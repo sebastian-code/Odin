@@ -93,7 +93,7 @@ class User(AbstractUser):
         return self.avatar.url
 
     def get_courses(self):
-        return list(ca.course for ca in self.courseassignment_set.all())
+        return [ca.course for ca in self.courseassignment_set.all()]
 
     def log_hr_login(sender, user, request, **kwargs):
         if user.status == User.HR:
