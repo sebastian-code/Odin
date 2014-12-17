@@ -32,9 +32,9 @@
         <li><a href="{% url 'forum:forum' %}">Форум</a></li>
         <li><a target="_blank" href="http://blog.hackbulgaria.com/">Блог</a></li>
         {% if user.is_authenticated %}
-            {% if is_hr %}
+            {% if user.is_hr %}
               <li><a href="{% url 'students:user_profile' %}"><strong>HR панел</strong></a></li>
-            {% elif is_teacher %}
+            {% elif user.is_teacher %}
               <li><a href="{% url 'students:user_profile' %}"><strong>Учителски панел</strong></a></li>
             {% else %}
               <li><a href="{% url 'students:user_profile' %}"><strong>Профил</strong></a></li>

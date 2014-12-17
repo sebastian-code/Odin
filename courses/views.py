@@ -37,7 +37,7 @@ def show_course_students(request, course_url):
         user__status=User.STUDENT
     ).select_related('user', 'certificate').prefetch_related('usernote_set', 'usernote_set__author').order_by('-is_attending')
 
-    is_teacher_or_hr = current_user.status == User.HR or current_user.status == User.TEACHER
+    is_teacher_or_hr = current_user.is_hr() or current_user.is_teacher()
     if current_user.hr_of:
         assignments_interested_in_me = CourseAssignment.objects.filter(
             course=course,
@@ -71,7 +71,7 @@ def show_certificate(request, assignment_id):
 def show_submitted_solutions(request, course_url):
     current_user = request.user
 
-    if current_user.status != User.TEACHER:
+    if not current_user.is_teacher():
         return HttpResponseForbidden()
 
     course = get_object_or_404(Course, url=course_url)

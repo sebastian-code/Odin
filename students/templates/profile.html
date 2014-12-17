@@ -18,16 +18,16 @@
                     <ol>
                         {% for assignment in assignments %}
                             <li>
-                                {% if is_student %}
+                                {% if current_user.is_student %}
                                     <a href="{% url 'students:assignment' assignment.pk %}">{{ assignment.course }}</a>
 
                                     <a href="{% url 'courses:show_course_students' assignment.course.url %}"><span class="fi-address-book"></span> Всички записали курса</a>
                                     <a href="{% url 'students:solutions' assignment.course.url %}"><span class="fi-paperclip"></span> Предай задачи</a>
-                                {% elif is_hr %}
+                                {% elif current_user.is_hr %}
                                     {{ assignment.course }}
 
                                     <a href="{% url 'courses:show_course_students' assignment.course.url %}"><span class="fi-address-book"></span> Всички записали курса</a>
-                                {% elif is_teacher %}
+                                {% elif current_user.is_teacher %}
                                     {{ assignment.course }}
                                     <a href="{% url 'courses:show_course_students' assignment.course.url %}"><span class="fi-address-book"></span> Всички записали курса, </a>
                                     <a href="{% url 'courses:show_submitted_solutions' assignment.course.url %}"><span class="fi-archive"></span> Всички предадени задачи</a>
