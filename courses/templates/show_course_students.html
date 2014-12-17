@@ -1,5 +1,11 @@
 {% extends "base.html" %}
 
+{% block meta %}
+    <title>{{ course }} - курсисти | HackBulgaria</title>
+    {{ form.media }}
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/assignment.css" />
+{% endblock meta %}
+
 {% block content %}
 <div class="row">
     {% for assignment in assignments %}

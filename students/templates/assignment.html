@@ -2,6 +2,7 @@
 {% load markdown_deux_tags %}
 
 {% block meta %}
+    <title>{{ assignment.user.get_full_name  }} и {{ assignment.course }}| HackBulgaria</title>
     {{ form.media }}
     <link rel="stylesheet" href="{{ STATIC_URL }}css/assignment.css" />
 {% endblock meta %}
@@ -54,7 +55,7 @@
                     <img src="{{ assignment.user.get_avatar_url }}" class="th">
                 </div>
                 <h3>
-                    {{ assignment.course }} и {{ assignment.user.get_full_name }}
+                    {{ assignment.user.get_full_name }} и {{ assignment.course }}
                     <span style="float: right;">
                         
                     {% if is_teacher %}
