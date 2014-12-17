@@ -44,12 +44,12 @@
                             {% endif %}
                         </ul>
 
-                        {% if assignment.user.get_courses_list|length > 1 %}
+                        {% if assignment.user.courseassignment_set|length > 1 %}
                             Други изкарани курсове:
                             <ul>
-                            {% for student_course in assignment.user.get_courses_list %}
-                                {% if assignment != student_course  %}
-                                    <li>{{ student_course.course.name }}</li>
+                            {% for student_courseassignment in assignment.user.courseassignment_set %}
+                                {% if assignment != student_courseassignment  %}
+                                    <li>{{ student_courseassignment.course.name }}</li>
                                 {% endif %}
                             {% endfor %}
                             </ul>

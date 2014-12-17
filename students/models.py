@@ -98,10 +98,7 @@ class User(AbstractUser):
                           in self.courseassignment_set.all()])
 
     def get_courses_list(self):
-        courses = []
-        for course in self.courseassignment_set.all():
-            courses.append(course)
-        return courses
+        return list(ca.course for ca in self.courseassignment_set.all())
 
     def log_hr_login(sender, user, request, **kwargs):
         if user.status == User.HR:
