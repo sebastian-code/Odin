@@ -47,8 +47,6 @@ def show_course_students(request, course_url):
             user__status=User.STUDENT
         )
 
-        assignments = list(sorted(assignments, key = lambda x: (not x.is_attending, not x in interested_in_me)))
-
     return render(request, 'show_course_students.html', locals())
 
 
