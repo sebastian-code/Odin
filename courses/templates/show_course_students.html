@@ -33,10 +33,6 @@
                             {% if not assignment.is_attending %}
                                 <small>- незавършил</small> 
                             {% endif %}
-
-                            {% if assignment in interested_in_me %}
-                                <small class="interested-in-me">- проявил интерес към {{ user.hr_of }}</small>
-                            {% endif %}
                         </h4>
                         <ul style="list-style: none; margin-left:0px;">
                             <li class="fi-mail"> {{ assignment.user.email }}</li>
@@ -50,7 +46,7 @@
                         {% if assignment.user.courseassignment_set|length > 1 %}
                             Други изкарани курсове:
                             <ul>
-                            {% for student_courseassignment in assignment.user.courseassignment_set %}
+                            {% for student_courseassignment in assignment.user.courseassignment_set.all %}
                                 {% if assignment != student_courseassignment  %}
                                     <li>{{ student_courseassignment.course.name }}</li>
                                 {% endif %}
