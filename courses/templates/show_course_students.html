@@ -47,10 +47,10 @@
                             {% endif %}
                         </ul>
 
-                        {% if assignment.user.get_courses_list|length > 1 %}
+                        {% if assignment.user.get_courses|length > 1 %}
                             Други изкарани курсове:
                             <ul>
-                            {% for student_course in assignment.user.get_courses_list %}
+                            {% for student_course in assignment.user.get_courses %}
                                 {% if assignment != student_course  %}
                                     <li>{{ student_course.course.name }}</li>
                                 {% endif %}
