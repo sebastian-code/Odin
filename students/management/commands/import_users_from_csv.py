@@ -15,7 +15,7 @@ class Command(BaseCommand):
         I will generate random passwords and send emails to them.
         You can edit the email template located in students/management/commands/template.txt
         The format of the CSV file must be:
-            email, first_name, last_name, 1/2, course_id, works_at
+            email, first_name last_name, 1/2, course_id, works_at
         * 1 is for early group_time
         * 2 is for late group_time
 
