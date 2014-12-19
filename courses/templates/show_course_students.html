@@ -39,7 +39,9 @@
                             {% endif %}
                         </h4>
                         <ul style="list-style: none; margin-left:0px;">
-                            <li class="fi-mail"> {{ assignment.user.email }}</li>
+                            {% if is_teacher_or_hr %}
+                                <li class="fi-mail"> {{ assignment.user.email }}</li>
+                            {% endif %}
                             {% if assignment.user.github_account %}
                                 <li class="fi-social-github"> {{ assignment.user.github_account }}</li>
                             {% else %}
