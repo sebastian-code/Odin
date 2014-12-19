@@ -202,15 +202,15 @@ class CourseAssignmentViewsTest(TestCase):
 
     def test_vote_for_partner_form_visibility_when_not_ask_for_favorite_partner(self):
         self.client.login(username='ivo_student@gmail.com', password='123')
-        response = self.client.get(reverse('students:assignment', kwargs={'id': self.assignment.id}))
-        self.assertNotContains(response, 'data-reveal-id="vote-for-partner"')
+        response = self.client.get(reverse('students:user_profile'))
+        self.assertNotContains(response, r'data-reveal-id="vote-for-partner-1')
 
     def test_vote_for_partner_form_visibility_when_ask_for_favorite_partner(self):
         self.course.ask_for_favorite_partner = True
         self.course.save()
         self.client.login(username='ivo_student@gmail.com', password='123')
-        response = self.client.get(reverse('students:assignment', kwargs={'id': self.assignment.id}))
-        self.assertContains(response, 'data-reveal-id="vote-for-partner')
+        response = self.client.get(reverse('students:user_profile'))
+        self.assertContains(response, r'data-reveal-id="vote-for-partner-1')
 
     def test_give_feedback_form_visibility_when_not_ask_for_feedback(self):
         self.course.ask_for_feedback = False

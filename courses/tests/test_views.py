@@ -101,16 +101,31 @@ class CoursesViewsTest(TestCase):
             reverse('courses:show_course_students', kwargs={'course_url': self.course.url}))
         self.assertEqual(200, response.status_code)
         self.assertFalse('interested_in_me' in response.context)
+        self.assertNotContains(response, 'class="interested-in-me"')
         self.assertTemplateUsed('show_course_students.html', response)
 
     def test_show_course_students_when_hr(self):
         partner = Partner.objects.create(name='Fish', is_active=True)
-        self.student_user.hr_of = partner
-        self.student_user.save()
-        self.client.login(username='ivo_student@gmail.com', password='123')
+        self.hr_user.hr_of = partner
+        self.hr_user.save()
+
+        self.assignment = CourseAssignment.objects.create(
+            user=self.student_user,
+            course=self.course,
+            group_time=CourseAssignment.EARLY
+        )
+
+        self.client.login(username='ivo_hr@gmail.com', password='123')
+
+        self.assignment.favourite_partners.add(partner)
+        self.assignment.save()
+
         response = self.client.get(
             reverse('courses:show_course_students', kwargs={'course_url': self.course.url}))
-        self.assertTrue('assignments_interested_in_me' in response.context)
+
+        self.assertContains(response, 'class="interested-in-me"')
+        self.assertTrue('interested_in_me' in response.context)
+        self.assertTemplateUsed('show_course_students.html', response)
 
     def test_show_submitted_solutions_when_student(self):
         self.client.login(username='ivo_student@gmail.com', password='123')

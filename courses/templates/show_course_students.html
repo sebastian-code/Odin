@@ -9,7 +9,6 @@
 {% block content %}
 <div class="row">
     {% for assignment in assignments %}
-        {% if assignment not in assignments_interested_in_me or not assignments_interested_in_me %}
         <div class="medium-12 columns">
             <div class="panel">
                 <div class="row">
@@ -33,6 +32,10 @@
                             {{ assignment.user.get_full_name }} 
                             {% if not assignment.is_attending %}
                                 <small>- незавършил</small> 
+                            {% endif %}
+
+                            {% if assignment in interested_in_me %}
+                                <small class="interested-in-me">- проявил интерес към {{ user.hr_of }}</small>
                             {% endif %}
                         </h4>
                         <ul style="list-style: none; margin-left:0px;">
@@ -75,7 +78,6 @@
                 </div>
             </div>
         </div>
-        {% endif %}
     {% endfor %}
 </div>
 {% endblock content %}

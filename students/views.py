@@ -9,6 +9,7 @@ from django.contrib.auth import views as auth_views
 from django.http import HttpResponse
 from django.db import IntegrityError
 from django.conf import settings
+from django.core.exceptions import PermissionDenied
 
 from .forms import UserEditForm, AddNote, VoteForPartner, AddSolutionForm, GiveFeedbackForm
 from .models import CourseAssignment, UserNote, User, CheckIn, Task, Solution
@@ -35,6 +36,24 @@ def user_profile(request):
 
     assignments = CourseAssignment.objects.only('course', 'user').filter(user=current_user).select_related('course').order_by('course__name')
     certificates = Certificate.objects.only('assignment').filter(assignment__in=assignments).select_related('assignment').order_by('assignment__course__name')
+    user_courses = [ca.course for ca in assignments]
+
+    vote_forms = []
+    for assignment in assignments:
+        if assignment.course.ask_for_favorite_partner:
+            vote_form = VoteForPartner(instance=assignment, assignment=assignment)
+            vote_forms.append(vote_form)
+
+    if request.method == 'POST':
+        assignment = get_object_or_404(CourseAssignment, id=request.POST.get('assignment_id'))
+        if assignment not in assignments:
+            raise PermissionDenied()
+
+        vote_form = VoteForPartner(request.POST, request.FILES, instance=assignment, assignment=assignment)
+        if vote_form.is_valid():
+            vote_form.save()
+            return redirect('students:user_profile')
+
     return render(request, 'profile.html', locals())
 
 
@@ -70,14 +89,6 @@ def assignment(request, id):
             form = AddNote(author=request.user)
 
     if current_user.is_student() and current_user == assignment.user:
-        if assignment.course.ask_for_favorite_partner:
-            vote_form = VoteForPartner(instance=assignment, assignment=assignment)
-            if request.method == 'POST':
-                vote_form = VoteForPartner(request.POST, request.FILES, instance=assignment, assignment=assignment)
-                if vote_form.is_valid():
-                    vote_form.save()
-                    return redirect('students:assignment', id=id)
-
         date_today = datetime.date.today()
         # get course.end_time if existing, else fake a date from 10 years ago
         course_end_date = datetime.date(1990, 1, 1)
