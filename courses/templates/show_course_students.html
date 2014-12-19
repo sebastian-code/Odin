@@ -51,8 +51,8 @@
                             Други изкарани курсове:
                             <ul>
                             {% for student_course in assignment.user.get_courses %}
-                                {% if assignment != student_course  %}
-                                    <li>{{ student_course.course.name }}</li>
+                                {% if assignment.course != student_course  %}
+                                    <li>{{ student_course.name }}</li>
                                 {% endif %}
                             {% endfor %}
                             </ul>
