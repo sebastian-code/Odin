@@ -33,6 +33,10 @@
                             {% if not assignment.is_attending %}
                                 <small>- незавършил</small> 
                             {% endif %}
+
+                            {% if assignment in interested_in_me and current_user.is_hr%}
+                                <small class="interested-in-me">- проявил интерес към {{ current_user.hr_of }}</small>
+                            {% endif %}
                         </h4>
                         <ul style="list-style: none; margin-left:0px;">
                             <li class="fi-mail"> {{ assignment.user.email }}</li>
@@ -43,12 +47,12 @@
                             {% endif %}
                         </ul>
 
-                        {% if assignment.user.courseassignment_set|length > 1 %}
+                        {% if assignment.user.get_courses_list|length > 1 %}
                             Други изкарани курсове:
                             <ul>
-                            {% for student_courseassignment in assignment.user.courseassignment_set.all %}
-                                {% if assignment != student_courseassignment  %}
-                                    <li>{{ student_courseassignment.course.name }}</li>
+                            {% for student_course in assignment.user.get_courses_list %}
+                                {% if assignment != student_course  %}
+                                    <li>{{ student_course.course.name }}</li>
                                 {% endif %}
                             {% endfor %}
                             </ul>
