@@ -5,17 +5,21 @@
         <meta property="og:title" content="Hack Bulgaria Certificate"/>
         <meta property="og:image" content="{{ STATIC_URL }}img/certificate-screen.png"/>
         <meta property="og:site_name" content="Hack Bulgaria"/>
-        <meta property="og:description" content="Certificate for being awesome in the {{ course.name }} course in HackBulgaria"/>
-
+        <meta property="og:description" content="Certificate for being {{ percent }} awesome in the {{ course.name }} course in HackBulgaria"/>
+        <link rel="shortcut icon" href="{{ STATIC_URL }}/img/favicon.ico">
     </head>
     <body>
-        <div id="fb-holder">
-            <div class="fb-share-button" data-href="" data-width="50"></div>
+        <div id="social-holder">
+            <ul style="list-style-type: none;">
+                <li><a href="https://twitter.com/share" class="twitter-share-button">Tweet</a></li>
+                <li><div class="g-plusone" data-size="medium"></div></li>
+                <li><div class="fb-share-button" data-href="" data-layout="button_count"></div></li>
+            </ul>
         </div>
         <a href="http://{{ request.get_host }}/">
             <img id="logo" src="{{ STATIC_URL }}img/HackBG-certificates-logo.png" alt="HackBulgaria Logo">
         </a>
-        <h2 id="title">Certificate for being awesome in <a href="{% url 'courses:show_course' course.url %}">{{ course.name }}</a></h2>
+        <h2 id="title">Certificate for being <span id="percent">{{ percent }}%</span> awesome in <a href="{% url 'courses:show_course' course.url %}">{{ course.name }}</a></h2>
         <div>
             <p id="name"><a href="{{ user.github_account }}">{{ user }}</a></p>
         </div>
@@ -43,7 +47,15 @@
             </fieldset>
         </div>
     <div id="fb-root"></div>
-    </body>
-
     <script src="{{ STATIC_URL }}js/facebook.js"></script>
+    <script src="{{ STATIC_URL }}js/twitter.js"></script>
+    <!-- <script type="text/javascript">
+        window.___gcfg = {
+            lang: 'en-US',
+            parsetags: 'onload'
+        };
+    </script>
+    -->
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    </body>
 </html>

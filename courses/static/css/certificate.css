@@ -70,13 +70,25 @@ legend {
     letter-spacing: 2.2px;
 }
 
-#fb-holder {
-    height: 35px;
+#percent {
+    color: #FFCE4F;
 }
 
-.fb-share-button {
-    padding: 10px;
+#social-holder {
+
     float: left;
+}
+
+#social-holder ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+#social-holder ul li {
+        display: block;
+    width: 60px;
+    padding-bottom: 10px;
 }
 
 .code-sent {
