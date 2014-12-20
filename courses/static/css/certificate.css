@@ -71,11 +71,24 @@ legend {
 }
 
 #percent {
-    color: #E8AA19;
+    color: #FFCE4F;
 }
 
 #social-holder {
+
     float: left;
+}
+
+#social-holder ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+#social-holder ul li {
+        display: block;
+    width: 60px;
+    padding-bottom: 10px;
 }
 
 .code-sent {
