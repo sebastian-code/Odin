@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.http import HttpResponseForbidden
 from django.shortcuts import render, get_object_or_404
+from django.conf import settings
 
 from statistics.helpers import division_or_zero
 from students.models import CourseAssignment, User, Solution
@@ -60,6 +61,7 @@ def show_certificate(request, assignment_id):
     course = assignment.course
     tasks = Task.objects.filter(course=course)
     solutions = Solution.objects.filter(task__in=tasks, user=user)
+    website_url = "https://" + settings.DOMAIN
 
     solutions_by_task = {}
     for solution in solutions:
