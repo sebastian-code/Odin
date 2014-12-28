@@ -99,9 +99,9 @@ TINYMCE_COMPRESSOR = True
 
 try:
     if 'TRAVIS' in os.environ:
-        from travis_settings import *
+        from .travis_settings import *
     else:
-        from local_settings import *
+        from .local_settings import *
 
 except ImportError:
     exit("{}_settings.py not found!".format("travis" if 'TRAVIS' in os.environ else "local"))

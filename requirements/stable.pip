@@ -19,4 +19,3 @@ netaddr==0.7.12
 psycopg2==2.5.4
 sorl-thumbnail==11.12
 sqlparse==0.1.13
-wsgiref==0.1.2
