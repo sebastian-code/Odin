@@ -41,7 +41,7 @@
             {% endif %}
           <li><a href="{% url 'students:logout' %}">Изход</a></li>
         {% else %}
-          <li><a href="{% url 'students:login' %}"><strong>Вход</strong></a></li>
+          <li id="login"><a href="{% url 'students:login' %}"><strong>Вход</strong></a></li>
         {% endif %}
       </ul>
     </section>
