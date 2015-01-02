@@ -33,15 +33,15 @@
         <li><a target="_blank" href="http://blog.hackbulgaria.com/">Блог</a></li>
         {% if user.is_authenticated %}
             {% if user.is_hr %}
-              <li><a href="{% url 'students:user_profile' %}"><strong>HR панел</strong></a></li>
+              <li><a id="profile" href="{% url 'students:user_profile' %}"><strong>HR панел</strong></a></li>
             {% elif user.is_teacher %}
-              <li><a href="{% url 'students:user_profile' %}"><strong>Учителски панел</strong></a></li>
+              <li><a id="profile" href="{% url 'students:user_profile' %}"><strong>Учителски панел</strong></a></li>
             {% else %}
-              <li><a href="{% url 'students:user_profile' %}"><strong>Профил</strong></a></li>
+              <li><a id="profile" href="{% url 'students:user_profile' %}"><strong>Профил</strong></a></li>
             {% endif %}
-          <li><a href="{% url 'students:logout' %}">Изход</a></li>
+          <li><a id="logout" href="{% url 'students:logout' %}">Изход</a></li>
         {% else %}
-          <li id="login"><a href="{% url 'students:login' %}"><strong>Вход</strong></a></li>
+          <li><a id="login" href="{% url 'students:login' %}"><strong>Вход</strong></a></li>
         {% endif %}
       </ul>
     </section>
