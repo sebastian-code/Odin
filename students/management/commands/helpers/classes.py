@@ -62,7 +62,7 @@ class TempCertificate:
         else:
             Certificate.objects.filter(assignment=self.assignment).delete()
             self.save_certificate_in_db()
-            print 'Created certificate for {}'.format(self.assignment.user)
+            print('Created certificate for {}'.format(self.assignment.user))
 
 
 class GithubSolution:

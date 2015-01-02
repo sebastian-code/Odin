@@ -12,7 +12,7 @@ class QuestionModelTest(TestCase):
         self.question = Question.objects.create(title='Chicken or Egg?')
 
     def test_unicode(self):
-        self.assertEqual('Chicken or Egg?', unicode(self.question))
+        self.assertEqual('Chicken or Egg?', str(self.question))
 
 
 class ChoiceModelTest(TestCase):
@@ -21,7 +21,7 @@ class ChoiceModelTest(TestCase):
         self.choice = Choice.objects.create(question=self.question, text='lorem ipsum')
 
     def test_unicode(self):
-        self.assertEqual('lorem ipsum', unicode(self.choice))
+        self.assertEqual('lorem ipsum', str(self.choice))
 
 
 class AnswerModelTest(TestCase):
@@ -41,7 +41,7 @@ class AnswerModelTest(TestCase):
         self.answer = Answer.objects.create(choice=self.choice, user=self.student_user)
 
     def test_unicode(self):
-        self.assertEqual('lorem ipsum', unicode(self.answer))
+        self.assertEqual('lorem ipsum', str(self.answer))
 
 
 class PollModelTest(TestCase):
@@ -54,7 +54,7 @@ class PollModelTest(TestCase):
         self.poll.question.add(self.question)
 
     def test_unicode(self):
-        self.assertEqual('Very important!', unicode(self.poll))
+        self.assertEqual('Very important!', str(self.poll))
 
     def test_user_has_answered_when_no_answers(self):
         self.assertFalse(self.poll.user_has_answered(self.student_user))
