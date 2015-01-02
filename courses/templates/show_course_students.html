@@ -1,9 +1,14 @@
 {% extends "base.html" %}
 
+{% block meta %}
+    <title>{{ course }} - курсисти | HackBulgaria</title>
+    {{ form.media }}
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/assignment.css" />
+{% endblock meta %}
+
 {% block content %}
 <div class="row">
     {% for assignment in assignments %}
-        {% if assignment not in assignments_interested_in_me or not assignments_interested_in_me %}
         <div class="medium-12 columns">
             <div class="panel">
                 <div class="row">
@@ -28,9 +33,15 @@
                             {% if not assignment.is_attending %}
                                 <small>- незавършил</small> 
                             {% endif %}
+
+                            {% if assignment in interested_in_me and current_user.is_hr%}
+                                <small class="interested-in-me">- проявил интерес към {{ current_user.hr_of }}</small>
+                            {% endif %}
                         </h4>
                         <ul style="list-style: none; margin-left:0px;">
-                            <li class="fi-mail"> {{ assignment.user.email }}</li>
+                            {% if is_teacher_or_hr %}
+                                <li class="fi-mail"> {{ assignment.user.email }}</li>
+                            {% endif %}
                             {% if assignment.user.github_account %}
                                 <li class="fi-social-github"> {{ assignment.user.github_account }}</li>
                             {% else %}
@@ -38,12 +49,12 @@
                             {% endif %}
                         </ul>
 
-                        {% if assignment.user.get_courses_list|length > 1 %}
+                        {% if assignment.user.get_courses|length > 1 %}
                             Други изкарани курсове:
                             <ul>
-                            {% for student_course in assignment.user.get_courses_list %}
-                                {% if assignment != student_course  %}
-                                    <li>{{ student_course.course.name }}</li>
+                            {% for student_course in assignment.user.get_courses %}
+                                {% if assignment.course != student_course  %}
+                                    <li>{{ student_course.name }}</li>
                                 {% endif %}
                             {% endfor %}
                             </ul>
@@ -69,7 +80,6 @@
                 </div>
             </div>
         </div>
-        {% endif %}
     {% endfor %}
 </div>
 {% endblock content %}

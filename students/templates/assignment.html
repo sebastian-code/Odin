@@ -2,29 +2,13 @@
 {% load markdown_deux_tags %}
 
 {% block meta %}
+    <title>{{ assignment.user.get_full_name  }} и {{ assignment.course }}| HackBulgaria</title>
     {{ form.media }}
     <link rel="stylesheet" href="{{ STATIC_URL }}css/assignment.css" />
 {% endblock meta %}
 
 {% block content %}
 <div class="row">
-
-    <div id="vote-for-partner" class="reveal-modal" data-reveal>
-        <form method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            <p>Моля посочeте към кои от партньорите на курса по {{ assignment.course }} проявявате интерес.</p>
-            {{ vote_form.favourite_partners }}
-
-            <p>
-                Може да прикачите вашето CV ако искате то по-бързо да стигне до нашите партньори.
-            </p>
-
-            {{ vote_form.cv }}
-            <button>Готово</button>
-        </form>
-        <a class="close-reveal-modal">&#215;</a>
-    </div>
-
     <div id="give-feedback" class="reveal-modal" data-reveal>
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
@@ -54,10 +38,10 @@
                     <img src="{{ assignment.user.get_avatar_url }}" class="th">
                 </div>
                 <h3>
-                    {{ assignment.course }} и {{ assignment.user.get_full_name }}
+                    {{ assignment.user.get_full_name }} и {{ assignment.course }}
                     <span style="float: right;">
                         
-                    {% if is_teacher %}
+                    {% if current_user.is_teacher %}
                         <span class="switch tiny radius has-tip" data-tooltip aria-haspopup="true" title="Завършил успешно курса?">
                             <input id="activity_switch" type="checkbox" data-assignment-id={{ assignment.id }}  data-send-to="{% url 'students:toggle_assignment_activity' %}"
 
@@ -74,7 +58,7 @@
 
                 <div>
                     <ul style="list-style: none; margin-left:0px;">
-                        {% if is_teacher or is_hr %}
+                        {% if current_user.is_teacher or current_user.is_hr %}
                             <li class="fi-mail"> {{ assignment.user.email }}</li>
                         {% endif %}
 
@@ -87,7 +71,7 @@
                         {% endif %}
                     </ul>
 
-                    {% if is_teacher or is_hr %}
+                    {% if current_user.is_teacher or current_user.is_hr %}
                         {% if assignment.after_course_works_at %}
                             <p>
                                 След курса започна работа в: <a href="{{ assignment.after_course_works_at.website }}" target="_blank">{{ assignment.user.after_course_works_at }}</a>
@@ -97,13 +81,7 @@
 
                     <hr>
 
-                    {% if is_student and user == assignment.user %}
-                        {% if assignment.course.ask_for_favorite_partner %}
-                        <p class="text-center">
-                            <button data-reveal-id="vote-for-partner">Посочете към кои от партньорите ни проявявате интерес</button>
-                        </p>
-                        {% endif %}
-
+                    {% if current_user.is_student and user == assignment.user %}
                         {% if assignment.course.ask_for_feedback and has_ended and not has_started_working_at %}
                         <p class="text-center">
                             <button data-reveal-id="give-feedback">Посочете къде сте започнали работа след курсът</button>
@@ -115,7 +93,7 @@
 
 
                     <dl class="tabs" data-tab>
-                        {% if is_student %}
+                        {% if current_user.is_student %}
                         <dd class="active"><a href="#comments">Коментари във форума</a></dd>
                         {% else %}
                             <dd class="active"><a href="#notes">Notes</a></dd>
@@ -128,7 +106,7 @@
 
                     <div class="tabs-content">
                       <div class="content active" id="notes">
-                          {% if is_teacher or is_hr %}
+                          {% if current_user.is_teacher or current_user.is_hr %}
                               {% for note in notes %}
                                   <strong>{{ note.author.get_full_name }}</strong>
                                   <small>{{ note.post_time|date:"d-m-Y" }}</small>
@@ -136,7 +114,7 @@
                                   <hr>
                               {% endfor %}
                           {% endif %}
-                          {% if is_teacher %}
+                          {% if current_user.is_teacher %}
                               {{ form.errors }}
                               <form method="POST">
                                   {% csrf_token %} {{form.text}}

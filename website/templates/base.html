@@ -4,6 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="shortcut icon" href="{{ STATIC_URL }}/img/favicon.ico">
 
   {% block meta %}
   {% endblock meta %}
@@ -31,9 +32,9 @@
         <li><a href="{% url 'forum:forum' %}">Форум</a></li>
         <li><a target="_blank" href="http://blog.hackbulgaria.com/">Блог</a></li>
         {% if user.is_authenticated %}
-            {% if is_hr %}
+            {% if user.is_hr %}
               <li><a href="{% url 'students:user_profile' %}"><strong>HR панел</strong></a></li>
-            {% elif is_teacher %}
+            {% elif user.is_teacher %}
               <li><a href="{% url 'students:user_profile' %}"><strong>Учителски панел</strong></a></li>
             {% else %}
               <li><a href="{% url 'students:user_profile' %}"><strong>Профил</strong></a></li>
@@ -59,22 +60,22 @@
           &copy; HackBulgaria
             <ul id="socials">
               <li>
-                <a href="https://www.facebook.com/HackBulgaria" rel="nofollow" title="Facebook of Hack Bulgaria" id="si-facebook" style="background: #3b5998 url({{ STATIC_URL }}img/social/facebook.png);">Facebook</a>
+                <a href="https://www.facebook.com/HackBulgaria" title="Facebook of Hack Bulgaria" id="si-facebook" style="background: #3b5998 url({{ STATIC_URL }}img/social/facebook.png);" target="_blank">Facebook</a>
               </li>
               <li>
-                <a href="https://twitter.com/hackbulgaria" rel="nofollow" title="Twitter" id="si-twitter"  style="background: #00ACED url({{ STATIC_URL }}img/social/twitter.png);">>Twitter</a>
+                <a href="https://twitter.com/hackbulgaria" title="Twitter" id="si-twitter"  style="background: #00ACED url({{ STATIC_URL }}img/social/twitter.png);" target="_blank">Twitter</a>
               </li>
               <li>
-                <a href="https://www.youtube.com/channel/UClxooLdBT49Kp9_UC0l_7gQ" rel="nofollow" title="YouTube" id="si-youtube"  style="background: #CD332D url({{ STATIC_URL }}img/social/youtube.png);">>YouTube</a>
+                <a href="https://www.youtube.com/channel/UClxooLdBT49Kp9_UC0l_7gQ" title="YouTube" id="si-youtube"  style="background: #CD332D url({{ STATIC_URL }}img/social/youtube.png);" target="_blank">YouTube</a>
               </li>
               <li>
-                <a href="https://github.com/hackbulgaria" rel="nofollow" title="GitHub" id="si-github"  style="background: #4B5D5F url({{ STATIC_URL }}img/social/github.png);">>GitHub</a>
+                <a href="https://github.com/hackbulgaria" title="GitHub" id="si-github"  style="background: #4B5D5F url({{ STATIC_URL }}img/social/github.png);" target="_blank">GitHub</a>
+              </li>
+              <li>
+                <a href="https://www.linkedin.com/company/hack-bulgaria" title="LinkedIn" id="si-linkedin" style="background: #007FB1 url({{ STATIC_URL }}img/social/linkedin.png);" target="_blank">LinkedIn</a>
               </li>
               <!--<li>
                 <a href="" rel="nofollow" title="Google Plus" id="si-googleplus" style="background: #D14836 url({{ STATIC_URL }}img/social/googleplus.png);">Google Plus</a>
-              </li>
-              <li>
-                <a href="" rel="nofollow" title="LinkedIn" id="si-linkedin" style="background: #007FB1 url({{ STATIC_URL }}img/social/linkedin.png);">LinkedIn</a>
               </li>-->
             </ul>
         </div>

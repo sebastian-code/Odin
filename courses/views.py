@@ -4,8 +4,10 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.http import HttpResponseForbidden
 from django.shortcuts import render, get_object_or_404
+from django.conf import settings
 
-from students.models import CourseAssignment, User, Solution, UserNote
+from statistics.helpers import division_or_zero
+from students.models import CourseAssignment, User, Solution
 from .models import Course, Partner, Certificate, Task
 
 
@@ -37,13 +39,17 @@ def show_course_students(request, course_url):
         user__status=User.STUDENT
     ).select_related('user', 'certificate').prefetch_related('usernote_set', 'usernote_set__author').order_by('-is_attending')
 
-    is_teacher_or_hr = current_user.status == User.HR or current_user.status == User.TEACHER
+
+    is_teacher_or_hr = current_user.is_hr() or current_user.is_teacher()
+
     if current_user.hr_of:
-        assignments_interested_in_me = CourseAssignment.objects.filter(
+        interested_in_me = CourseAssignment.objects.filter(
             course=course,
             favourite_partners=current_user.hr_of,
             user__status=User.STUDENT
         )
+
+        assignments = sorted(assignments, key = lambda x: (not x.is_attending, not x in interested_in_me))
 
     return render(request, 'show_course_students.html', locals())
 
@@ -55,6 +61,7 @@ def show_certificate(request, assignment_id):
     course = assignment.course
     tasks = Task.objects.filter(course=course)
     solutions = Solution.objects.filter(task__in=tasks, user=user)
+    website_url = "https://" + settings.DOMAIN
 
     solutions_by_task = {}
     for solution in solutions:
@@ -63,7 +70,7 @@ def show_certificate(request, assignment_id):
     for task in tasks:
         if task.id in solutions_by_task:
             task.solution = solutions_by_task[task.id]
-
+    percent = round(division_or_zero(solutions.count(), tasks.count()) * 100, 2)
     return render(request, 'show_certificate.html', locals())
 
 
@@ -71,7 +78,7 @@ def show_certificate(request, assignment_id):
 def show_submitted_solutions(request, course_url):
     current_user = request.user
 
-    if current_user.status != User.TEACHER:
+    if not current_user.is_teacher():
         return HttpResponseForbidden()
 
     course = get_object_or_404(Course, url=course_url)

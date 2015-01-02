@@ -1,6 +1,25 @@
 {% extends "base.html" %}
 
 {% block content %}
+    {% for vote_form in vote_forms %}
+    <div id="vote-for-partner-{{ forloop.counter }}" class="reveal-modal" data-reveal>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <p>Моля посочeте към кои от партньорите на курса по {{ vote_form.assignment.course }} проявявате интерес.</p>
+            {{ vote_form.favourite_partners }}
+
+            <p>
+                Може да прикачите вашето CV ако искате то по-бързо да стигне до нашите партньори.
+            </p>
+            <input type="hidden" name="assignment_id" value="{{ vote_form.assignment.id }}">
+            {{ vote_form.cv }}
+            <button>Готово</button>
+        </form>
+        <a class="close-reveal-modal">&#215;</a>
+    </div>
+    {% endfor %}
+
+
 <div class="row">
     <div class="large-12 columns">
         <div class="panel">
@@ -10,6 +29,11 @@
                 </div>
                 <div class="medium-9 columns">
                     <h1>{{ user.get_full_name }}</h1>
+                    <p>
+                        {% for vote_form in vote_forms %}
+                            <button data-reveal-id="vote-for-partner-{{ forloop.counter  }}" >Към кои от партньорите на курса по {{ vote_form.assignment.course }} проявявате интерес?</button>
+                        {% endfor %}
+                    </p>
                     <a href="{% url 'students:edit_profile' %}"><span class="fi-page-edit"></span> Редактирай профила</a>
                 </div>
                 <div class="medium-12 columns">
@@ -18,16 +42,16 @@
                     <ol>
                         {% for assignment in assignments %}
                             <li>
-                                {% if is_student %}
+                                {% if current_user.is_student %}
                                     <a href="{% url 'students:assignment' assignment.pk %}">{{ assignment.course }}</a>
 
                                     <a href="{% url 'courses:show_course_students' assignment.course.url %}"><span class="fi-address-book"></span> Всички записали курса</a>
                                     <a href="{% url 'students:solutions' assignment.course.url %}"><span class="fi-paperclip"></span> Предай задачи</a>
-                                {% elif is_hr %}
+                                {% elif current_user.is_hr %}
                                     {{ assignment.course }}
 
                                     <a href="{% url 'courses:show_course_students' assignment.course.url %}"><span class="fi-address-book"></span> Всички записали курса</a>
-                                {% elif is_teacher %}
+                                {% elif current_user.is_teacher %}
                                     {{ assignment.course }}
                                     <a href="{% url 'courses:show_course_students' assignment.course.url %}"><span class="fi-address-book"></span> Всички записали курса, </a>
                                     <a href="{% url 'courses:show_submitted_solutions' assignment.course.url %}"><span class="fi-archive"></span> Всички предадени задачи</a>

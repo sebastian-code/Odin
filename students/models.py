@@ -93,20 +93,21 @@ class User(AbstractUser):
         return self.avatar.url
 
     def get_courses(self):
-        return '; '.join([courseassignment.course.name + ' - ' + str(courseassignment.group_time)
-                          for courseassignment
-                          in self.courseassignment_set.all()])
-
-    def get_courses_list(self):
-        courses = []
-        for course in self.courseassignment_set.all():
-            courses.append(course)
-        return courses
+        return [ca.course for ca in self.courseassignment_set.all()]
 
     def log_hr_login(sender, user, request, **kwargs):
         if user.status == User.HR:
             log = HrLoginLog(user=user)
             log.save()
+
+    def is_teacher(self):
+        return self.status == self.TEACHER
+
+    def is_hr(self):
+        return self.status == self.HR
+
+    def is_student(self):
+        return self.status == self.STUDENT
 
     user_logged_in.connect(log_hr_login)
 
