@@ -182,7 +182,7 @@ class CheckIn(models.Model):
 class Solution(models.Model):
     task = models.ForeignKey(Task)
     user = models.ForeignKey(User)
-    repo = models.URLField()
+    repo = models.URLField(validators=[validate_github])
 
     def get_assignment(self):
         return CourseAssignment.objects.get(user=self.user, course=self.task.course)
