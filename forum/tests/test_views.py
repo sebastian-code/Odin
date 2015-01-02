@@ -352,4 +352,4 @@ class ForumViewsTest(TestCase):
             'topic': new_topic,
         })
 
-        self.assertTrue(mail.outbox[0].subject.find(new_topic.title.encode("utf-8")))
+        self.assertTrue(mail.outbox[0].subject.find(new_topic.title))

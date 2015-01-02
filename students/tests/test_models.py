@@ -54,7 +54,7 @@ class UserModelTest(TestCase):
             user=self.student_user, course=self.course, group_time=CourseAssignment.EARLY)
 
     def test_unicode(self):
-        self.assertEqual(self.student_user.get_full_name(), unicode(self.student_user))
+        self.assertEqual(self.student_user.get_full_name(), str(self.student_user))
 
     def test_get_avatar_url(self):
         self.student_user.avatar = None
@@ -118,7 +118,7 @@ class CourseAssignmentModelTest(TestCase):
         self.third_wheel = User.objects.create_user('third_wheel@gmail.com', '456')
 
     def test_unicode(self):
-        self.assertEqual('<Ivaylo Bachvarov> Test Course - 1', unicode(self.assignment))
+        self.assertEqual('<Ivaylo Bachvarov> Test Course - 1', str(self.assignment))
 
     def test_get_absolute_url(self):
         actual = self.assignment.get_absolute_url()
@@ -169,7 +169,7 @@ class StudentStartedWorkingAtModelTest(TestCase):
 
     def test_unicode(self):
         expected = '{} - {}'.format(self.assignment, self.partner)
-        self.assertEqual(expected, unicode(self.started_working_at))
+        self.assertEqual(expected, str(self.started_working_at))
 
 
 class SolutionTest(TestCase):

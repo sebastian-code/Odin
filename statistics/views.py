@@ -5,7 +5,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render, get_object_or_404
 
 from courses.models import Course, Partner
-from helpers import division_or_zero
+from .helpers import division_or_zero
 from students.models import CourseAssignment, StudentStartedWorkingAt
 
 

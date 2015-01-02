@@ -15,7 +15,7 @@ class CourseModelTest(TestCase):
         )
 
     def test_unicode(self):
-        self.assertEqual('Test Course', unicode(self.course))
+        self.assertEqual('Test Course', str(self.course))
 
     def test_get_statistics_url(self):
         expected = '/stats/courses/{}/'.format(self.course.id)
@@ -27,7 +27,7 @@ class PartnerModelTest(TestCase):
         self.partner = Partner.objects.create(name='Potato Company', description='Potato company')
 
     def test_unicode(self):
-        self.assertEqual(self.partner.name, unicode(self.partner))
+        self.assertEqual(self.partner.name, str(self.partner))
 
     def test_get_statistics_url(self):
         expected = '/stats/partners/{}/'.format(self.partner.id)
@@ -47,7 +47,7 @@ class TaskModelTest(TestCase):
         )
 
     def test_unicode(self):
-        self.assertEqual('task1', unicode(self.task))
+        self.assertEqual('task1', str(self.task))
 
 
 class CertificateModelTest(TestCase):

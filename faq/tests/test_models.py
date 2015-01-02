@@ -9,4 +9,4 @@ class FaqModelTest(TestCase):
         consectetur adipiscing elit.')
 
     def test_unicode(self):
-        self.assertEqual(self.faq.title, unicode(self.faq))
+        self.assertEqual(self.faq.title, str(self.faq))

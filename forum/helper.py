@@ -14,14 +14,14 @@ def send_topic_subscribe_email(topic, comment):
                 settings.BASE_DIR + '/forum/templates/email/send_topic_subscribe_email.txt').read()
 
             message = message.format(
-                user.get_full_name().encode('utf8'),
+                user.get_full_name(),
                 settings.DOMAIN,
                 topic.id,
                 comment.id
             )
 
             emails.append((
-                'Hack Bulgaria new comment in "{}"'.format(topic.title.encode('utf8')),
+                'Hack Bulgaria new comment in "{}"'.format(topic.title),
                 message,
                 settings.DEFAULT_FROM_EMAIL,
                 (user.email,)

@@ -11,7 +11,7 @@ class CategoryModelTest(TestCase):
         )
 
     def test_unicode(self):
-        self.assertEqual('Test Category', unicode(self.category))
+        self.assertEqual('Test Category', str(self.category))
 
 
 class TopicModelTest(TestCase):
@@ -30,4 +30,4 @@ class TopicModelTest(TestCase):
         )
 
     def test_unicode(self):
-        self.assertEqual('Test Topic', unicode(self.topic))
+        self.assertEqual('Test Topic', str(self.topic))

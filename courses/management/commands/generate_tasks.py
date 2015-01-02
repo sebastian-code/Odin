@@ -33,7 +33,7 @@ class Command(BaseCommand):
                 elif is_weekly_task(element):
                     print(create_db_task(course, element, is_exam=False))
         else:
-            print 'No github repo set for course <{}>'.format(course.name)
+            print('No github repo set for course <{}>'.format(course.name))
 
 
 def get_api_repo(github_parameters):
