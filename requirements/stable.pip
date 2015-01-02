@@ -16,5 +16,6 @@ easy-thumbnails==2.2
 markdown2==2.3.0
 mock==1.0.1
 netaddr==0.7.13
+psycopg2==2.5.4
 sorl-thumbnail==12.2
 sqlparse==0.1.14
