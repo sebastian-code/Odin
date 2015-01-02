@@ -7,8 +7,8 @@ class Question(models.Model):
     free_text_enabled = models.BooleanField(default=False)
     title = models.CharField(blank=True, max_length=256)
 
-    def __unicode__(self):
-        return unicode(self.title)
+    def __str__(self):
+        return self.title
 
 
 class Choice(models.Model):
@@ -16,16 +16,16 @@ class Choice(models.Model):
     question = models.ForeignKey(Question)
     text = models.CharField(blank=True, max_length=256)
 
-    def __unicode__(self):
-        return unicode(self.text)
+    def __str__(self):
+        return self.text
 
 
 class Answer(models.Model):
     choice = models.ForeignKey(Choice)
     user = models.ForeignKey(User)
 
-    def __unicode__(self):
-        return unicode(self.choice.text)
+    def __str__(self):
+        return self.choice.text
 
 
 class Poll(models.Model):
@@ -33,8 +33,8 @@ class Poll(models.Model):
     question = models.ManyToManyField(Question)
     is_active = models.BooleanField(default=True)
 
-    def __unicode__(self):
-        return unicode(self.title)
+    def __str__(self):
+        return self.title
 
     def user_has_answered(self, user):
         result = False
@@ -43,4 +43,4 @@ class Poll(models.Model):
         return result
 
     def get_question_list(self):
-        return '; '.join([unicode(q) for q in self.question.all()])
+        return '; '.join([q for q in self.question.all()])

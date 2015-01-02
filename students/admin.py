@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from models import User, CourseAssignment, UserNote, CheckIn, HrLoginLog, Solution, StudentStartedWorkingAt
+from .models import User, CourseAssignment, UserNote, CheckIn, HrLoginLog, Solution, StudentStartedWorkingAt
 
 
 class UsersAdmin(admin.ModelAdmin):

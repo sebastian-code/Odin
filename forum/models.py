@@ -8,7 +8,7 @@ class Category(models.Model):
     text = models.CharField(blank=False, max_length=512)
     ordering = models.PositiveSmallIntegerField(default=0, blank=False, null=False)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
     class Meta:
@@ -23,7 +23,7 @@ class Topic(models.Model):
     category = models.ForeignKey(Category)
     date = models.DateField(auto_now=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
 

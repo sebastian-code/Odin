@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from models import Poll, Question, Answer, Choice
+from .models import Poll, Question, Answer, Choice
 
 
 class PollAdmin(admin.ModelAdmin):

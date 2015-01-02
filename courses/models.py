@@ -25,8 +25,8 @@ class Course(models.Model):
     start_time = models.DateField(blank=True, null=True)
     url = models.SlugField(max_length=80, unique=True)
 
-    def __unicode__(self):
-        return unicode(self.name)
+    def __str__(self):
+        return self.name
 
     def get_statistics_url(self):
         return reverse('statistics:show_course_stats', args=[self.id])
@@ -46,8 +46,8 @@ class Partner(models.Model):
     class Meta:
         ordering = ('ordering',)
 
-    def __unicode__(self):
-        return unicode(self.name)
+    def __str__(self):
+        return self.name
 
     def get_statistics_url(self):
         return reverse('statistics:show_partner_stats', args=[self.id])
@@ -61,7 +61,7 @@ class Task(models.Model):
     name = models.CharField(max_length=128)
     week = models.CharField(max_length=10, blank=False, null=False)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta:

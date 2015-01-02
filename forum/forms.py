@@ -1,11 +1,10 @@
-# -*- coding: utf-8 -*-
 from django import forms
 
 from tinymce.widgets import TinyMCE
 
 from .models import Topic, Comment
 
-EMPTY_COMMENT_ERROR = u'Празни коментари не са позволени'
+EMPTY_COMMENT_ERROR = 'Празни коментари не са позволени'
 
 
 class AddTopicForm(forms.ModelForm):

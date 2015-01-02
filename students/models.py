@@ -10,7 +10,7 @@ from django.db import models
 from django_resized import ResizedImageField
 
 from courses.models import Course, Partner, Task
-from validators import validate_mac, validate_github, validate_linkedin
+from .validators import validate_mac, validate_github, validate_linkedin
 
 
 class UserManager(BaseUserManager):
@@ -76,8 +76,8 @@ class User(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
-    def __unicode__(self):
-        return unicode(self.get_full_name())
+    def __str__(self):
+        return self.get_full_name()
 
     @staticmethod
     def is_existing(email):
@@ -134,8 +134,8 @@ class CourseAssignment(models.Model):
     points = models.PositiveIntegerField(default=0)
     user = models.ForeignKey(User)
 
-    def __unicode__(self):
-        return u'<{}> {} - {}'.format(self.user.get_full_name(), self.course, self.group_time)
+    def __str__(self):
+        return '<{}> {} - {}'.format(self.user.get_full_name(), self.course, self.group_time)
 
     @staticmethod
     def is_existing(user, course):
@@ -160,8 +160,8 @@ class StudentStartedWorkingAt(models.Model):
     partner = models.ForeignKey(Partner, blank=True, null=True)
     partner_name = models.CharField(max_length=128, blank=True, null=True)
 
-    def __unicode__(self):
-        return u'{} - {}'.format(self.assignment, self.partner)
+    def __str__(self):
+        return '{} - {}'.format(self.assignment, self.partner)
 
 
 class UserNote(models.Model):
