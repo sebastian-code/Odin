@@ -69,10 +69,10 @@ class UserModelTest(TestCase):
         self.assertEqual(u'Test Course - 1; Test Course2 - 2', self.student_user.get_courses())
 
     def test_get_courses(self):
-        self.assertItemsEqual([self.course], self.student_user.get_courses())
+        self.assertCountEqual([self.course], self.student_user.get_courses())
         assignment2 = CourseAssignment.objects.create(
             user=self.student_user, course=self.course2, group_time=CourseAssignment.LATE)
-        self.assertItemsEqual([self.course, self.course2], self.student_user.get_courses())
+        self.assertCountEqual([self.course, self.course2], self.student_user.get_courses())
 
     def test_is_existing(self):
         self.assertFalse(User.is_existing('referee@real-madrid.com'))

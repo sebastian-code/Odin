@@ -4,6 +4,8 @@ from courses.models import WeeklyCommit, Certificate
 from github import Github, GithubException
 from datetime import datetime, timedelta
 
+from functools import reduce
+
 
 class TempCertificate:
 
