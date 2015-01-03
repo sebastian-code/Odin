@@ -11,9 +11,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         filename = args[0]
-        # status = 1 (STUDENT)
-        students = User.objects.filter(status=1).exclude(github_account__contains='//github.com')
+        students = User.objects.filter(status=User.STUDENT).exclude(github_account__contains='//github.com')
         with open(filename, 'w+') as f:
-            for i, student in enumerate(students, start=1):
-                f.write('[{}] {} - {}\n'.format(i, student.get_full_name(),
-                                 student.email))
+            for i, student in enumerate(students, start=User.STUDENT):
+                f.write('[{}] {} - {}\n'.format(i, student.get_full_name(), student.email))
