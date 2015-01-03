@@ -1,4 +1,5 @@
 import datetime
+import json
 
 from django.conf import settings
 from django.core.urlresolvers import reverse
@@ -427,24 +428,42 @@ class API_Tests(TestCase):
         self.student_user.save()
 
     def test_api_students_with_no_checkins(self):
-        expected = '[{"available": false, "courses": [], "github": "https://github.com/Ivaylo-Bachvarov", "name": ""}]'
+        expected = [
+            {
+                "available": False,
+                "courses": [],
+                "github": "https://github.com/Ivaylo-Bachvarov",
+                "name": ""
+            }
+        ]
         response = self.client.get('/api/students/')
+        result = json.loads(response.content.decode())
+
         self.assertEqual(200, response.status_code)
-        self.assertEqual(expected, response.content)
+        self.assertEqual(expected, result)
 
     def test_api_students_with_checkins(self):
-        expected = '[{"available": true, "courses": [], "github": "https://github.com/Ivaylo-Bachvarov", "name": ""}]'
+        expected = [
+            {
+                "available": True,
+                "courses": [],
+                "github": "https://github.com/Ivaylo-Bachvarov", "name": ""
+            }
+        ]
+
         self.client.post('/set-check-in/', {
             'mac': self.student_user.mac,
             'token': self.checkin_settings,
         })
         response = self.client.get('/api/students/')
-        self.assertEqual(expected, response.content)
+        result = json.loads(response.content.decode())
+
+        self.assertEqual(expected, result)
 
     def test_api_checkins_with_none_checked_in(self):
         response = self.client.get('/api/checkins/')
         self.assertEqual(200, response.status_code)
-        self.assertEqual('[]', response.content)
+        self.assertEqual('[]', response.content.decode())
 
     def test_api_checkins_with_checked_in(self):
         self.client.post('/set-check-in/', {
@@ -453,6 +472,14 @@ class API_Tests(TestCase):
         })
         response = self.client.get('/api/checkins/')
         date_str = str(datetime.datetime.now().strftime('%Y-%m-%d'))
-        expected = [{"date": date_str, "student_id": self.student_user.id, "student_courses": [], "student_name": ''}]
-        expected = "{}".format(expected).replace("'", '"')
-        self.assertEqual(expected, response.content)
+        expected = [
+            {
+                "date": date_str,
+                "student_id": self.student_user.id,
+                "student_courses": [],
+                "student_name": ''
+            }
+        ]
+        result = json.loads(response.content.decode())
+
+        self.assertEqual(expected, result)
