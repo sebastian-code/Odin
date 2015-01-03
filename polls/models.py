@@ -43,4 +43,4 @@ class Poll(models.Model):
         return result
 
     def get_question_list(self):
-        return '; '.join([q for q in self.question.all()])
+        return '; '.join([str(q) for q in self.question.all()])

@@ -15,5 +15,5 @@ class Command(BaseCommand):
         students = User.objects.filter(status=1).exclude(github_account__contains='//github.com')
         with open(filename, 'w+') as f:
             for i, student in enumerate(students, start=1):
-                f.write('[{}] {} - {}\n'.format(i, student.get_full_name().encode('utf-8'),
+                f.write('[{}] {} - {}\n'.format(i, student.get_full_name(),
                                  student.email))
