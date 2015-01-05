@@ -4,6 +4,13 @@ SSH_USERNAME = {{ USERNAME }}
 SSH_HOST = {{ HOST }}
 FAB_FOLDER = deploy_tools
 
+
+all: help
+
+help:
+	@echo 'Available commands are:'
+	@echo 'clean, pip-update and deploy-update'
+
 clean:
 	rm -rf *~*
 	find . -name '*.pyc' -exec rm {} \;
@@ -17,4 +24,4 @@ deploy-update:
 
 
 
-.PHONY: clean pip-update deploy-update
+.PHONY: all clean pip-update deploy-update
