@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# coding=utf-8
 from .base import FunctionalTest
 
 from django.contrib.auth import get_user_model
@@ -9,7 +11,7 @@ User = get_user_model()
 class LoginTest(FunctionalTest):
 
     def test_login_with_hr(self):
-        User.objects.create(email='hr@hackbulgara.com', password='sony')
+        User.objects.create(email='hr@hackbulgara.com', password='sony', status=User.HR)
         # Open the site
         self.browser.get(self.server_ur)
         # Click the login button and get redirected to /login
