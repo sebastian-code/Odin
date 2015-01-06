@@ -1,5 +1,5 @@
 # Dependencies:
-* python 2.7
+* python 3.4
 * virtualenv (python virtual environment)
 * pip 1.5.4 (python package manager)
 * python-dev (header files and a static library for python)
@@ -10,18 +10,18 @@ The package install snippets below are for Ubuntu distros and Ubuntu flavours.
 For your distro the package manager and packages may differ.
 
 ```
-sudo apt-get install python-pip
+sudo apt-get install python3-pip
 ```
 might be, as in openSUSE
 ```
-sudo zypper install python-pip
+sudo zypper install python3-pip
 ```
 
-# Install python 2.7, virtualenv and pip 1.5.4
+# Install python 3.4, virtualenv and pip 1.5.4
 ```
-sudo apt-get install python
-sudo apt-get install python-virtualenv
-sudo apt-get install python-pip
+sudo apt-get install python3
+sudo apt-get install python3-virtualenv
+sudo apt-get install python3-pip
 ```
 
 # Set up a virtual env and activate it
@@ -39,7 +39,7 @@ git clone https://github.com/HackBulgaria/Odin.git
 
 # Install all the requirements
 ```
-sudo apt-get install python-dev
+sudo apt-get install python3-dev
 sudo apt-get install libmysqlclient-dev
 pip install -r requirements/stable.pip
 ```
