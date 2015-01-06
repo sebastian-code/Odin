@@ -11,6 +11,7 @@ def migrate_data(apps, schema_editor):
     solutions = Solution.objects.all()
 
     for solution in solutions:
+        print(solution.task)
         assignment = CourseAssignment.objects.get(user=solution.user, course=solution.task.course)
         solution.assignment = assignment
         solution.save()
