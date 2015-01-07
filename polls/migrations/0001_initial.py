@@ -2,20 +2,18 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
-from django.conf import settings
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.CreateModel(
             name='Answer',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('id', models.AutoField(verbose_name='ID', auto_created=True, serialize=False, primary_key=True)),
             ],
             options={
             },
@@ -24,7 +22,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Choice',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('id', models.AutoField(verbose_name='ID', auto_created=True, serialize=False, primary_key=True)),
                 ('is_free', models.BooleanField(default=False)),
                 ('text', models.CharField(max_length=256, blank=True)),
             ],
@@ -35,7 +33,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Poll',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('id', models.AutoField(verbose_name='ID', auto_created=True, serialize=False, primary_key=True)),
                 ('title', models.CharField(max_length=256)),
                 ('is_active', models.BooleanField(default=True)),
             ],
@@ -46,7 +44,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Question',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('id', models.AutoField(verbose_name='ID', auto_created=True, serialize=False, primary_key=True)),
                 ('free_text_enabled', models.BooleanField(default=False)),
                 ('title', models.CharField(max_length=256, blank=True)),
             ],
@@ -70,12 +68,6 @@ class Migration(migrations.Migration):
             model_name='answer',
             name='choice',
             field=models.ForeignKey(to='polls.Choice'),
-            preserve_default=True,
-        ),
-        migrations.AddField(
-            model_name='answer',
-            name='user',
-            field=models.ForeignKey(to=settings.AUTH_USER_MODEL),
             preserve_default=True,
         ),
     ]
