@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+
+{% block meta %}
+    <title></title>
+{% endblock meta %}
+
+{% block content %}
+<div class="row">
+    <div class="large-12 columns">
+        <div class="panel">
+            <form method="POST">
+                {% csrf_token %}
+                {{ form }}
+                <button>Давай</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}

@@ -109,7 +109,15 @@ class User(AbstractUser):
     def is_student(self):
         return self.status == self.STUDENT
 
-    user_logged_in.connect(log_hr_login)
+    def set_full_name(self, full_name):
+        names = full_name.split()
+        if len(names) >= 2:
+            self.first_name = names[0]
+            self.last_name = names[-1]
+        elif len(names) == 1:
+            self.first_name = names[0]
+        else:
+            raise ValueError("Not valid full_name.")
 
 
 class HrLoginLog(models.Model):

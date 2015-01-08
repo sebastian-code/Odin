@@ -20,6 +20,7 @@ urlpatterns = patterns('',
     url(r'', include('courses.urls', namespace='courses')),
     url(r'', include('faq.urls', namespace='faq')),
     url(r'', include('students.urls', namespace='students')),
+    url(r'^apply/', include('applications.urls', namespace='applications')),
     url(r'^forum/', include('forum.urls', namespace='forum')),
     url(r'^stats/', include('statistics.urls', namespace='statistics')),
 
