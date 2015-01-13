@@ -1,9 +1,9 @@
 Здравей, {0}
 
-Това е автоматично генериран Email от системата на Hack Bulgaria. Ти получаваш account, за нашата система. 
+Това е автоматично генериран Email от системата на Hack Bulgaria. Ти получаваш account, за нашата система.
 
 Смени паролата си и попълни данните си! :-D
-http://hackbulgaria.com/login/
+https://hackbulgaria.com/login/
 
 Email: {1}
 Password: {2}
