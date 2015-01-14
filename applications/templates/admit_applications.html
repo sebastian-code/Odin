@@ -1,0 +1,20 @@
+{% extends "admin/base_site.html" %}
+{% load i18n l10n %}
+
+{% block content %}
+    <p>{% blocktrans %}Are you sure you want to admit and email the selected {{ objects_name }}? All of the following objects will be admitted and emailed:{% endblocktrans %}</p>
+    {% for student in students %}
+        <ul>{{ student|unordered_list }}</ul>
+    {% endfor %}
+    <form action="" method="post">
+    {% csrf_token %}
+    <div>
+        {% for obj in queryset %}
+            <input type="hidden" name="{{ action_checkbox_name }}" value="{{ obj.pk|unlocalize }}" />
+        {% endfor %}
+        <input type="hidden" name="action" value="admit_applications" />
+        <input type="hidden" name="post" value="yes" />
+        <input type="submit" value="{% trans "Yes, I'm sure" %}" />
+    </div>
+    </form>
+{% endblock %}
