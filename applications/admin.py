@@ -1,5 +1,6 @@
+from django.conf import settings
 from django.contrib import admin
-from django.contrib import messages
+from django.contrib import messages as dj_messages
 from django.contrib.admin import helpers
 from django.core.mail import send_mass_mail
 from django.template.response import TemplateResponse
@@ -20,12 +21,25 @@ class ApplicationAdmin(admin.ModelAdmin):
         if request.POST.get('post'):
             n = queryset.count()
             if n:
-                students = [obj.student.get_full_name() for obj in queryset]
-                students = ','.join(students)
+                mails = []
+                message_template = request.POST.get('message_template') or open(settings.BASE_DIR +
+                                                                                '/applications/templates/admit_template.txt', 'r').read()
+                for obj in queryset:
+                    course = obj.course
+                    student = obj.student
+                    message = message_template.format(student_name=obj.student.get_full_name(),
+                                                      course_name=course,
+                                                      course_start_date=course.start_time)
+                    subject = 'HackBulgaria admition for {0}'.format(course)
+                    mails.append((subject, message, settings.DEFAULT_FROM_EMAIL, (student.email,)))
+
+                send_mass_mail(mails)
+                students = (obj.student for obj in queryset)
+                names = ','.join((obj.get_full_name() for obj in students))
                 self.message_user(
                     request, 'You successfully admitted and emailed {0}'.format(
-                        students),
-                    messages.SUCCESS)
+                        names),
+                    dj_messages.SUCCESS)
             return None
 
         opts = self.model._meta

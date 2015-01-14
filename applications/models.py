@@ -9,6 +9,9 @@ class Application(models.Model):
     class Meta:
         unique_together = ('student', 'course')
 
+    def __str__(self):
+        return 'Application for course <{0}> by <{1}>'.format(self.course, self.student)
+
 
 class ApplicationTask(models.Model):
     course = models.ForeignKey('courses.Course')

@@ -3,10 +3,18 @@
 
 {% block content %}
     <p>{% blocktrans %}Are you sure you want to admit and email the selected {{ objects_name }}? All of the following objects will be admitted and emailed:{% endblocktrans %}</p>
-    {% for student in students %}
-        <ul>{{ student|unordered_list }}</ul>
+
+    {% for obj in queryset %}
+        <ul><strong>{{ obj }}</strong></ul>
     {% endfor %}
-    <form action="" method="post">
+
+
+    <br />
+
+    <p>If you wish to specify the message that'll be sent. Otherwise admit_template.txt will be read.</p>
+    <textarea rows="10", cols="40" name="message_template" form="django"></textarea>
+
+    <form action="" method="post" id="django">
     {% csrf_token %}
     <div>
         {% for obj in queryset %}
@@ -17,4 +25,5 @@
         <input type="submit" value="{% trans "Yes, I'm sure" %}" />
     </div>
     </form>
+
 {% endblock %}
