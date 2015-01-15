@@ -54,7 +54,7 @@
                                 {% elif current_user.is_teacher %}
                                     {{ assignment.course }}
                                     <a href="{% url 'courses:show_course_students' assignment.course.url %}"><span class="fi-address-book"></span> Всички записали курса, </a>
-                                    <a href="{% url 'courses:show_submitted_solutions' assignment.course.url %}"><span class="fi-archive"></span> Всички предадени задачи</a>
+                                    <a href="{% url 'courses:show_submitted_solutions' assignment.course.url %}"><span class="fi-archive"></span> Всички предадени задачи, </a>
                                     <a href="{% url 'applications:show_submitted_applications' assignment.course.url %}"><span class="fi-ticket"></span> Всички кандидатствали</a>
                                 {% endif %}
                             </li>
