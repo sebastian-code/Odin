@@ -37,7 +37,7 @@ def show_submitted_applications(request, course_url):
 
     course = get_object_or_404(Course, url=course_url)
     applications = Application.objects.filter(course=course)
-    return render('show_submitted_applications.html', locals())
+    return render(request, 'show_submitted_applications.html', locals())
 
 
 @csrf_exempt
