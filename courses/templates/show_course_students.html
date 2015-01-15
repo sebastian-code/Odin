@@ -70,7 +70,7 @@
                             <div class="notes" style="display:none;">
                                 {% for note in assignment.usernote_set.all %}
                                     <strong>{{ note.author }}:</strong>
-                                    <small>{{ note.post_time|date:"d m Y" }}</small>
+                                    <small>{{ note.post_time|date:"d-m-Y" }}</small>
                                     <p>{{ note.text }}</p>
                                     <hr>
                                 {% endfor %}
