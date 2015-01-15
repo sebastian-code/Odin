@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+
+{% block meta %}
+    <title>Предаване на задачи за прием</title>
+{% endblock meta %}
+
+{% block content %}
+    <h3>Прием - {{ course }}</h3>
+    {% for task in tasks %}
+        <p>
+            <a href="{{ task.description }}" target="_blank"><h4>{{ task }}</h4></a>
+            <p>
+                Deadline: {{ task.deadline}}
+                <div class="row collapse">
+                    <div class="small-10 columns">
+                        <input type="url" name="repo" data-task="{{ task.id }}" data-send-to="{% url 'students:add_solution' %}" placeholder="Линк към Github repo или файл." class="task-sender" value="{{ task.solution.repo }}">
+                    </div>
+                    <div class="small-1 columns">
+                        <button type="button" class="button postfix">Send</button>
+                    </div>
+                    <div class="small-1 columns">
+                        <span class="postfix radius status-info">
+                            {% if task.solution.repo %}
+                                <i class='fi-check'></i>
+                            {% else %}
+                                <i class='fi-x'></i>
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+            </p>
+            <hr>
+        </p>
+    {% endfor %}
+{% endblock content %}
+
+{% block jsfooter %}
+    <script src="{{ STATIC_URL }}js/solutions.js"></script>
+{% endblock jsfooter %}

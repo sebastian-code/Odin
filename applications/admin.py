@@ -30,7 +30,7 @@ class ApplicationAdmin(admin.ModelAdmin):
                     message = message_template.format(student_name=obj.student.get_full_name(),
                                                       course_name=course,
                                                       course_start_date=course.start_time)
-                    subject = 'HackBulgaria admition for {0}'.format(course)
+                    subject = 'HackBulgaria admission for {0}'.format(course)
                     mails.append((subject, message, settings.DEFAULT_FROM_EMAIL, (student.email,)))
 
                 send_mass_mail(mails)

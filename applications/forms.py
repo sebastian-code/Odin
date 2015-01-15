@@ -1,7 +1,7 @@
 from django import forms
 from django.utils import timezone
 
-from applications.models import Application
+from applications.models import Application, ApplicationSolution
 from students.models import User
 from courses.models import Course
 
@@ -51,4 +51,23 @@ class ApplicationForm(forms.ModelForm):
         model = Application
         fields = (
             'course',
+        )
+
+
+class AddApplicationSolutionForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user')
+        super().__init__(*args, **kwargs)
+
+    def save(self, *args, **kwargs):
+        self.instance.user = self.user
+        return super().save()
+
+    class Meta:
+        model = ApplicationSolution
+
+        fields = (
+            'task',
+            'user',
         )
