@@ -195,6 +195,7 @@ def solutions(request, course_url):
         if task in solutions_by_task:
             task.solution = solutions_by_task[task]
 
+    header_text = 'Задачи: {0}'.format(course.get_course_with_deadlines())
     return render(request, 'solutions.html', locals())
 
 

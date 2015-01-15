@@ -1,13 +1,13 @@
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
+from django.http import HttpResponseForbidden
 from django.shortcuts import redirect, render, get_object_or_404
-from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
 
 from .forms import ApplicationForm, AddApplicationSolutionForm
-from .models import ApplicationSolution, ApplicationTask
+from .models import Application, ApplicationSolution, ApplicationTask
 from courses.models import Course
 
 
@@ -26,6 +26,18 @@ def apply(request):
 
 def thanks(request):
     return render(request, 'thanks.html', locals())
+
+
+@login_required
+def show_submitted_applications(request, course_url):
+    current_user = request.user
+
+    if not current_user.is_teacher():
+        return HttpResponseForbidden()
+
+    course = get_object_or_404(Course, url=course_url)
+    applications = Application.objects.filter(course=course)
+    return render('show_submitted_applications.html', locals())
 
 
 @csrf_exempt
@@ -54,7 +66,7 @@ def solutions(request, course_url):
     course = get_object_or_404(Course, url=course_url)
     tasks = ApplicationTask.objects.select_related('solution').filter(course=course).order_by('name')
 
-    solutions = ApplicationSolution.objects.filter(task__in=tasks, user=request.user).select_related('task')
+    solutions = ApplicationSolution.objects.filter(task__in=tasks, student=request.user).select_related('task')
 
     solutions_by_task = {}
     for solution in solutions:
@@ -63,4 +75,6 @@ def solutions(request, course_url):
     for task in tasks:
         if task in solutions_by_task:
             task.solution = solutions_by_task[task]
+
+    header_text = 'Задачи за прием: {0}'.format(course.get_course_with_deadlines())
     return render(request, 'solutions.html', locals())
