@@ -61,7 +61,7 @@ class AddApplicationSolutionForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
     def save(self, *args, **kwargs):
-        self.instance.user = self.user
+        self.instance.student = self.user
         return super().save()
 
     class Meta:
@@ -69,5 +69,5 @@ class AddApplicationSolutionForm(forms.ModelForm):
 
         fields = (
             'task',
-            'user',
+            'student',
         )
