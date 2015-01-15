@@ -15,7 +15,7 @@ class Application(models.Model):
 
 class ApplicationTask(models.Model):
     course = models.ForeignKey('courses.Course')
-    title = models.CharField(blank=False, max_length=255)
+    name = models.CharField(blank=False, max_length=255)
     description = models.URLField()
 
 
