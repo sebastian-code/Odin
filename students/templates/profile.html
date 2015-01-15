@@ -55,6 +55,7 @@
                                     {{ assignment.course }}
                                     <a href="{% url 'courses:show_course_students' assignment.course.url %}"><span class="fi-address-book"></span> Всички записали курса, </a>
                                     <a href="{% url 'courses:show_submitted_solutions' assignment.course.url %}"><span class="fi-archive"></span> Всички предадени задачи</a>
+                                    <a href="{% url 'applications:show_submitted_applications' assignment.course.url %}"><span class="fi-ticket"></span> Всички кандидатствали</a>
                                 {% endif %}
                             </li>
                         {% endfor %}
@@ -74,7 +75,7 @@
                     <h5>Applications</h5>
                     <ol>
                         {% for application in applications %}
-                            <li><a href="{% url 'applications:solutions' application.course %}">{{ application.course.get_course_with_deadlines }}</a></li>
+                            <li><a href="{% url 'applications:solutions' application.course.url %}">{{ application.course.get_course_with_deadlines }}</a></li>
                         {% endfor %}
                     </ol>
                     {% endif %}
