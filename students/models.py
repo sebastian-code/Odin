@@ -178,6 +178,9 @@ class UserNote(models.Model):
     author = models.ForeignKey(User, null=True, blank=True)
     post_time = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        ordering = ('post_time',)
+
 
 class CheckIn(models.Model):
     mac = models.CharField(max_length=17)
