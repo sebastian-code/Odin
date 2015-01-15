@@ -6,15 +6,14 @@
 {% endblock meta %}
 
 {% block content %}
-    <h3>Прием - {{ course }}</h3>
+    <h3>Прием - {{ course.get_course_with_deadlines }}</h3>
     {% for task in tasks %}
         <p>
             <a href="{{ task.description }}" target="_blank"><h4>{{ task }}</h4></a>
             <p>
-                Deadline: {{ task.deadline}}
                 <div class="row collapse">
                     <div class="small-10 columns">
-                        <input type="url" name="repo" data-task="{{ task.id }}" data-send-to="{% url 'students:add_solution' %}" placeholder="Линк към Github repo или файл." class="task-sender" value="{{ task.solution.repo }}">
+                        <input type="url" name="repo" data-task="{{ task.id }}" data-send-to="{% url 'applications:add_solution' %}" placeholder="Линк към Github repo или файл." class="task-sender" value="{{ task.solution.repo }}">
                     </div>
                     <div class="small-1 columns">
                         <button type="button" class="button postfix">Send</button>

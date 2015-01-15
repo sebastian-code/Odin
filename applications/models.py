@@ -16,9 +16,10 @@ class Application(models.Model):
 class ApplicationTask(models.Model):
     course = models.ForeignKey('courses.Course')
     title = models.CharField(blank=False, max_length=255)
-    url = models.URLField()
+    description = models.URLField()
 
 
 class ApplicationSolution(models.Model):
     task = models.ForeignKey(ApplicationTask)
+    repo = models.URLField()
     user = models.ForeignKey('students.User')
