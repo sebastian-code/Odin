@@ -40,12 +40,12 @@
                         </h4>
                         <ul style="list-style: none; margin-left:0px;">
                             {% if is_teacher_or_hr %}
-                                <li class="fi-mail"><a href="mailto:{{ assignment.user.email }}">{{ assignment.user.email }}</a></li>
+                                <li class="fi-mail"> <a href="mailto:{{ assignment.user.email }}">{{ assignment.user.email }}</a></li>
                             {% endif %}
                             {% if assignment.user.github_account %}
-                                <li class="fi-social-github"><a href="{{ assignment.user.github_account }}">{{ assignment.user.github_account }}</a></li>
+                                <li class="fi-social-github"> <a href="{{ assignment.user.github_account }}">{{ assignment.user.github_account }}</a></li>
                             {% else %}
-                                <li class="fi-social-github">Няма GitHub регистрация!</li>
+                                <li class="fi-social-github"> Няма GitHub регистрация!</li>
                             {% endif %}
                         </ul>
 
