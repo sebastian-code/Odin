@@ -21,5 +21,5 @@ class ApplicationTask(models.Model):
 
 class ApplicationSolution(models.Model):
     task = models.ForeignKey(ApplicationTask)
-    repo = models.URLField()
-    user = models.ForeignKey('students.User')
+    repo = models.URLField(blank=True, null=True)
+    student = models.ForeignKey('students.User')
