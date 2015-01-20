@@ -22,7 +22,6 @@ class ApplicationForm(forms.ModelForm):
 
     def is_valid(self):
         valid = super().is_valid()
-        print('Form', valid)
         if not valid:
             return valid
 
