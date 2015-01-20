@@ -75,7 +75,7 @@
                     <h5>Applications</h5>
                     <ol>
                         {% for application in applications %}
-                            <li><a href="{% url 'applications:solutions' application.course.url %}">{{ application.course.get_course_with_deadlines }}</a></li>
+                            <li><a href="{% url 'applications:solutions' application.course.url %}">{{ application.course.get_course_with_start_time }}</a></li>
                         {% endfor %}
                     </ol>
                     {% endif %}
