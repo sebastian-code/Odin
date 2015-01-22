@@ -13,7 +13,6 @@ django-resized==0.2.4
 django-tinymce==1.5.3
 easy-thumbnails==2.2
 markdown2==2.3.0
-mock==1.0.1
 netaddr==0.7.12
 psycopg2==2.5.4
 sorl-thumbnail==11.12
