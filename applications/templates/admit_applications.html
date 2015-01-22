@@ -8,11 +8,20 @@
         <ul><strong>{{ obj }}</strong></ul>
     {% endfor %}
 
-
     <br />
 
     <p>If you wish to specify the message that'll be sent. Otherwise <strong>admit_template.html</strong> will be read.</p>
-    <p style="float:right">Available variables are: student, student_name, course, course_name and course_start_date. Course and Student have all the data of their respective models.</p>
+    <p>Available variables are:</p>
+    <ul>
+        <li>student,</li>
+        <li>student_name,</li>
+        <li>course,</li>
+        <li>course_name,</li>
+        <li>course_start_date</li>.
+    </ul>
+    <strong>Course and Student have all the data of their respective models.</strong>
+
+    <br />
     <textarea rows="10", cols="40" name="message_template" form="django"></textarea>
 
     <form action="" method="post" id="django">
