@@ -11,7 +11,8 @@
 
     <br />
 
-    <p>If you wish to specify the message that'll be sent. Otherwise admit_template.txt will be read.</p>
+    <p>If you wish to specify the message that'll be sent. Otherwise <strong>admit_template.html</strong> will be read.</p>
+    <p style="float:right">Available variables are: student, student_name, course, course_name and course_start_date. Course and Student have all the data of their respective models.</p>
     <textarea rows="10", cols="40" name="message_template" form="django"></textarea>
 
     <form action="" method="post" id="django">

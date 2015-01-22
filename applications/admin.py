@@ -32,9 +32,11 @@ class ApplicationAdmin(admin.ModelAdmin):
                     student = obj.student
 
                     context = Context({
-                        'student_name': obj.student.get_full_name(),
+                        'course': obj.course,
                         'course_name': course.name,
                         'course_start_date': course.start_time,
+                        'student': obj.student,
+                        'student_name': obj.student.get_full_name(),
                     })
                     message = template.render(context)
                     subject = 'HackBulgaria admission for {0}'.format(course)
