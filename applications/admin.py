@@ -3,7 +3,8 @@ from django.contrib import admin
 from django.contrib import messages as dj_messages
 from django.contrib.admin import helpers
 from django.core.mail import send_mass_mail
-from django.template.loader import render_to_string, get_template
+from django.template import Context, Template
+from django.template.loader import get_template
 from django.template.response import TemplateResponse
 
 from .models import Application
@@ -23,23 +24,19 @@ class ApplicationAdmin(admin.ModelAdmin):
             n = queryset.count()
             if n:
                 mails = []
-                message_template = request.POST.get('message_template')
-                use_default_template = True if not message_template else False
+                form_message_template = request.POST.get('message_template')
+                template = Template(form_message_template) if form_message_template else get_template('admit_template.html')
+
                 for obj in queryset:
                     course = obj.course
                     student = obj.student
 
-                    if use_default_template:
-                        context = {
-                            'student_name': obj.student.get_full_name(),
-                            'course_name': course.name,
-                            'course_start_date': course.start_time,
-                        }
-                        message = render_to_string('admit_template.html', context)
-                    else:
-                        message = message_template.format(student_name=obj.student.get_full_name(),
-                                                          course_name=course,
-                                                          course_start_date=course.start_time)
+                    context = Context({
+                        'student_name': obj.student.get_full_name(),
+                        'course_name': course.name,
+                        'course_start_date': course.start_time,
+                    })
+                    message = template.render(context)
                     subject = 'HackBulgaria admission for {0}'.format(course)
                     mails.append((subject, message, settings.DEFAULT_FROM_EMAIL, (student.email,)))
 
