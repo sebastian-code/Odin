@@ -19,7 +19,6 @@ def apply(request):
             return redirect('applications:thanks')
 
     form = ApplicationForm()
-
     return render(request, 'apply.html', locals())
 
 
