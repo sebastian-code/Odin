@@ -4,6 +4,7 @@ from django.test import TestCase
 from django.utils import timezone
 
 from applications.forms import ApplicationForm, AddApplicationSolutionForm, EMAIL_DUPLICATE_ERROR, NAMES_ERROR
+from applications.models import ApplicationSolution, ApplicationTask
 from courses.models import Course
 from students.models import User
 
@@ -59,3 +60,24 @@ class ApplicationFormTest(TestCase):
         self.assertEqual(given_name, newly_created_user.get_full_name())
         self.assertEqual(given_email, newly_created_user.email)
         self.assertEqual(users_count_after, users_count_before + 1)
+
+
+class AddApplicationSolutionFormTest(TestCase):
+
+    def setUp(self):
+        course = Course.objects.create(
+            name='Test Course',
+            url='test-course',
+            application_until=timezone.now(),
+        )
+        self.user = User.objects.create(email='foo@bar.com')
+        self.task = ApplicationTask.objects.create(course=course,
+                                                   description='task-test',
+                                                   name='task for test')
+
+    def test_saves_correctly(self):
+        form = AddApplicationSolutionForm(data={'task': self.task.pk, 'student': self.user.pk})
+        application_solutions_count_before = ApplicationSolution.objects.count()
+        form.save()
+        application_solutions_count_after = ApplicationSolution.objects.count()
+        self.assertEqual(application_solutions_count_after, application_solutions_count_before + 1)

@@ -35,6 +35,7 @@ class ApplicationForm(forms.ModelForm):
         return True
 
     def save(self):
+        course = self.cleaned_data['course']
         email = self.cleaned_data['email']
         name = self.cleaned_data['name']
         password = User.generate_password()
@@ -54,14 +55,6 @@ class ApplicationForm(forms.ModelForm):
 
 
 class AddApplicationSolutionForm(forms.ModelForm):
-
-    def __init__(self, *args, **kwargs):
-        self.user = kwargs.pop('user')
-        super().__init__(*args, **kwargs)
-
-    def save(self, *args, **kwargs):
-        self.instance.student = self.user
-        return super().save()
 
     class Meta:
         model = ApplicationSolution
