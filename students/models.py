@@ -1,9 +1,5 @@
-import string
-import random
-
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser, BaseUserManager
-from django.contrib.auth.signals import user_logged_in
 from django.core.urlresolvers import reverse
 from django.db import models
 
@@ -82,10 +78,6 @@ class User(AbstractUser):
     @staticmethod
     def is_existing(email):
         return User.objects.filter(email=email).count() > 0
-
-    @staticmethod
-    def generate_password(size=9, chars=string.ascii_uppercase + string.digits):
-        return ''.join(random.choice(chars) for x in range(size))
 
     def get_avatar_url(self):
         if not self.avatar:

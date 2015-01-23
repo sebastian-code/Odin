@@ -63,12 +63,6 @@ class UserModelTest(TestCase):
         self.assertEqual('/media/Kappa.jpg', self.student_user.get_avatar_url())
 
     def test_get_courses(self):
-        self.assertEqual(u'Test Course - 1', self.student_user.get_courses())
-        CourseAssignment.objects.create(
-            user=self.student_user, course=self.course2, group_time=CourseAssignment.LATE)
-        self.assertEqual(u'Test Course - 1; Test Course2 - 2', self.student_user.get_courses())
-
-    def test_get_courses(self):
         self.assertCountEqual([self.course], self.student_user.get_courses())
         assignment2 = CourseAssignment.objects.create(
             user=self.student_user, course=self.course2, group_time=CourseAssignment.LATE)
@@ -77,12 +71,6 @@ class UserModelTest(TestCase):
     def test_is_existing(self):
         self.assertFalse(User.is_existing('referee@real-madrid.com'))
         self.assertTrue(User.is_existing('ivo_student@gmail.com'))
-
-    @mock.patch('students.models.random')
-    def test_generate_password(self, mocked_random):
-        mocked_random.choice = mock.Mock(return_value='1')
-        expected = '111111111'
-        self.assertEqual(expected, User.generate_password())
 
 
 class CourseAssignmentModelTest(TestCase):
