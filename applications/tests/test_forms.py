@@ -37,10 +37,12 @@ class ApplicationFormTest(TestCase):
             application_until=timezone.now(),
             )
         User.objects.create(email='foo@bar.com')
-        form = ApplicationForm(data={'course': 1, 'name': 'Foo Bar', 'email': 'foo@bar.com',
+        form = ApplicationForm(data={'course': course.pk, 'name': 'Foo Bar', 'email': 'foo@bar.com',
                                      'skype': 'foobar', 'phone': '007'})
+        print(form.errors)
+        print(form._errors)
         self.assertFalse(form.is_valid())
-        self.assertEqual(form.errors['email'], EMAIL_DUPLICATE_ERROR)
+        self.assertEqual(form.errors['email'], [EMAIL_DUPLICATE_ERROR])
 
     def test_form_is_not_valid_when_less_than_two_names_given(self):
         course = Course.objects.create(
@@ -48,10 +50,10 @@ class ApplicationFormTest(TestCase):
             url='test-course',
             application_until=timezone.now(),
             )
-        form = ApplicationForm(data={'course': 1, 'name': 'One', 'email': 'foo@bar.com',
+        form = ApplicationForm(data={'course': course.pk, 'name': 'One', 'email': 'foo@bar.com',
         'skype': 'foobar', 'phone': '007'})
         self.assertFalse(form.is_valid())
-        self.assertEqual(form.errors['name'], NAMES_ERROR)
+        self.assertEqual(form.errors['name'], [NAMES_ERROR])
 
     def test_form_creates_an_user_during_save(self):
         users_count_before = User.objects.count()

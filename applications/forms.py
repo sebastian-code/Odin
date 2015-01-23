@@ -26,11 +26,11 @@ class ApplicationForm(forms.ModelForm):
             return valid
 
         if User.is_existing(self.cleaned_data['email']):
-            self.errors['email'] = EMAIL_DUPLICATE_ERROR
+            self.add_error('email', EMAIL_DUPLICATE_ERROR)
             return False
 
         if len(self.cleaned_data['name'].split(' ')) < 2:
-            self.errors['name'] = NAMES_ERROR
+            self.add_error('name', NAMES_ERROR)
             return False
         return True
 
