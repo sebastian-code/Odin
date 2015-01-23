@@ -49,6 +49,7 @@ class ApplicationFormTest(TestCase):
         users_count_before = User.objects.count()
         form = ApplicationForm(data={'course': self.course.pk, 'name': 'One Two', 'email': 'foo@bar.com',
                                      'skype': 'foobar', 'phone': '007'})
+        self.assertTrue(form.is_valid())
         form.save()
         users_count_after = User.objects.count()
         self.assertEqual(users_count_after, users_count_before + 1)
