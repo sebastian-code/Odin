@@ -47,9 +47,15 @@ class ApplicationFormTest(TestCase):
 
     def test_form_creates_an_user_during_save(self):
         users_count_before = User.objects.count()
-        form = ApplicationForm(data={'course': self.course.pk, 'name': 'One Two', 'email': 'foo@bar.com',
+        given_name = 'One Two'
+        given_email = 'foo@bar.com'
+        form = ApplicationForm(data={'course': self.course.pk, 'name': given_name, 'email': given_email,
                                      'skype': 'foobar', 'phone': '007'})
         self.assertTrue(form.is_valid())
         form.save()
         users_count_after = User.objects.count()
+
+        newly_created_user = User.objects.get(email=given_email)
+        self.assertEqual(given_name, newly_created_user.get_full_name())
+        self.assertEqual(given_email, newly_created_user.email)
         self.assertEqual(users_count_after, users_count_before + 1)
