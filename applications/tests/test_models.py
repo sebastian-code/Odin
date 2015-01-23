@@ -40,7 +40,6 @@ class ApplicationModelTest(TestCase):
         self.assertEqual(assignment.pk, actual_assignment.pk)
         self.assertEqual(assignment.pk, actual_assignment.pk)
 
-
     def test_get_assignment_url_when_not_existing(self):
         self.assertIsNone(self.application.get_assignment_url())
 
