@@ -13,7 +13,7 @@ NAMES_ERROR = 'Моля въведете поне две имена.'
 class ApplicationForm(forms.ModelForm):
     course = forms.ModelChoiceField(
         label='За кой курс кандидатстваш',
-        queryset=Course.objects.filter(application_until__gt=timezone.now())
+        queryset=Course.objects.filter(application_until__gte=timezone.now())
     )
     name = forms.CharField(label='Как се казваш', widget=forms.TextInput(attrs={'placeholder': 'Две имена'}), max_length=100)
     email = forms.EmailField(label='Email')
@@ -26,11 +26,11 @@ class ApplicationForm(forms.ModelForm):
             return valid
 
         if User.is_existing(self.cleaned_data['email']):
-            self._errors['email'] = EMAIL_DUPLICATE_ERROR
+            self.errors['email'] = EMAIL_DUPLICATE_ERROR
             return False
 
-        if len(self.cleaned_data['name'].split()) < 2:
-            self._errors['name'] = NAMES_ERROR
+        if len(self.cleaned_data['name'].split(' ')) < 2:
+            self.errors['name'] = NAMES_ERROR
             return False
         return True
 
