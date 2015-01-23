@@ -1,4 +1,5 @@
-from django.core.urlresolvers import reverse
+from django.conf import settings
+from django.core.mail import send_mail
 from django.db import models
 
 from students.models import CourseAssignment
@@ -25,9 +26,12 @@ class Application(models.Model):
     def get_assignment_url(self):
         try:
             assignment = CourseAssignment.objects.get(user=self.student, course=self.course)
-            return reverse('students:assignment', args=[assignment.id])
+            return assignment.get_absolute_url()
         except CourseAssignment.DoesNotExist:
             return None
+
+    def email_student(self, subject, message):
+        send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, (self.student.email,))
 
 
 class ApplicationTask(models.Model):

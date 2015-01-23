@@ -1,4 +1,5 @@
 from django import forms
+from django.template.loader import render_to_string
 from django.utils import timezone
 
 from applications.models import Application, ApplicationSolution
@@ -36,15 +37,25 @@ class ApplicationForm(forms.ModelForm):
 
     def save(self):
         course = self.cleaned_data['course']
+        course_name = course.name
         email = self.cleaned_data['email']
         name = self.cleaned_data['name']
-        password = User.generate_password()
+        password = User.objects.make_random_password()
 
         new_user = User.objects.create_user(email, password)
         new_user.set_full_name(name)
         new_user.save()
 
         self.instance.student = new_user
+
+        context = {
+            'course_name': course_name,
+            'email': new_user.email,
+            'password': password,
+        }
+        message = render_to_string('email_application_submit.html', context)
+        subject = 'HackBulgaria application submitted for {0}'.format(course_name)
+        self.instance.email_student(subject, message)
         return super().save()
 
     class Meta:
