@@ -16,7 +16,10 @@ def apply(request):
     current_user = request.user
 
     if request.method == 'POST':
-        form = ApplicationForm(request.POST)
+        if current_user.is_authenticated():
+            form = ExistingUserApplicationForm(data=request.POST, user=current_user)
+        else:
+            form = ApplicationForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('applications:thanks')
@@ -47,12 +50,12 @@ def apply(request):
             return render(request, 'generic_error.html', {'error_message': error_message})
 
         if last_assignment and last_assignment.is_attending is False:
-            header_text = 'Изглежда, че не сте завършили последният записан курс при нас.\nЩе се наложи да кандидатствате отново за следващият.'
+            header_text = 'Изглежда, че не сте завършили последният записан курс при нас.\n\
+                           Ще се наложи да кандидатствате отново за следващият.'
         elif last_assignment and last_assignment.is_attending:
-            data = current_user.__dict__  # efficient
-            data['name'] = current_user.get_full_name()
-            form = ApplicationForm(data)  # should think of a way to inject data into existing form
+            header_text = 'Радваме се, че сте отново с нас.'
 
+        form = ExistingUserApplicationForm(data=request.POST or None, user=current_user)
         return render(request, 'apply.html', locals())
 
     return render(request, 'apply.html', locals())
