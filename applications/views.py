@@ -31,23 +31,26 @@ def apply(request):
         return render(request, 'generic_error.html', {'error_message': error_message})
 
     if form_courses and current_user.is_authenticated():
-        applications = Application.objects.select_related('course').filter(student=current_user, course__in=form_courses)
+        existing_applications = Application.objects.select_related('course').filter(student=current_user, course__in=form_courses)
 
-        if applications:
-            courses = [str(obj.course) for obj in applications]
+        if existing_applications:
+            courses = [str(obj.course) for obj in existing_applications]
             error_message = 'Вие вече сте кандидатствали за {0}'.format(', '.join(courses))
             return render(request, 'generic_error.html', {'error_message': error_message})
 
-        last_assignment = CourseAssignment.objects.filter(user=current_user).exclude(course__in=form_courses).latest('course__end_time')
-        if last_assignment.is_attending is False:
+        try:
+            last_assignment = CourseAssignment.objects.filter(user=current_user).exclude(course__in=form_courses).latest('course__end_time')
+        except CourseAssignment.DoesNotExist:
+            last_assignment = None
+
+        if last_assignment and last_assignment.is_attending is False:
             header_text = 'Изглежда, че не сте завършили последният записан курс при нас.\nЩе се наложи да кандидатствате отново за следващият.'
-            return render(request, 'apply.html', locals())
-        else:
-            header_text = 'Радваме се, че отново искате да запишете курс при нас.'
+        elif last_assignment and last_assignment.is_attending:
             data = current_user.__dict__  # efficient
             data['name'] = current_user.get_full_name()
             form = ApplicationForm(data)  # should think of a way to inject data into existing form
-            return render(request, 'apply.html', locals())
+
+        return render(request, 'apply.html', locals())
 
     return render(request, 'apply.html', locals())
 
