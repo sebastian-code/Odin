@@ -26,10 +26,11 @@ def apply(request):
     form_courses = form.fields['course'].queryset
 
     if not form_courses:
-        error_message = 'За момента няма курсове, за които да се запишете. Следете блога на HackBulgaria - <a href="blog.hackbulgaria.com">blog.hackbulgaria.com</a>'
+        error_message = 'За момента няма курсове, за които да се запишете. Следете блога на HackBulgaria\n\
+                        или вижте някои от курсовете досега.1'
         return render(request, 'generic_error.html', {'error_message': error_message})
 
-    if current_user.is_authenticated():
+    if form_courses and current_user.is_authenticated():
         applications = Application.objects.select_related('course').filter(student=current_user, course__in=form_courses)
 
         if applications:
