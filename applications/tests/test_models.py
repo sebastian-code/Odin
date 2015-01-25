@@ -53,7 +53,7 @@ class ApplicationModelTest(TestCase):
         self.assertEqual(expected_url, self.application.get_assignment_url())
 
     def test_email_student(self):
-        with self.settings(EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend'):
+        with self.settings(EMAIL_BACKEND='django.core.mail.backends.dummy.EmailBackend):
             subject = 'test_email_student'
             message = 'testing'
             self.application.email_student(subject, message)
