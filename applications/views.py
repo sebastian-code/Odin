@@ -20,7 +20,7 @@ def apply(request):
         form = ApplicationForm(request.POST)
         if form.is_valid():
             form.save()
-        return redirect('applications:thanks')
+            return redirect('applications:thanks')
 
     form = ApplicationForm()
     form_courses = form.fields['course'].queryset
