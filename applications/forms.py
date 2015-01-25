@@ -5,6 +5,7 @@ from django.utils import timezone
 from applications.models import Application, ApplicationSolution
 from students.models import User
 from courses.models import Course
+from students.validators import validate_github, validate_linkedin
 
 
 EMAIL_DUPLICATE_ERROR = 'Този email вече е регистриран.'
@@ -20,6 +21,8 @@ class ApplicationForm(forms.ModelForm):
     email = forms.EmailField(label='Email')
     skype = forms.CharField(label='Skype', max_length=100)
     phone = forms.CharField(label='Телефон', max_length=100)
+    github_account = forms.CharField(label='Github', widget=forms.TextInput(attrs={'placeholder': 'https://github.com/HackBulgaria'}), max_length=100, validators=[validate_github])
+    linkedin_acount = forms.CharField(label='Linkedin', widget=forms.TextInput(attrs={'placeholder': 'https://www.linkedin.com/'}), max_length=100, validators=[validate_linkedin])
 
     def is_valid(self):
         valid = super().is_valid()
@@ -39,10 +42,14 @@ class ApplicationForm(forms.ModelForm):
         course = self.cleaned_data['course']
         course_name = course.name
         email = self.cleaned_data['email']
+        github_account = self.cleaned_data['github_account']
+        linkedin_account = self.cleaned_data['linkedin_account']
         name = self.cleaned_data['name']
         password = User.objects.make_random_password()
 
-        new_user = User.objects.create_user(email, password)
+        new_user = User.objects.create_user(email=email, password=password,
+                                            github_account=github_account,
+                                            linkedin_account=linkedin_account)
         new_user.set_full_name(name)
         new_user.save()
 

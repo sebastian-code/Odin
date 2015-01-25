@@ -27,7 +27,7 @@ def apply(request):
 
     if not form_courses:
         error_message = 'За момента няма курсове, за които да се запишете. Следете блога на HackBulgaria\n\
-                        или вижте някои от курсовете досега.1'
+                        или вижте някои от курсовете досега.'
         return render(request, 'generic_error.html', {'error_message': error_message})
 
     if form_courses and current_user.is_authenticated():
@@ -44,7 +44,8 @@ def apply(request):
             return render(request, 'apply.html', locals())
         else:
             header_text = 'Радваме се, че отново искате да запишете курс при нас.'
-            data = last_assignment.user.__dict__  # efficient
+            data = current_user.__dict__  # efficient
+            data['name'] = current_user.get_full_name()
             form = ApplicationForm(data)  # should think of a way to inject data into existing form
             return render(request, 'apply.html', locals())
 
