@@ -6,8 +6,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
 
-from .forms import ApplicationForm, AddApplicationSolutionForm
-from .models import Application, ApplicationSolution, ApplicationTask
+from applications.forms import ApplicationForm, AddApplicationSolutionForm, ExistingUserApplicationForm
+from applications.models import Application, ApplicationSolution, ApplicationTask
 from courses.models import Course
 from students.models import CourseAssignment
 
@@ -21,12 +21,12 @@ def apply(request):
             form.save()
             return redirect('applications:thanks')
 
-    form = ApplicationForm()
+    form = ApplicationForm(request.POST or None)
     form_courses = form.fields['course'].queryset
 
     if not form_courses:
         error_message = 'За момента няма курсове, за които да се запишете. Следете блога на HackBulgaria\n\
-                        или вижте някои от курсовете досега.'
+                         или вижте някои от курсовете досега.'
         return render(request, 'generic_error.html', {'error_message': error_message})
 
     if form_courses and current_user.is_authenticated():
