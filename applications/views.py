@@ -23,9 +23,13 @@ def apply(request):
         return redirect('applications:thanks')
 
     form = ApplicationForm()
+    form_courses = form.fields['course'].queryset
+
+    if not form_courses:
+        error_message = 'За момента няма курсове, за които да се запишете. Следете блога на HackBulgaria - <a href="blog.hackbulgaria.com">blog.hackbulgaria.com</a>'
+        return render(request, 'generic_error.html', {'error_message': error_message})
 
     if current_user.is_authenticated():
-        form_courses = form.fields['course'].queryset
         applications = Application.objects.select_related('course').filter(student=current_user, course__in=form_courses)
 
         if applications:
@@ -43,7 +47,7 @@ def apply(request):
             last_name = last_assignment.last_name
             data = last_assignment.__dict__ # efficient
             form = ApplicationForm(data) # should think of a way to inject data into existing form
-            return render(request, 'apply.html', locals())
+            return render(request, 'apply.html', locals(    ))
 
     return render(request, 'apply.html', locals())
 
