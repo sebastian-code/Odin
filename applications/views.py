@@ -38,9 +38,13 @@ def apply(request):
             return render(request, 'generic_error.html', {'error_message': error_message})
 
         try:
-            last_assignment = CourseAssignment.objects.filter(user=current_user).exclude(course__in=form_courses).latest('course__end_time')
+            last_assignment = CourseAssignment.objects.filter(user=current_user).latest('course__end_time')
         except CourseAssignment.DoesNotExist:
             last_assignment = None
+
+        if last_assignment and last_assignment.course in form_courses:
+            error_message = 'Вие вече сте приет в {0}! :)'.format(last_assignment.course)
+            return render(request, 'generic_error.html', {'error_message': error_message})
 
         if last_assignment and last_assignment.is_attending is False:
             header_text = 'Изглежда, че не сте завършили последният записан курс при нас.\nЩе се наложи да кандидатствате отново за следващият.'
