@@ -48,7 +48,7 @@ def apply(request):
             last_name = last_assignment.last_name
             data = last_assignment.__dict__ # efficient
             form = ApplicationForm(data) # should think of a way to inject data into existing form
-            return render(request, 'apply.html', locals(    ))
+            return render(request, 'apply.html', locals())
 
     return render(request, 'apply.html', locals())
 
