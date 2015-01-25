@@ -3,10 +3,10 @@ from datetime import datetime
 from django.test import TestCase
 from django.utils import timezone
 
-from applications.forms import ApplicationForm, AddApplicationSolutionForm, EMAIL_DUPLICATE_ERROR, NAMES_ERROR
+from applications.forms import ApplicationForm, AddApplicationSolutionForm, ExistingUserApplicationForm, EMAIL_DUPLICATE_ERROR, NAMES_ERROR
 from applications.models import ApplicationSolution, ApplicationTask
 from courses.models import Course
-from students.models import User
+from students.models import CourseAssignment, User
 
 
 class ApplicationFormTest(TestCase):
@@ -78,6 +78,25 @@ class AddApplicationSolutionFormTest(TestCase):
     def test_saves_correctly(self):
         form = AddApplicationSolutionForm(data={'task': self.task.pk, 'student': self.user.pk})
         application_solutions_count_before = ApplicationSolution.objects.count()
+        self.assertTrue(form.is_valid())
         form.save()
         application_solutions_count_after = ApplicationSolution.objects.count()
         self.assertEqual(application_solutions_count_after, application_solutions_count_before + 1)
+
+
+class ExistingUserApplicationFormTest(TestCase):
+
+    def setUp(self):
+        self.user = User.objects.create(email='foo@bar.com')
+        self.form = ExistingUserApplicationForm(data={'group_time': 1}, user=self.user)
+
+    def test_group_time_choices(self):
+        form_choices = self.form.fields['group_time'].queryset
+        self.assertEqual(CourseAssignment.GROUP_TIME_CHOICES, form_choices)
+
+    def test_saves_correctly(self):
+        assigments_count_before = CourseAssignment.objects.count()
+        self.assertTrue(self.form.is_valid())
+        self.form.save()
+        assigments_count_after = CourseAssignment.objects.count()
+        self.assertEqual(assigments_count_after, assigments_count_before + 1)
