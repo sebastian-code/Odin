@@ -133,6 +133,7 @@ class CourseAssignment(models.Model):
     is_attending = models.BooleanField(default=True)
     points = models.PositiveIntegerField(default=0)
     user = models.ForeignKey(User)
+    is_online = models.BooleanField(default=False)
 
     def __str__(self):
         return '<{}> {} - {}'.format(self.user.get_full_name(), self.course, self.group_time)
