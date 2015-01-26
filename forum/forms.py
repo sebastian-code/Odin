@@ -22,7 +22,7 @@ class AddTopicForm(forms.ModelForm):
 
     class Meta:
         model = Topic
-        exclude = ['author', 'category']
+        fields = ('title', 'text',)
 
 
 class AddCommentForm(forms.ModelForm):
