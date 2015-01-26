@@ -23,7 +23,7 @@ class ApplicationForm(forms.ModelForm):
     skype = forms.CharField(label='Skype', max_length=100)
     phone = forms.CharField(label='Телефон', max_length=100)
     github_account = forms.CharField(label='Github', widget=forms.TextInput(attrs={'placeholder': 'https://github.com/HackBulgaria'}), max_length=100, validators=[validate_github], required=False)
-    linkedin_acount = forms.CharField(label='Linkedin', widget=forms.TextInput(attrs={'placeholder': 'https://www.linkedin.com/'}), max_length=100, validators=[validate_linkedin], required=False)
+    linkedin_account = forms.CharField(label='Linkedin', widget=forms.TextInput(attrs={'placeholder': 'https://www.linkedin.com/'}), max_length=100, validators=[validate_linkedin], required=False)
 
     def clean(self):
         cleaned_data = super(ApplicationForm, self).clean()

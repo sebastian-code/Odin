@@ -70,7 +70,6 @@ class ApplicationFormTest(TestCase):
                                      'skype': 'foobar', 'phone': '007', 'linkedin_account': given_linkedin,
                                      'github_account': given_github})
         self.assertTrue(form.is_valid())
-        print(form.cleaned_data)
         form_user = form.save().student
         self.assertEqual(given_github, form_user.github_account)
         self.assertEqual(given_linkedin, form_user.linkedin_account)
@@ -111,8 +110,8 @@ class ExistingUserApplicationFormTest(TestCase):
 
     def test_group_time_choices(self):
         form_choices = self.form.fields['group_time'].choices
-        self.assertIn(CourseAssignment.GROUP_TIME_CHOICES[0], form_choices)
-        self.assertIn(CourseAssignment.GROUP_TIME_CHOICES[1], form_choices)
+        for choice in CourseAssignment.GROUP_TIME_CHOICES:
+            self.assertIn(choice, form_choices)
 
     def test_saves_correctly(self):
         assigments_count_before = CourseAssignment.objects.count()
