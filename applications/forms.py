@@ -28,8 +28,8 @@ class ApplicationForm(forms.ModelForm):
     linkedin_account = forms.CharField(label='Linkedin', widget=forms.TextInput(attrs={'placeholder': 'https://www.linkedin.com/'}), max_length=100, required=False)
 
     def __init__(self, *args, **kwargs):
-        self.user = kwargs.pop('user')
-        self.not_registered = not self.user.is_authenticated()
+        self.user = kwargs.pop('user', None)
+        self.not_registered = not self.user.is_authenticated() if self.user else True
         super(ApplicationForm, self).__init__(*args, **kwargs)
 
     def clean(self):

@@ -6,7 +6,7 @@ from django.utils import timezone
 from applications.forms import ApplicationForm, AddApplicationSolutionForm, ExistingAttendingUserApplicationForm, EMAIL_DUPLICATE_ERROR, NAMES_ERROR
 from applications.models import ApplicationSolution, ApplicationTask
 from courses.models import Course
-from students.models import CourseAssignment, User
+from students.models import CourseAssignment, EducationInstitution, User
 
 
 class ApplicationFormTest(TestCase):
@@ -17,6 +17,7 @@ class ApplicationFormTest(TestCase):
             url='test-course',
             application_until=timezone.now(),
         )
+        self.education = EducationInstitution.objects.create(name='MIT')
 
     def test_form_has_name_placeholder(self):
         form = ApplicationForm()
@@ -36,13 +37,13 @@ class ApplicationFormTest(TestCase):
     def test_form_is_not_valid_when_duplicate_email_given(self):
         User.objects.create(email='foo@bar.com')
         form = ApplicationForm(data={'course': self.course.pk, 'name': 'Foo Bar', 'email': 'foo@bar.com',
-                                     'skype': 'foobar', 'phone': '007'})
+                                     'education': self.education.pk, 'skype': 'foobar', 'phone': '007'})
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors['email'], [EMAIL_DUPLICATE_ERROR])
 
     def test_form_is_not_valid_when_less_than_two_names_given(self):
         form = ApplicationForm(data={'course': self.course.pk, 'name': 'One', 'email': 'foo@bar.com',
-                                     'skype': 'foobar', 'phone': '007'})
+                                     'education': self.education.pk, 'skype': 'foobar', 'phone': '007'})
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors['name'], [NAMES_ERROR])
 
@@ -51,7 +52,7 @@ class ApplicationFormTest(TestCase):
         given_name = 'One Two'
         given_email = 'foo@bar.com'
         form = ApplicationForm(data={'course': self.course.pk, 'name': given_name, 'email': given_email,
-                                     'skype': 'foobar', 'phone': '007'})
+                                     'education': self.education.pk, 'skype': 'foobar', 'phone': '007'})
         self.assertTrue(form.is_valid())
         form.save()
         users_count_after = User.objects.count()
@@ -67,8 +68,8 @@ class ApplicationFormTest(TestCase):
         given_github = 'https://github.com/HackBulgaria/Odin'
         given_linkedin = 'https://www.linkedin.com/'
         form = ApplicationForm(data={'course': self.course.pk, 'name': given_name, 'email': given_email,
-                                     'skype': 'foobar', 'phone': '007', 'linkedin_account': given_linkedin,
-                                     'github_account': given_github})
+                                     'education': self.education.pk, 'skype': 'foobar', 'phone': '007',
+                                     'linkedin_account': given_linkedin, 'github_account': given_github})
         self.assertTrue(form.is_valid())
         form_user = form.save().student
         self.assertEqual(given_github, form_user.github_account)
