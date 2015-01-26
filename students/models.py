@@ -4,6 +4,7 @@ import random
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.contrib.auth.signals import user_logged_in
+from django.dispatch import receiver
 from django.core.urlresolvers import reverse
 from django.db import models
 
@@ -95,6 +96,7 @@ class User(AbstractUser):
     def get_courses(self):
         return [ca.course for ca in self.courseassignment_set.all()]
 
+    @receiver(user_logged_in)
     def log_hr_login(sender, user, request, **kwargs):
         if user.status == User.HR:
             log = HrLoginLog(user=user)
@@ -108,8 +110,6 @@ class User(AbstractUser):
 
     def is_student(self):
         return self.status == self.STUDENT
-
-    user_logged_in.connect(log_hr_login)
 
 
 class HrLoginLog(models.Model):
