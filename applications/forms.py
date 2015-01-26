@@ -46,7 +46,6 @@ class ApplicationForm(forms.ModelForm):
 
     def save(self):
         if self.not_registered:
-            course = self.cleaned_data['course']
             email = self.cleaned_data['email']
             name = self.cleaned_data['name']
             password = User.objects.make_random_password()
@@ -58,10 +57,11 @@ class ApplicationForm(forms.ModelForm):
             new_user.save()
             self.instance.student = new_user
         else:
-            course = self.user.course
             email = self.user.email
             self.instance.student = self.user
+            password = ''  # wouldn't get shown anyway
 
+        course = self.cleaned_data['course']
         context = {
             'application_until': course.application_until,
             'course_name': course.name,
