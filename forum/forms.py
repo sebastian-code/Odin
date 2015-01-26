@@ -26,7 +26,6 @@ class AddTopicForm(forms.ModelForm):
 
 
 class AddCommentForm(forms.ModelForm):
-    # text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}))
 
     def __init__(self, *args, **kwargs):
         self.author = kwargs.pop('author')
