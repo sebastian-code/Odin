@@ -10,8 +10,7 @@ def send_topic_subscribe_email(topic, comment):
     emails = []
     for user in users:
         if comment.author != user:
-            message = open(
-                settings.BASE_DIR + '/forum/templates/email/send_topic_subscribe_email.txt', 'r', encoding='utf-8').read()
+            message = open(settings.BASE_DIR + '/forum/templates/email/send_topic_subscribe_email.txt', 'r', encoding='utf-8').read()
 
             message = message.format(
                 name=user.get_full_name(),
