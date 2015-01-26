@@ -1,5 +1,5 @@
-Здравей {},
+Здравей {name},
 
-Нов коментар беше получен в пуснат в тема в форума на HackBulgaria.
+Нов коментар беше пуснат в тема, за която сте абонирани във форума на HackBulgaria.
 
-https://{}/forum/topic/{}#{}
+https://{domain}/forum/topic/{topic}#{comment}
