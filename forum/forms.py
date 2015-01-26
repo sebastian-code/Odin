@@ -2,7 +2,7 @@ from django import forms
 
 from tinymce.widgets import TinyMCE
 
-from .models import Topic, Comment
+from forum.models import Topic, Comment
 
 EMPTY_COMMENT_ERROR = 'Празни коментари не са позволени'
 

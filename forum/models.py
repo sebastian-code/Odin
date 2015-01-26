@@ -1,4 +1,7 @@
+from django.conf import settings
+from django.core.mail import send_mass_mail
 from django.db import models
+from django.template.loader import render_to_string
 
 from students.models import User
 
@@ -25,6 +28,34 @@ class Topic(models.Model):
 
     def __str__(self):
         return self.title
+
+    def send_mails(self, comment):
+        users = User.objects.filter(subscribed_topics=self)
+        emails = []
+        for user in users:
+            if comment.author != user:
+                context = {
+                    'author': comment.author.get_full_name(),
+                    'name': user.get_full_name(),
+                    'domain': settings.DOMAIN,
+                    'topic': self.title,
+                    'topic_id': self.id,
+                    'comment': comment.id
+                }
+
+                message = render_to_string('send_topic_subscribe_email.html', context)
+                emails.append((
+                    'Hack Bulgaria new comment in "{0}"'.format(self.title),
+                    message,
+                    settings.DEFAULT_FROM_EMAIL,
+                    (user.email,)
+                ))
+        send_mass_mail(emails)
+
+    def subscribe(self, user):
+        if self not in user.subscribed_topics:
+            user.subscribed_topics.add(self)
+            user.save()
 
 
 class Comment(models.Model):
