@@ -63,10 +63,10 @@ class ApplicationForm(forms.ModelForm):
             self.instance.student = self.user
 
         context = {
-            'not_registered': self.not_registered,
             'application_until': course.application_until,
             'course_name': course.name,
             'email': email,
+            'not_registered': self.not_registered,
             'password': password,
         }
         message = render_to_string('email_application_submit.html', context)

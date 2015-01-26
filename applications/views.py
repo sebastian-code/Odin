@@ -29,8 +29,16 @@ def apply(request):
         if form.is_valid():
             form.save()
             return redirect('applications:thanks')
+        return render(request, 'apply.html', locals())
 
-    form = ApplicationForm(data=request.POST or None, user=current_user)
+    if current_user.is_authenticated():
+        user_data = {'name': current_user.get_full_name(),
+                     'email': current_user.email,
+                     'education': current_user.studies_at,
+                     'github_account': current_user.github_account,
+                     'linkedin_account': current_user.linkedin_account}
+
+    form = ApplicationForm(data=user_data or None, user=current_user)
     form_courses = form.fields['course'].queryset
 
     if not form_courses:
