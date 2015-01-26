@@ -158,8 +158,7 @@ class CheckInCaseViewsTest(TestCase):
         before_log = HrLoginLog.objects.count()
         self.client.login(username='ivan_hr@gmail.com', password='1234')
         after_log = HrLoginLog.objects.count()
-
-        self.assertEqual(before_log + 1, after_log)
+        self.assertEqual(after_log, before_log + 1)
 
 
 class CourseAssignmentViewsTest(TestCase):
