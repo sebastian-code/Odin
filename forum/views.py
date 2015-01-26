@@ -26,15 +26,16 @@ def show_topic(request, topic_id):
     topic = get_object_or_404(Topic, pk=topic_id)
     comments = Comment.objects.filter(topic=topic).select_related('author').order_by('id')
 
-    data = request.POST or None
-    form = AddCommentForm(data, author=request.user, topic=topic)
+    if current_user.is_authenticated():
+        data = request.POST or None
+        form = AddCommentForm(data, author=request.user, topic=topic)
 
-    if request.method == 'POST' and current_user.is_authenticated():
-        if form.is_valid():
-            comment = form.save()
-            topic.subscribe(current_user)
-            topic.send_mails(comment)
-            return redirect('forum:show_topic', topic_id=topic_id)
+        if request.method == 'POST':
+            if form.is_valid():
+                comment = form.save()
+                topic.subscribe(current_user)
+                topic.send_mails(comment)
+                return redirect('forum:show_topic', topic_id=topic_id)
 
     return render(request, 'show_topic.html', locals())
 
