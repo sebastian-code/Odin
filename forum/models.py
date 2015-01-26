@@ -53,7 +53,7 @@ class Topic(models.Model):
         send_mass_mail(emails)
 
     def subscribe(self, user):
-        if self not in user.subscribed_topics:
+        if self not in user.subscribed_topics.all():
             user.subscribed_topics.add(self)
             user.save()
 
