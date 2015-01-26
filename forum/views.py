@@ -34,7 +34,7 @@ def show_topic(request, topic_id):
         if form.is_valid():
             comment = form.save()
             subscribe_to_topic(current_user, topic)
-            # send_topic_subscribe_email(topic, comment)
+            send_topic_subscribe_email(topic, comment)
             return redirect('forum:show_topic', topic_id=topic_id)
 
     return render(request, 'show_topic.html', locals())
