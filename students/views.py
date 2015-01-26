@@ -11,11 +11,11 @@ from django.db import IntegrityError
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
 
-from .forms import UserEditForm, AddNote, VoteForPartner, AddSolutionForm, GiveFeedbackForm
-from .models import CourseAssignment, UserNote, User, CheckIn, Task, Solution
 from applications.models import Application
 from courses.models import Course, Certificate
 from forum.models import Comment
+from students.forms import UserEditForm, AddNote, VoteForPartner, AddSolutionForm, GiveFeedbackForm
+from students.models import CourseAssignment, UserNote, User, CheckIn, Task, Solution
 
 
 def login(request):

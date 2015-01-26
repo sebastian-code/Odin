@@ -6,7 +6,7 @@ from django.db import models
 from django_resized import ResizedImageField
 
 from courses.models import Course, Partner, Task
-from .validators import validate_mac, validate_github, validate_linkedin
+from students.validators import validate_mac, validate_github, validate_linkedin
 
 
 class UserManager(BaseUserManager):
@@ -32,6 +32,13 @@ class UserManager(BaseUserManager):
     def create_superuser(self, email, password, first_name='', last_name='', works_at=None):
         return self.__create_user(email, password, True, True,
                                   first_name, last_name, works_at)
+
+
+class EducationInstitution(models.Model):
+    name = models.CharField(max_length=128)
+
+    def __str__(self):
+        return self.name
 
 
 class User(AbstractUser):
@@ -61,6 +68,7 @@ class User(AbstractUser):
     linkedin_account = models.URLField(validators=[validate_linkedin], null=True, blank=True)
     mac = models.CharField(validators=[validate_mac], max_length=17, null=True, blank=True)
     subscribed_topics = models.ManyToManyField('forum.Topic', blank=True)
+    studies_at = models.ForeignKey(EducationInstitution, null=True, blank=True)
     works_at = models.CharField(null=True, blank=True, max_length='40')
 
     AbstractUser._meta.get_field('email')._unique = True
@@ -109,7 +117,7 @@ class User(AbstractUser):
         elif len(names) == 1:
             self.first_name = names[0]
         else:
-            raise ValueError("Not valid full_name.")
+            raise ValueError('Not valid full_name.')
 
 
 class HrLoginLog(models.Model):
@@ -128,7 +136,7 @@ class CourseAssignment(models.Model):
 
     course = models.ForeignKey(Course)
     cv = models.FileField(blank=True, null=True, upload_to='cvs')
-    favourite_partners = models.ManyToManyField(Partner, blank=True)
+    favourite_partners = models.ManyToManyField(Partner, null=True, blank=True)
     group_time = models.SmallIntegerField(choices=GROUP_TIME_CHOICES)
     is_attending = models.BooleanField(default=True)
     points = models.PositiveIntegerField(default=0)
