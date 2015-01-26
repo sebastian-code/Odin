@@ -5,8 +5,7 @@ from django.utils import timezone
 from applications.models import Application, ApplicationSolution
 from courses.models import Course
 from students.models import CourseAssignment
-from students.models import User
-from students.validators import validate_github, validate_linkedin
+from students.models import EducationInstitution, User
 
 
 EMAIL_DUPLICATE_ERROR = 'Този email вече е регистриран.'
@@ -19,11 +18,18 @@ class ApplicationForm(forms.ModelForm):
         queryset=Course.objects.filter(application_until__gte=timezone.now())
     )
     name = forms.CharField(label='Как се казваш', widget=forms.TextInput(attrs={'placeholder': 'Две имена'}), max_length=100)
+    education = forms.ModelChoiceField(
+        label='Къде учиш',
+        queryset=EducationInstitution.objects.all())
     email = forms.EmailField(label='Email')
     skype = forms.CharField(label='Skype', max_length=100)
     phone = forms.CharField(label='Телефон', max_length=100)
     github_account = forms.CharField(label='Github', widget=forms.TextInput(attrs={'placeholder': 'https://github.com/HackBulgaria'}), max_length=100, required=False)
     linkedin_account = forms.CharField(label='Linkedin', widget=forms.TextInput(attrs={'placeholder': 'https://www.linkedin.com/'}), max_length=100, required=False)
+
+    # def __init__(self, *args, **kwargs):
+    #     self.user = kwargs.pop('user')
+    #     super(ExistingAttendingUserApplicationForm, self).__init__(*args, **kwargs)
 
     def clean(self):
         cleaned_data = super(ApplicationForm, self).clean()
@@ -69,7 +75,7 @@ class ApplicationForm(forms.ModelForm):
         )
 
 
-class ExistingUserApplicationForm(forms.ModelForm):
+class ExistingAttendingUserApplicationForm(forms.ModelForm):
 
     course = forms.ModelChoiceField(
         label='За кой курс кандидатстваш',
@@ -78,7 +84,7 @@ class ExistingUserApplicationForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user')
-        super(ExistingUserApplicationForm, self).__init__(*args, **kwargs)
+        super(ExistingAttendingUserApplicationForm, self).__init__(*args, **kwargs)
 
     def save(self):
         self.instance.user = self.user

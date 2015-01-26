@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
 
-from applications.forms import ApplicationForm, AddApplicationSolutionForm, ExistingUserApplicationForm
+from applications.forms import ApplicationForm, AddApplicationSolutionForm, ExistingAttendingUserApplicationForm
 from applications.models import Application, ApplicationSolution, ApplicationTask
 from courses.models import Course
 from students.models import CourseAssignment
@@ -15,16 +15,22 @@ from students.models import CourseAssignment
 def apply(request):
     current_user = request.user
 
+    if current_user.is_authenticated():
+        try:
+            latest_assignment = CourseAssignment.objects.filter(user=current_user).latest('course__end_time')
+        except CourseAssignment.DoesNotExist:
+            latest_assignment = None
+
     if request.method == 'POST':
-        if current_user.is_authenticated():
-            form = ExistingUserApplicationForm(data=request.POST, user=current_user)
+        if latest_assignment and latest_assignment.is_attending:
+            form = ExistingAttendingUserApplicationForm(data=request.POST, user=current_user)
         else:
-            form = ApplicationForm(request.POST)
+            form = ApplicationForm(request.POST, user=current_user)
         if form.is_valid():
             form.save()
             return redirect('applications:thanks')
 
-    form = ApplicationForm(request.POST or None)
+    form = ApplicationForm(request.POST or None, user=current_user)
     form_courses = form.fields['course'].queryset
 
     if not form_courses:
@@ -32,32 +38,23 @@ def apply(request):
                          или вижте някои от курсовете досега.'
         return render(request, 'generic_error.html', {'error_message': error_message})
 
-    if form_courses and current_user.is_authenticated():
-        existing_applications = Application.objects.select_related('course').filter(student=current_user, course__in=form_courses)
+    if latest_assignment and latest_assignment.course in form_courses:
+        error_message = 'Вие вече сте приет в {0}! :)'.format(latest_assignment.course)
+        return render(request, 'generic_error.html', {'error_message': error_message})
 
-        if existing_applications:
-            courses = [str(obj.course) for obj in existing_applications]
-            error_message = 'Вие вече сте кандидатствали за {0}'.format(', '.join(courses))
-            return render(request, 'generic_error.html', {'error_message': error_message})
+    existing_applications = Application.objects.select_related('course').filter(student=current_user, course__in=form_courses)
 
-        try:
-            last_assignment = CourseAssignment.objects.filter(user=current_user).latest('course__end_time')
-        except CourseAssignment.DoesNotExist:
-            last_assignment = None
+    if existing_applications:
+        courses = [str(obj.course) for obj in existing_applications]
+        error_message = 'Вие вече сте кандидатствали за {0}'.format(', '.join(courses))
+        return render(request, 'generic_error.html', {'error_message': error_message})
 
-        if last_assignment and last_assignment.course in form_courses:
-            error_message = 'Вие вече сте приет в {0}! :)'.format(last_assignment.course)
-            return render(request, 'generic_error.html', {'error_message': error_message})
-
-        if last_assignment and last_assignment.is_attending is False:
-            header_text = 'Изглежда, че не сте завършили последният записан курс при нас.\n\
-                           Ще се наложи да кандидатствате отново за следващият.'
-        elif last_assignment and last_assignment.is_attending:
-            header_text = 'Радваме се, че сте отново с нас.'
-
-        form = ExistingUserApplicationForm(data=request.POST or None, user=current_user)
-        return render(request, 'apply.html', locals())
-
+    if latest_assignment and not latest_assignment.is_attending:
+        header_text = 'Изглежда, че не сте завършили последният записан курс при нас.\n\
+                       Ще се наложи да кандидатствате отново за следващият.'
+    elif latest_assignment and latest_assignment.is_attending:
+        header_text = 'Радваме се, че сте отново с нас.'
+        form = ExistingAttendingUserApplicationForm(data=request.POST or None, user=current_user)
     return render(request, 'apply.html', locals())
 
 

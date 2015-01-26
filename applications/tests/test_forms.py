@@ -3,7 +3,7 @@ from datetime import datetime
 from django.test import TestCase
 from django.utils import timezone
 
-from applications.forms import ApplicationForm, AddApplicationSolutionForm, ExistingUserApplicationForm, EMAIL_DUPLICATE_ERROR, NAMES_ERROR
+from applications.forms import ApplicationForm, AddApplicationSolutionForm, ExistingAttendingUserApplicationForm, EMAIL_DUPLICATE_ERROR, NAMES_ERROR
 from applications.models import ApplicationSolution, ApplicationTask
 from courses.models import Course
 from students.models import CourseAssignment, User
@@ -97,7 +97,7 @@ class AddApplicationSolutionFormTest(TestCase):
         self.assertEqual(application_solutions_count_after, application_solutions_count_before + 1)
 
 
-class ExistingUserApplicationFormTest(TestCase):
+class ExistingAttendingUserApplicationFormTest(TestCase):
 
     def setUp(self):
         course = Course.objects.create(
@@ -106,7 +106,7 @@ class ExistingUserApplicationFormTest(TestCase):
             application_until=timezone.now(),
         )
         self.user = User.objects.create(email='foo@bar.com')
-        self.form = ExistingUserApplicationForm(data={'course': course.pk, 'group_time': 1}, user=self.user)
+        self.form = ExistingAttendingUserApplicationForm(data={'course': course.pk, 'group_time': 1}, user=self.user)
 
     def test_group_time_choices(self):
         form_choices = self.form.fields['group_time'].choices
