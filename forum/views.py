@@ -4,9 +4,9 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 
 
-from .models import Category, Topic, Comment
-from .forms import AddTopicForm, AddCommentForm
-from .helper import send_topic_subscribe_email, subscribe_to_topic
+from forum.models import Category, Topic, Comment
+from forum.forms import AddTopicForm, AddCommentForm
+from forum.helpers import send_topic_subscribe_email, subscribe_to_topic
 
 
 def show_categories(request):
