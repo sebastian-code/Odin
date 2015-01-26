@@ -25,12 +25,12 @@ def apply(request):
         if latest_assignment and latest_assignment.is_attending:
             form = ExistingAttendingUserApplicationForm(data=request.POST, user=current_user)
         else:
-            form = ApplicationForm(request.POST, user=current_user)
+            form = ApplicationForm(data=request.POST, user=current_user)
         if form.is_valid():
             form.save()
             return redirect('applications:thanks')
 
-    form = ApplicationForm(request.POST or None, user=current_user)
+    form = ApplicationForm(data=request.POST or None, user=current_user)
     form_courses = form.fields['course'].queryset
 
     if not form_courses:

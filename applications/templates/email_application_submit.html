@@ -1,7 +1,10 @@
 Вие кандидатствахте за {{ course_name }}.
+{% if not_registered %}
 Направихме ви регистрация в системата ни.
 Вашите username и парола са {{ email }} / {{ password }}.
-
+{% endif %}
 
 Може да влезете от https://hackbulgaria.com/login и да си разгледате профила в https://hackbulgaria.com/accounts/profile/ .
 За да си смените паролата - https://hackbulgaria.com/accounts/edit/ .
+
+Очаквайте отговор от нас до {{ application_until }}.
