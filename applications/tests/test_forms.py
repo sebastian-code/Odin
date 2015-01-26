@@ -46,7 +46,7 @@ class ApplicationFormTest(TestCase):
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors['name'], [NAMES_ERROR])
 
-    def test_form_creates_an_user_during_save(self):
+    def test_form_creates_an_user_during_save_without_social_accounts(self):
         users_count_before = User.objects.count()
         given_name = 'One Two'
         given_email = 'foo@bar.com'
@@ -60,6 +60,20 @@ class ApplicationFormTest(TestCase):
         self.assertEqual(given_name, newly_created_user.get_full_name())
         self.assertEqual(given_email, newly_created_user.email)
         self.assertEqual(users_count_after, users_count_before + 1)
+
+    def test_form_creates_an_user_during_save_with_social_accounts(self):
+        given_name = 'One Two'
+        given_email = 'foo@bar.com'
+        given_github = 'https://github.com/HackBulgaria/Odin'
+        given_linkedin = 'https://www.linkedin.com/'
+        form = ApplicationForm(data={'course': self.course.pk, 'name': given_name, 'email': given_email,
+                                     'skype': 'foobar', 'phone': '007', 'linkedin_account': given_linkedin,
+                                     'github_account': given_github})
+        self.assertTrue(form.is_valid())
+        print(form.cleaned_data)
+        form_user = form.save().student
+        self.assertEqual(given_github, form_user.github_account)
+        self.assertEqual(given_linkedin, form_user.linkedin_account)
 
 
 class AddApplicationSolutionFormTest(TestCase):
@@ -87,17 +101,23 @@ class AddApplicationSolutionFormTest(TestCase):
 class ExistingUserApplicationFormTest(TestCase):
 
     def setUp(self):
+        course = Course.objects.create(
+            name='Test Course',
+            url='test-course',
+            application_until=timezone.now(),
+        )
         self.user = User.objects.create(email='foo@bar.com')
-        self.form = ExistingUserApplicationForm(data={'group_time': 1}, user=self.user)
+        self.form = ExistingUserApplicationForm(data={'course': course.pk, 'group_time': 1}, user=self.user)
 
     def test_group_time_choices(self):
-        form_choices = self.form.fields['group_time'].queryset
-        self.assertEqual(CourseAssignment.GROUP_TIME_CHOICES, form_choices)
+        form_choices = self.form.fields['group_time'].choices
+        self.assertIn(CourseAssignment.GROUP_TIME_CHOICES[0], form_choices)
+        self.assertIn(CourseAssignment.GROUP_TIME_CHOICES[1], form_choices)
 
     def test_saves_correctly(self):
         assigments_count_before = CourseAssignment.objects.count()
         self.assertTrue(self.form.is_valid())
-        self.form.save()
+        form_result = self.form.save()
         assigments_count_after = CourseAssignment.objects.count()
         self.assertEqual(assigments_count_after, assigments_count_before + 1)
-        self.assertIs(CourseAssignment.objects.last(), self.form.instance)
+        self.assertEqual(CourseAssignment.objects.last(), form_result)

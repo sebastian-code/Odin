@@ -41,15 +41,15 @@ class ApplicationForm(forms.ModelForm):
         course = self.cleaned_data['course']
         course_name = course.name
         email = self.cleaned_data['email']
-        github_account = self.cleaned_data['github_account']
-        linkedin_account = self.cleaned_data['linkedin_account']
+        github_account = self.cleaned_data.get('github_account', '')
+        linkedin_account = self.cleaned_data.get('linkedin_account', '')
         name = self.cleaned_data['name']
         password = User.objects.make_random_password()
 
-        new_user = User.objects.create_user(email=email, password=password,
-                                            github_account=github_account,
-                                            linkedin_account=linkedin_account)
+        new_user = User.objects.create_user(email=email, password=password)
         new_user.set_full_name(name)
+        new_user.linkedin_account = linkedin_account
+        new_user.github_account = github_account
         new_user.save()
 
         self.instance.student = new_user
