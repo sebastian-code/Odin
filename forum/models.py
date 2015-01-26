@@ -31,3 +31,6 @@ class Comment(models.Model):
     text = models.TextField(blank=False)
     author = models.ForeignKey(User)
     topic = models.ForeignKey(Topic)
+
+    def __str__(self):
+        return self.text
