@@ -100,3 +100,4 @@ class ExistingUserApplicationFormTest(TestCase):
         self.form.save()
         assigments_count_after = CourseAssignment.objects.count()
         self.assertEqual(assigments_count_after, assigments_count_before + 1)
+        self.assertIs(CourseAssignment.objects.last(), self.form.instance)
