@@ -29,4 +29,4 @@ deploy-update:
 
 
 
-.PHONY: clean pip-update deploy-update
+.PHONY: help clean pip-update deploy-update
