@@ -1,6 +1,7 @@
 from django import forms
 
 from tinymce.widgets import TinyMCE
+from pagedown.widgets import PagedownWidget
 
 from forum.models import Topic, Comment
 
@@ -8,7 +9,7 @@ EMPTY_COMMENT_ERROR = 'Празни коментари не са позволе�
 
 
 class AddTopicForm(forms.ModelForm):
-    text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}))
+    text = forms.CharField(widget=PagedownWidget())
 
     def __init__(self, *args, **kwargs):
         self.author = kwargs.pop('author')
@@ -26,7 +27,6 @@ class AddTopicForm(forms.ModelForm):
 
 
 class AddCommentForm(forms.ModelForm):
-
     def __init__(self, *args, **kwargs):
         self.author = kwargs.pop('author')
         self.topic = kwargs.pop('topic')
@@ -41,11 +41,7 @@ class AddCommentForm(forms.ModelForm):
         model = Comment
         fields = ('text',)
         widgets = {
-            'text': TinyMCE(attrs={
-                'cols': 10,
-                'rows': 10,
-                'placeholder': 'Вашият отговор!',
-            }),
+            'text': PagedownWidget()
         }
         error_messages = {
             'text': {'required': EMPTY_COMMENT_ERROR}
