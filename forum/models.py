@@ -57,6 +57,11 @@ class Topic(models.Model):
             user.subscribed_topics.add(self)
             user.save()
 
+    def unsubscribe(self, user):
+        if self in user.subscribed_topics.all():
+            user.subscribed_topics.remove(self)
+            user.save()
+
 
 class Comment(models.Model):
     text = models.TextField(blank=False)

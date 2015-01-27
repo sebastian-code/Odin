@@ -399,7 +399,6 @@ class SolutionViewsTest(TestCase):
     #     })
 
     #     after_adding = Solution.objects.count()
-
     #     self.assertEqual(before_adding + 1, after_adding)
     #     self.assertEqual(200, response.status_code)
 

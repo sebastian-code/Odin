@@ -33,7 +33,9 @@ def show_topic(request, topic_id):
         if request.method == 'POST':
             if form.is_valid():
                 comment = form.save()
-                topic.subscribe(current_user)
+                is_new_topic = comments.count() < 2
+                if is_new_topic:
+                    topic.subscribe(current_user)
                 topic.send_mails(comment)
                 return redirect('forum:show_topic', topic_id=topic_id)
 
@@ -43,16 +45,14 @@ def show_topic(request, topic_id):
 @login_required
 def unsubscribe(request, topic_id):
     topic = get_object_or_404(Topic, pk=topic_id)
-    request.user.subscribed_topics.remove(topic)
-    request.user.save()
+    topic.unsubscribe(request.user)
     return HttpResponse(status=200)
 
 
 @login_required
 def subscribe(request, topic_id):
     topic = get_object_or_404(Topic, pk=topic_id)
-    request.user.subscribed_topics.add(topic)
-    request.user.save()
+    topic.subscribe(request.user)
     return HttpResponse(status=200)
 
 
