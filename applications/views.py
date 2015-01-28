@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
 
-from applications.forms import ApplicationForm, AddApplicationSolutionForm, ExistingAttendingUserApplicationForm
+from applications.forms import ApplicationForm, AddApplicationSolutionForm, ExistingUserApplicationForm, ExistingAttendingUserApplicationForm
 from applications.models import Application, ApplicationSolution, ApplicationTask
 from courses.models import Course
 from students.models import CourseAssignment
@@ -14,46 +14,41 @@ from students.models import CourseAssignment
 
 def apply(request):
     current_user = request.user
-
     latest_assignment = None
+
     if current_user.is_authenticated():
         try:
             latest_assignment = CourseAssignment.objects.filter(user=current_user).latest('course__end_time')
         except CourseAssignment.DoesNotExist:
-            latest_assignment = None
+            pass
 
     if request.method == 'POST':
         if latest_assignment and latest_assignment.is_attending:
             form = ExistingAttendingUserApplicationForm(data=request.POST, user=current_user)
+        elif current_user.is_authenticated():
+            form = ExistingUserApplicationForm(data=request.POST, user=current_user)
         else:
-            form = ApplicationForm(data=request.POST, user=current_user)
+            form = ApplicationForm(data=request.POST)
         if form.is_valid():
             form.save()
             return redirect('applications:thanks')
         return render(request, 'apply.html', locals())
 
-    user_data = None
     if current_user.is_authenticated():
-        user_data = {'name': current_user.get_full_name(),
-                     'email': current_user.email,
-                     'education': current_user.studies_at,
-                     'github_account': current_user.github_account,
-                     'linkedin_account': current_user.linkedin_account}
+        form = ExistingUserApplicationForm(data=request.POST or None, user=current_user)
+    else:
+        form = ApplicationForm()
 
-    form = ApplicationForm(data=user_data or None, user=current_user)
     form_courses = form.fields['course'].queryset
-
     if not form_courses:
         error_message = 'За момента няма курсове, за които да се запишете. Следете блога на HackBulgaria\n\
                          или вижте някои от курсовете досега.'
         return render(request, 'generic_error.html', {'error_message': error_message})
-
-    if latest_assignment and latest_assignment.course in form_courses:
+    elif getattr(latest_assignment, 'course', None) in form_courses:
         error_message = 'Вие вече сте приет в {0}! :)'.format(latest_assignment.course)
         return render(request, 'generic_error.html', {'error_message': error_message})
 
     existing_applications = Application.objects.filter(student=current_user.pk, course__in=form_courses)
-
     if existing_applications:
         courses = [str(obj.course) for obj in existing_applications]
         error_message = 'Вие вече сте кандидатствали за {0}'.format(', '.join(courses))
@@ -93,23 +88,19 @@ def add_solution(request):
         task=request.POST['task'],
     ).first()
 
-    if solution:
-        form = AddApplicationSolutionForm(request.POST, instance=solution, student=request.user)
-    else:
-        form = AddApplicationSolutionForm(request.POST, student=request.user)
+    form = AddApplicationSolutionForm(request.POST, instance=solution or None, user=request.user)
 
     if form.is_valid():
-        form.save()
+        solution = form.save()
         return HttpResponse(status=200)
-
     return HttpResponse(status=422)
 
 
 @login_required
 def solutions(request, course_url):
     course = get_object_or_404(Course, url=course_url)
-    tasks = ApplicationTask.objects.select_related('solution').filter(course=course).order_by('name')
-    solutions = ApplicationSolution.objects.filter(task__in=tasks, student=request.user).select_related('task')
+    tasks = ApplicationTask.objects.select_related('course').filter(course=course).order_by('name')
+    solutions = ApplicationSolution.objects.select_related('task').filter(task__in=tasks, student=request.user)
 
     solutions_by_task = {}
     for solution in solutions:

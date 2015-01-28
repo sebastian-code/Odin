@@ -39,8 +39,14 @@ class ApplicationTask(models.Model):
     description = models.URLField()
     name = models.CharField(blank=False, max_length=255)
 
+    def __str__(self):
+        return self.name
+
 
 class ApplicationSolution(models.Model):
     repo = models.URLField(blank=True, null=True)
     student = models.ForeignKey('students.User')
     task = models.ForeignKey(ApplicationTask)
+
+    # def __str__(self):
+    #     return '{student} - {task}'.format(**self._dict)
