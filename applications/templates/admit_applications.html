@@ -22,7 +22,7 @@
     <strong>To use the variables <i>{% autoescape on %} {{ var }} {% endautoescape %}</i>.Course and Student have all the data of their respective models.</strong>
 
     <br />
-    <textarea rows="10", cols="40" name="message_template" form="django"></textarea>
+    <textarea rows="10", cols="40" name="message_template" form="django" placeholder="{{ default_text }}"></textarea>
 
     <form action="" method="post" id="django">
     {% csrf_token %}
