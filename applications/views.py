@@ -15,6 +15,7 @@ from students.models import CourseAssignment
 def apply(request):
     current_user = request.user
 
+    latest_assignment = None
     if current_user.is_authenticated():
         try:
             latest_assignment = CourseAssignment.objects.filter(user=current_user).latest('course__end_time')
@@ -31,6 +32,7 @@ def apply(request):
             return redirect('applications:thanks')
         return render(request, 'apply.html', locals())
 
+    user_data = None
     if current_user.is_authenticated():
         user_data = {'name': current_user.get_full_name(),
                      'email': current_user.email,
@@ -50,7 +52,7 @@ def apply(request):
         error_message = 'Вие вече сте приет в {0}! :)'.format(latest_assignment.course)
         return render(request, 'generic_error.html', {'error_message': error_message})
 
-    existing_applications = Application.objects.select_related('course').filter(student=current_user, course__in=form_courses)
+    existing_applications = Application.objects.filter(student=current_user.pk, course__in=form_courses)
 
     if existing_applications:
         courses = [str(obj.course) for obj in existing_applications]
@@ -107,7 +109,6 @@ def add_solution(request):
 def solutions(request, course_url):
     course = get_object_or_404(Course, url=course_url)
     tasks = ApplicationTask.objects.select_related('solution').filter(course=course).order_by('name')
-
     solutions = ApplicationSolution.objects.filter(task__in=tasks, student=request.user).select_related('task')
 
     solutions_by_task = {}
@@ -119,4 +120,4 @@ def solutions(request, course_url):
             task.solution = solutions_by_task[task]
 
     header_text = 'Задачи за прием: {0}'.format(course.get_course_with_deadlines())
-    return render(request, 'solutions.html', locals())
+    return render(request, 'admission_solutions.html', locals())
