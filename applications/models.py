@@ -48,5 +48,5 @@ class ApplicationSolution(models.Model):
     student = models.ForeignKey('students.User')
     task = models.ForeignKey(ApplicationTask)
 
-    # def __str__(self):
-    #     return '{student} - {task}'.format(**self._dict)
+    def __str__(self):
+        return '{0} - {1}'.format(self.student, self.task)
