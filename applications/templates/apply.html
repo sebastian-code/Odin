@@ -6,16 +6,16 @@
 {% endblock meta %}
 
 {% block content %}
-<div class="row">
     <h3>{{ header_text }}</h3>
-    <div class="large-12 columns">
-        <div class="panel">
-            <form method="POST">
-                {% csrf_token %}
-                {{ form }}
-                <button>Давай</button>
-            </form>
+    <div class="row">
+        <div class="large-12 columns">
+            <div class="panel">
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ form }}
+                    <button>Давай</button>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 {% endblock content %}
