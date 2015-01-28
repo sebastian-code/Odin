@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.db import models
 
@@ -95,6 +96,9 @@ class User(AbstractUser):
     def get_courses(self):
         return [ca.course for ca in self.courseassignment_set.all()]
 
+    def send_email(self, subject, message):
+        send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, (self.email,))
+
     def log_hr_login(sender, user, request, **kwargs):
         if user.status == User.HR:
             log = HrLoginLog(user=user)
@@ -139,6 +143,7 @@ class CourseAssignment(models.Model):
     favourite_partners = models.ManyToManyField(Partner, null=True, blank=True)
     group_time = models.SmallIntegerField(choices=GROUP_TIME_CHOICES)
     is_attending = models.BooleanField(default=True)
+    is_online = models.BooleanField(default=False)
     points = models.PositiveIntegerField(default=0)
     user = models.ForeignKey(User)
 
