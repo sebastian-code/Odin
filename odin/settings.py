@@ -30,6 +30,7 @@ INSTALLED_APPS = (
     'markdown_deux',
     'tinymce',
     'debug_panel',
+    'pagedown',
 
     'courses',
     'faq',

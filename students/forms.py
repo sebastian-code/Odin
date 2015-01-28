@@ -1,7 +1,8 @@
 from django import forms
 from django.utils.translation import ugettext as _
 
-from tinymce.widgets import TinyMCE
+from pagedown.widgets import PagedownWidget
+
 
 from .models import User, UserNote, CourseAssignment, Solution, StudentStartedWorkingAt
 from courses.models import Partner
@@ -50,7 +51,7 @@ class UserEditForm(forms.ModelForm):
 
 
 class AddNote(forms.ModelForm):
-    text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}))
+    text = forms.CharField(widget=PagedownWidget())
 
     def __init__(self, *args, **kwargs):
         self.author = kwargs.pop('author')

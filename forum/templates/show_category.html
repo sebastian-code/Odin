@@ -5,28 +5,34 @@
 {% endblock meta %}
 
 {% block content %}
-    <div class="large-12 columns">
-<div class="row">
-<table>
-    <thead>
-        <tr>
-            <th width="700">Тема</th>
-            <th width="250">Автор</th>
-            <th width="180">Дата</th>
-            <th width="100">Отговори</th>
-        </tr>
-    </thead>
-    <tbody>
-    {% for topic in topics %}
-        <tr>
-            <td><a href="{% url 'forum:show_topic' topic.id %}">{{ topic.title }}</a></td>
-            <td>{{ topic.author.get_full_name }}</td>
-            <td>{{ topic.date|date:"d-m-Y" }}</td>
-            <td>{{ topic.comments_count }}</td>
-        </tr>
-    {% endfor %}
-    </tbody>
-</table>
-<a href="{% url 'forum:add_topic' category.id %}"><button>Отвори нова тема</button></a>
+<ul class="breadcrumbs">
+    <li><a href="{% url 'forum:forum' %}">Форум</a></li>
+    <li class="current"><a href="#">{{ category }}</a></li>
+</ul>
+
+<div class="large-12 columns">
+    <div class="row">
+        <table>
+            <thead>
+                <tr>
+                    <th width="700">Тема</th>
+                    <th width="250">Автор</th>
+                    <th width="180">Дата</th>
+                    <th width="100">Отговори</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for topic in topics %}
+                <tr>
+                    <td><a href="{% url 'forum:show_topic' topic.id %}">{{ topic.title }}</a></td>
+                    <td>{{ topic.author.get_full_name }}</td>
+                    <td>{{ topic.date|date:"d-m-Y" }}</td>
+                    <td>{{ topic.comments_count }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    <a href="{% url 'forum:add_topic' category.id %}"><button>Отвори нова тема</button></a>
+    </div>
 </div>
 {% endblock content %}

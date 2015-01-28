@@ -8,6 +8,13 @@
 {% endblock meta %}
 
 {% block content %}
+
+<ul class="breadcrumbs">
+    <li><a href="{% url 'forum:forum' %}">Форум</a></li>
+    <li><a href="{% url 'forum:show_category' topic.category.id %}">{{ topic.category }}</a></li>
+    <li class="current"><a href="#">{{ topic.title }}</a></li>
+</ul>
+
 <div class="row">
     <div class="large-12 columns">
         <div class="row">
