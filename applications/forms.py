@@ -95,7 +95,7 @@ class ExistingUserApplicationForm(forms.ModelForm):
         message = render_to_string('email_application_submit.html', context)
         subject = 'HackBulgaria application submitted for {0}'.format(course.name)
         self.instance.student = self.user
-        self.instance.email_student(subject, message)
+        self.user.send_email(subject, message)
         return super().save()
 
     class Meta:
@@ -126,8 +126,8 @@ class ExistingAttendingUserApplicationForm(forms.ModelForm):
         }
         message = render_to_string('email_application_submit.html', context)
         subject = 'HackBulgaria application submitted for {0}'.format(course.name)
-        self.instance.student = self.user
-        self.instance.email_student(subject, message)
+        self.instance.user = self.user
+        self.user.send_email(subject, message)
         return super().save()
 
     class Meta:

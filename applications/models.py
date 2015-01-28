@@ -1,5 +1,3 @@
-from django.conf import settings
-from django.core.mail import send_mail
 from django.db import models
 
 from students.models import CourseAssignment
@@ -31,7 +29,7 @@ class Application(models.Model):
             return None
 
     def email_student(self, subject, message):
-        send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, (self.student.email,))
+        self.student.send_email(subject, message)
 
 
 class ApplicationTask(models.Model):

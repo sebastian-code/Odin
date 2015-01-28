@@ -76,29 +76,6 @@ class ApplicationFormTest(TestCase):
         self.assertEqual(given_github, form_user.github_account)
         self.assertEqual(given_linkedin, form_user.linkedin_account)
 
-    def test_form_doesnt_create_an_user_if_registered_and_uses_the_existing_one(self):
-        given_name = 'One Two'
-        given_email = 'foo@bar.com'
-        given_github = 'https://github.com/HackBulgaria/Odin'
-        given_linkedin = 'https://www.linkedin.com/'
-
-        given_user = User.objects.create(email=given_email)
-        form = ApplicationForm(data={'course': self.course.pk, 'name': given_name,
-                                     'email': given_email,
-                                     'education': self.education.pk, 'skype': 'foobar', 'phone': '007',
-                                     'linkedin_account': given_linkedin, 'github_account': given_github},
-                               user=given_user)
-        users_count_before = User.objects.count()
-
-        self.assertFalse(form.not_registered)
-        self.assertTrue(form.is_valid())
-
-        form_user = form.save().student
-        users_count_after = User.objects.count()
-
-        self.assertEqual(users_count_after, users_count_before)
-        self.assertIs(given_user, form_user)
-
 
 class AddApplicationSolutionFormTest(TestCase):
 
@@ -114,7 +91,7 @@ class AddApplicationSolutionFormTest(TestCase):
                                                    name='task for test')
 
     def test_saves_correctly(self):
-        form = AddApplicationSolutionForm(data={'task': self.task.pk, 'student': self.user.pk})
+        form = AddApplicationSolutionForm(data={'task': self.task.pk, 'student': self.user.pk}, user=self.user)
         application_solutions_count_before = ApplicationSolution.objects.count()
         self.assertTrue(form.is_valid())
         form.save()
