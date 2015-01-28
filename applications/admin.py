@@ -7,7 +7,7 @@ from django.template import Context, Template
 from django.template.loader import get_template
 from django.template.response import TemplateResponse
 
-from .models import Application
+from applications.models import Application, ApplicationTask, ApplicationSolution
 
 
 class ApplicationAdmin(admin.ModelAdmin):
@@ -68,3 +68,5 @@ class ApplicationAdmin(admin.ModelAdmin):
                                 context, current_app=self.admin_site.name)
 
 admin.site.register(Application, ApplicationAdmin)
+admin.site.register(ApplicationTask)
+admin.site.register(ApplicationSolution)
