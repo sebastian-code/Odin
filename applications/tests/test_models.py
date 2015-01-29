@@ -56,8 +56,10 @@ class ApplicationModelTest(TestCase):
         with self.settings(EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend'):
             subject = 'test_email_student'
             message = 'testing'
+
             self.application.email_student(subject, message)
             sent_mail = mail.outbox[0]
 
             self.assertEqual(len(mail.outbox), 1)
             self.assertEqual(subject, sent_mail.subject)
+            self.assertEqual(message, sent_mail.body)

@@ -56,7 +56,7 @@ class ApplicationForm(forms.ModelForm):
             'application_until': course.application_until,
             'course_name': course.name,
             'email': email,
-            'not_registered': True,
+            'was_registered': True,
             'password': password,
         }
         message = render_to_string('email_application_submit.html', context)
@@ -90,7 +90,7 @@ class ExistingUserApplicationForm(forms.ModelForm):
             'application_until': course.application_until,
             'course_name': course.name,
             'email': self.user.email,
-            'not_registered': False,
+            'was_registered': False,
         }
         message = render_to_string('email_application_submit.html', context)
         subject = 'HackBulgaria application submitted for {0}'.format(course.name)
@@ -122,7 +122,7 @@ class ExistingAttendingUserApplicationForm(forms.ModelForm):
             'application_until': course.application_until,
             'course_name': course.name,
             'email': self.user.email,
-            'not_registered': False,
+            'was_registered': False,
         }
         message = render_to_string('email_application_submit.html', context)
         subject = 'HackBulgaria application submitted for {0}'.format(course.name)
