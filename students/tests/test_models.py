@@ -102,8 +102,28 @@ class UserModelTest(TestCase):
         hr_logs_count_before = HrLoginLog.objects.count()
         self.client.login(username=self.hr_user.email, password='1234')
         hr_logs_count_after = HrLoginLog.objects.count()
-
         self.assertEqual(hr_logs_count_before + 1, hr_logs_count_after)
+
+    def test_set_full_name_with_blank_name(self):
+        with self.assertRaises(ValueError):
+            self.student_user.set_full_name('')
+
+    def test_set_full_name_with_only_one_name(self):
+        previous_last_name = self.student_user.last_name
+
+        self.student_user.set_full_name('A')
+        self.assertEqual('A', self.student_user.first_name)
+        self.assertEqual(previous_last_name, self.student_user.last_name)
+
+    def test_set_full_name_with_two_names(self):
+        self.student_user.set_full_name('A B')
+        self.assertEqual('A', self.student_user.first_name)
+        self.assertEqual('B', self.student_user.last_name)
+
+    def test_set_full_name_with_more_than_two_names(self):
+        self.student_user.set_full_name('A B C D')
+        self.assertEqual('A', self.student_user.first_name)
+        self.assertEqual('D', self.student_user.last_name)
 
 
 class EducationInstitutionModelTest(TestCase):
