@@ -2,24 +2,29 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
+import students.validators
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('students', '0002_auto_20150115_1846'),
+        ('students', '0002_courseassignment_is_online'),
     ]
 
     operations = [
         migrations.CreateModel(
             name='EducationInstitution',
             fields=[
-                ('id', models.AutoField(auto_created=True, serialize=False, primary_key=True, verbose_name='ID')),
+                ('id', models.AutoField(serialize=False, auto_created=True, verbose_name='ID', primary_key=True)),
                 ('name', models.CharField(max_length=128)),
             ],
             options={
             },
             bases=(models.Model,),
+        ),
+        migrations.AlterModelOptions(
+            name='usernote',
+            options={'ordering': ('post_time',)},
         ),
         migrations.AddField(
             model_name='user',
@@ -30,7 +35,13 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='courseassignment',
             name='favourite_partners',
-            field=models.ManyToManyField(blank=True, to='courses.Partner'),
+            field=models.ManyToManyField(blank=True, null=True, to='courses.Partner'),
+            preserve_default=True,
+        ),
+        migrations.AlterField(
+            model_name='solution',
+            name='repo',
+            field=models.URLField(validators=[students.validators.validate_github]),
             preserve_default=True,
         ),
     ]
