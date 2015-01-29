@@ -236,7 +236,6 @@ def add_solution(request):
     if form.is_valid():
         form.save()
         return HttpResponse(status=200)
-
     return HttpResponse(status=422)
 
 

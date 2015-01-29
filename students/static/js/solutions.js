@@ -12,6 +12,7 @@ $(document).ready(function() {
             url: sendTo,
             data: {
                 task: task,
+                repo: repo,
             }
         })
         .done(function(data) {

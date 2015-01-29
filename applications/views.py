@@ -90,15 +90,18 @@ def show_submitted_applications(request, course_url):
 @login_required
 @require_http_methods(['POST'])
 def add_solution(request):
-    task = ApplicationTask.objects.filter(id=request.POST['task']).first()
     solution = ApplicationSolution.objects.filter(
         student=request.user,
-        task=task,
+        task=request.POST['task'],
     ).first()
-    form = AddApplicationSolutionForm(request.POST, instance=solution or None, user=request.user)
+
+    if solution:
+        form = AddApplicationSolutionForm(request.POST, instance=solution, user=request.user)
+    else:
+        form = AddApplicationSolutionForm(request.POST, user=request.user)
 
     if form.is_valid():
-        solution = form.save()
+        form.save()
         return HttpResponse(status=200)
     return HttpResponse(status=422)
 

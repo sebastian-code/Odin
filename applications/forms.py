@@ -153,4 +153,5 @@ class AddApplicationSolutionForm(forms.ModelForm):
 
         fields = (
             'task',
+            'repo'
         )

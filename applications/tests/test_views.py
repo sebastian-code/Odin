@@ -281,33 +281,33 @@ class ApplicationSolutionViewsTest(TestCase):
 
     # TODO: Write isolated tests first starting from students.forms where
     # The form is based from.
-    # def test_edit_solution(self):
-    #     self.client.login(username='ivo_student@gmail.com', password='123')
+    def test_edit_solution(self):
+        self.client.login(username='ivo_student@gmail.com', password='123')
 
-    #     before_adding = ApplicationSolution.objects.count()
-    #     response = self.client.post(reverse('applications:add_solution'),
-    #                                 {
-    #         'task': self.green_task.pk,
-    #         'repo': 'https://github.com/HackBulgaria/OdinG',
-    #     })
+        before_adding = ApplicationSolution.objects.count()
+        response = self.client.post(reverse('applications:add_solution'),
+                                    {
+            'task': self.green_task.pk,
+            'repo': 'https://github.com/HackBulgaria/OdinG',
+        })
 
-    #     self.assertEqual(200, response.status_code)
-    #     self.assertEqual(before_adding + 1, ApplicationSolution.objects.count())
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(before_adding + 1, ApplicationSolution.objects.count())
 
-    #     solution = ApplicationSolution.objects.get(task=self.green_task)
-    #     self.assertEqual('https://github.com/HackBulgaria/OdinG', solution.repo)
+        solution = ApplicationSolution.objects.get(task=self.green_task)
+        self.assertEqual('https://github.com/HackBulgaria/OdinG', solution.repo)
 
-    #     response = self.client.post(reverse('applications:add_solution'),
-    #                                 {
-    #         'task': self.green_task.pk,
-    #         'repo': 'https://github.com/HackBulgaria/Odin2',
-    #     })
-    #     self.assertEqual('https://github.com/HackBulgaria/Odin2', solution.repo)
+        response = self.client.post(reverse('applications:add_solution'),
+                                    {
+            'task': self.green_task.pk,
+            'repo': 'https://github.com/HackBulgaria/Odin2',
+        })
+        self.assertEqual('https://github.com/HackBulgaria/Odin2', solution.repo)
 
-    #     after_adding = ApplicationSolution.objects.count()
+        after_adding = ApplicationSolution.objects.count()
 
-    #     self.assertEqual(before_adding + 1, after_adding)
-    #     self.assertEqual(200, response.status_code)
+        self.assertEqual(before_adding + 1, after_adding)
+        self.assertEqual(200, response.status_code)
 
     def test_submit_solutions_not_for_anonymous_users(self):
         response = self.client.get(
