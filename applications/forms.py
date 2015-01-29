@@ -56,7 +56,7 @@ class ApplicationForm(forms.ModelForm):
             'application_until': course.application_until,
             'course_name': course.name,
             'email': email,
-            'was_registered': True,
+            'was_registered': False,
             'password': password,
         }
         message = render_to_string('email_application_submit.html', context)
