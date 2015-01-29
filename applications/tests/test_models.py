@@ -2,7 +2,7 @@ from django.core import mail
 from django.test import TestCase
 from django.utils import timezone
 
-from applications.models import Application
+from applications.models import Application, ApplicationTask, ApplicationSolution
 from courses.models import Course
 from students.models import CourseAssignment, User
 
@@ -63,3 +63,26 @@ class ApplicationModelTest(TestCase):
             self.assertEqual(len(mail.outbox), 1)
             self.assertEqual(subject, sent_mail.subject)
             self.assertEqual(message, sent_mail.body)
+
+
+class ApplicationSolutionTest(TestCase):
+
+    def setUp(self):
+        self.course = Course.objects.create(
+            name='Test Course',
+            url='test-course',
+            application_until=timezone.now(),
+        )
+        self.student = User.objects.create(
+            email='foo@bar.com'
+        )
+        self.task_url = 'https://github.com/HackBulgaria/Frontend-JavaScript-1/tree/master/week1/2-jQuery-Gauntlet'
+        self.task = ApplicationTask.objects.create(
+            course=self.course, description=self.task_url, name='<2> jQuery-Gauntlet')
+        self.solution_url = 'https://github.com/syndbg/HackBulgaria/'
+        self.solution = ApplicationSolution.objects.create(
+            task=self.task, student=self.student, repo=self.solution_url)
+
+    def test_string_representation(self):
+        expected = '{0} - {1}'.format(self.student, self.task)
+        self.assertEqual(expected, str(self.solution))
