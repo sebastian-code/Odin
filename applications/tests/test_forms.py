@@ -1,4 +1,5 @@
 from datetime import datetime
+from unittest.mock import patch
 
 from django.core import mail
 from django.template.loader import render_to_string
@@ -74,7 +75,9 @@ class ApplicationFormTest(TestCase):
         self.assertEqual(self.given_github, form_user.github_account)
         self.assertEqual(self.given_linkedin, form_user.linkedin_account)
 
-    def test_form_emails_user(self):
+    @patch('django.contrib.auth.models.BaseUserManager.make_random_password')
+    def test_form_emails_user(self, mocked_random_password):
+        mocked_random_password.return_value = '1234'
         with self.settings(EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend'):
             self.form.is_valid()
             result = self.form.save()
@@ -83,6 +86,7 @@ class ApplicationFormTest(TestCase):
             subject = 'HackBulgaria application submitted for {0}'.format(result_course.name)
             context = {
                 'application_until': result_course.application_until,
+                'password': '1234',
                 'course_name': result_course.name,
                 'email': result.student.email,
                 'was_registered': False,
