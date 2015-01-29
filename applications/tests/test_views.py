@@ -302,6 +302,8 @@ class ApplicationSolutionViewsTest(TestCase):
             'task': self.green_task.pk,
             'repo': 'https://github.com/HackBulgaria/Odin2',
         })
+
+        solution = ApplicationSolution.objects.get(task=self.green_task)
         self.assertEqual('https://github.com/HackBulgaria/Odin2', solution.repo)
 
         after_adding = ApplicationSolution.objects.count()
