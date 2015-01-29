@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block meta %}
+    <title>{{ course }} - кандидатури | HackBulgaria</title>
+    {{ form.media }}
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/assignment.css" />
+{% endblock meta %}
+
+{% block content %}
+<div class="row">
+    {% for application in applications %}
+        <div class="medium-12 columns">
+            <div class="panel">
+                <div class="row">
+                    <div class="medium-3 columns">
+                        <img style="width: 200px;" src="{{ application.student.get_avatar_url }}"
+                        class="th">
+                    </div>
+
+                    <div class="medium-9 columns">
+                    {% if application.is_admitted %}
+                        <a target="_blank" href="{{ application.get_assignment_url }}"><span class="fi-crown" style="float:right; font-size:30px;"> </span></a>
+                    {% endif %}
+                    <h4>
+                        {{ application.student.get_full_name }}
+                    </h4>
+                    <ul style="list-style: none; margin-left:0px;">
+                        <li class="fi-mail"> <a href="mailto:{{ application.student.email }}">{{ application.student.email }}</a></li>
+                        {% if application.student.github_account %}
+                            <li class="fi-social-github"> <a href="{{ application.student.github_account }}">{{ application.student.github_account }}</a></li>
+                        {% else %}
+                            <li class="fi-social-github">Няма GitHub регистрация!</li>
+                        {% endif %}
+
+                        {% with solutions=application.student.applicationsolution_set.all %}
+                            {% if solutions %}
+                               <p>Предадени задачи:</p>
+                               {% for solution in solutions %}
+                                    <strong>Task: {{ solution.task.name }}</strong> - <a href="{{ solution.repo }} ">{{ solution.repo }}</a>
+                               {% endfor %}
+                            {% else %}
+                                <p>Няма предадени задачи</p>
+                            {% endif %}
+                        {% endwith %}
+                    </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock content %}

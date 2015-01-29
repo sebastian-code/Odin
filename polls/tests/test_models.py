@@ -11,7 +11,7 @@ class QuestionModelTest(TestCase):
     def setUp(self):
         self.question = Question.objects.create(title='Chicken or Egg?')
 
-    def test_unicode(self):
+    def test_string_representation(self):
         self.assertEqual('Chicken or Egg?', str(self.question))
 
 
@@ -20,7 +20,7 @@ class ChoiceModelTest(TestCase):
         self.question = Question.objects.create(title='Chicken or Egg?')
         self.choice = Choice.objects.create(question=self.question, text='lorem ipsum')
 
-    def test_unicode(self):
+    def test_string_representation(self):
         self.assertEqual('lorem ipsum', str(self.choice))
 
 
@@ -40,7 +40,7 @@ class AnswerModelTest(TestCase):
 
         self.answer = Answer.objects.create(choice=self.choice, user=self.student_user)
 
-    def test_unicode(self):
+    def test_string_representation(self):
         self.assertEqual('lorem ipsum', str(self.answer))
 
 
@@ -53,7 +53,7 @@ class PollModelTest(TestCase):
         self.poll = Poll.objects.create(title='Very important!')
         self.poll.question.add(self.question)
 
-    def test_unicode(self):
+    def test_string_representation(self):
         self.assertEqual('Very important!', str(self.poll))
 
     def test_user_has_answered_when_no_answers(self):

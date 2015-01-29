@@ -31,6 +31,12 @@ class Course(models.Model):
     def get_statistics_url(self):
         return reverse('statistics:show_course_stats', args=[self.id])
 
+    def get_course_with_deadlines(self):
+        return '{0} ({1} до {2})'.format(self.name, self.start_time, self.end_time)
+
+    def get_course_with_start_date(self):
+        return '{0} до {1}'.format(self.name, self.start_time)
+
 
 class Partner(models.Model):
     description = tinymce_models.HTMLField(blank=False)

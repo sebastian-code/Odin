@@ -53,7 +53,7 @@ class Command(BaseCommand):
                     elif not User.is_existing(email):
                         first_name = full_name[0]
                         last_name = full_name[-1]
-                        new_password = User.generate_password()
+                        new_password = User.objects.make_random_password()
                         User.objects.create_user(
                             email,
                             new_password,

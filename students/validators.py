@@ -6,7 +6,6 @@ from django.core.validators import URLValidator
 import requests
 
 
-# Model field validators
 def validate_mac(mac):
     # RegexValidator uses re.search, which has no use for us
     regex = re.compile(r'^([0-9A-F]{2}[:]){5}([0-9A-F]{2})$', re.IGNORECASE)
@@ -19,7 +18,7 @@ def validate_url(url, needle, message, code):
     needle = '://{}'.format(needle)
 
     URLValidator(url)
-    if not needle in url and not www_needle in url:
+    if needle not in url and www_needle not in url:
         raise ValidationError(message, code)
 
 
@@ -29,7 +28,7 @@ def validate_github(url):
     validate_url(url, 'github.com', message, code)
     response = requests.get(url)
     if not response.ok:
-     raise ValidationError(message, code)
+        raise ValidationError(message, code)
 
 
 def validate_linkedin(url):

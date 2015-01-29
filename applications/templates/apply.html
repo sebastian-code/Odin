@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+
+{% block meta %}
+    <title>Прием</title>
+{% endblock meta %}
+
+{% block content %}
+    <h4>{{ header_text }}</h4>
+    <div class="row">
+        <div class="large-12 columns">
+            <div class="panel">
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ form }}
+                    <button>Давай</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

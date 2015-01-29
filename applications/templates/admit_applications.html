@@ -1,0 +1,39 @@
+{% extends "admin/base_site.html" %}
+{% load i18n l10n %}
+
+{% block content %}
+    <p>{% blocktrans %}Are you sure you want to admit and email the selected {{ objects_name }}? All of the following objects will be admitted and emailed:{% endblocktrans %}</p>
+
+    {% for obj in queryset %}
+        <ul><strong>{{ obj }}</strong></ul>
+    {% endfor %}
+
+    <br />
+
+    <p>If you wish to specify the message that'll be sent. Otherwise <strong>admit_template.html</strong> will be read.</p>
+    <p>Available variables are:</p>
+    <ul>
+        <li>student,</li>
+        <li>student_name,</li>
+        <li>course,</li>
+        <li>course_name,</li>
+        <li>course_start_date</li>.
+    </ul>
+    <strong>To use the variables <i>{% autoescape on %} {{ var }} {% endautoescape %}</i>.Course and Student have all the data of their respective models.</strong>
+
+    <br />
+    <textarea rows="10", cols="40" name="message_template" form="django" placeholder="{{ default_text }}"></textarea>
+
+    <form action="" method="post" id="django">
+    {% csrf_token %}
+    <div>
+        {% for obj in queryset %}
+            <input type="hidden" name="{{ action_checkbox_name }}" value="{{ obj.pk|unlocalize }}" />
+        {% endfor %}
+        <input type="hidden" name="action" value="admit_applications" />
+        <input type="hidden" name="post" value="yes" />
+        <input type="submit" value="{% trans "Yes, I'm sure" %}" />
+    </div>
+    </form>
+
+{% endblock %}

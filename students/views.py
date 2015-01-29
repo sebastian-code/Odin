@@ -11,10 +11,11 @@ from django.db import IntegrityError
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
 
-from .forms import UserEditForm, AddNote, VoteForPartner, AddSolutionForm, GiveFeedbackForm
-from .models import CourseAssignment, UserNote, User, CheckIn, Task, Solution
+from applications.models import Application
 from courses.models import Course, Certificate
 from forum.models import Comment
+from students.forms import UserEditForm, AddNote, VoteForPartner, AddSolutionForm, GiveFeedbackForm
+from students.models import CourseAssignment, UserNote, User, CheckIn, Task, Solution
 
 
 def login(request):
@@ -39,6 +40,8 @@ def user_profile(request):
     user_courses = [ca.course for ca in assignments]
 
     vote_forms = []
+    applications = Application.objects.filter(student=current_user).all()
+
     for assignment in assignments:
         if assignment.course.ask_for_favorite_partner:
             vote_form = VoteForPartner(instance=assignment, assignment=assignment)
@@ -47,7 +50,7 @@ def user_profile(request):
     if request.method == 'POST':
         assignment = get_object_or_404(CourseAssignment, id=request.POST.get('assignment_id'))
         if assignment not in assignments:
-            raise PermissionDenied()
+            raise PermissionDenied
 
         vote_form = VoteForPartner(request.POST, request.FILES, instance=assignment, assignment=assignment)
         if vote_form.is_valid():
@@ -192,6 +195,7 @@ def solutions(request, course_url):
         if task in solutions_by_task:
             task.solution = solutions_by_task[task]
 
+    header_text = 'Задачи: {0}'.format(course.get_course_with_deadlines())
     return render(request, 'solutions.html', locals())
 
 

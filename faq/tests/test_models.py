@@ -8,5 +8,5 @@ class FaqModelTest(TestCase):
         self.faq = Faq.objects.create(title='Lorem ipsum', text='Lorem ipsum dolor sit amet,\
         consectetur adipiscing elit.')
 
-    def test_unicode(self):
+    def test_string_representation(self):
         self.assertEqual(self.faq.title, str(self.faq))

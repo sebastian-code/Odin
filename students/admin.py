@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import User, CourseAssignment, UserNote, CheckIn, HrLoginLog, Solution, StudentStartedWorkingAt
+from students.models import User, CourseAssignment, EducationInstitution, UserNote, CheckIn, HrLoginLog, Solution, StudentStartedWorkingAt
 
 
 class UsersAdmin(admin.ModelAdmin):
@@ -78,3 +78,4 @@ class SolutionAdmin(admin.ModelAdmin):
 
 admin.site.register(Solution, SolutionAdmin)
 admin.site.register(StudentStartedWorkingAt)
+admin.site.register(EducationInstitution)
