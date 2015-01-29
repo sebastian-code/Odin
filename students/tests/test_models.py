@@ -7,7 +7,7 @@ from django.db import IntegrityError
 from django.test import TestCase
 
 from courses.models import Partner, Course, Task
-from students.models import User, CourseAssignment, Solution, StudentStartedWorkingAt
+from students.models import User, EducationInstitution, CourseAssignment, Solution, StudentStartedWorkingAt, HrLoginLog
 
 
 class UserManagerModelTest(TestCase):
@@ -55,6 +55,13 @@ class UserModelTest(TestCase):
         self.assignment = CourseAssignment.objects.create(
             user=self.student_user, course=self.course, group_time=CourseAssignment.EARLY)
 
+        self.partner_potato = Partner.objects.create(
+            name='Potato Company', description='Potato company')
+        self.hr_user = User.objects.create_user('ivan_hr@gmail.com', '1234')
+        self.hr_user.status = User.HR
+        self.hr_user.hr_of = self.partner_potato
+        self.hr_user.save()
+
     def test_string_representation(self):
         self.assertEqual(
             self.student_user.get_full_name(), str(self.student_user))
@@ -77,6 +84,36 @@ class UserModelTest(TestCase):
     def test_is_existing(self):
         self.assertFalse(User.is_existing('referee@real-madrid.com'))
         self.assertTrue(User.is_existing('ivo_student@gmail.com'))
+
+    def test_log_hr_login_signal_when_student(self):
+        hr_logs_count_before = HrLoginLog.objects.count()
+        self.client.login(username=self.student_user.email, password='123')
+        hr_logs_count_after = HrLoginLog.objects.count()
+        self.assertEqual(hr_logs_count_before, hr_logs_count_after)
+
+    def test_log_hr_login_signal_when_teacher(self):
+        user = User.objects.create(email='teacher@asd.bg', password='123', status=User.TEACHER)
+        hr_logs_count_before = HrLoginLog.objects.count()
+        self.client.login(username=user.email, password='123')
+        hr_logs_count_after = HrLoginLog.objects.count()
+        self.assertEqual(hr_logs_count_before, hr_logs_count_after)
+
+    def test_log_hr_login_signal_when_HR(self):
+        hr_logs_count_before = HrLoginLog.objects.count()
+        self.client.login(username=self.hr_user.email, password='1234')
+        hr_logs_count_after = HrLoginLog.objects.count()
+
+        self.assertEqual(hr_logs_count_before + 1, hr_logs_count_after)
+
+
+class EducationInstitutionModelTest(TestCase):
+
+    def setUp(self):
+        self.institution = EducationInstitution(name='FMI')
+
+    def test_string_representation(self):
+        expected = self.institution.name
+        self.assertEqual(expected, str(self.institution))
 
 
 class CourseAssignmentModelTest(TestCase):
