@@ -28,7 +28,7 @@ def validate_github(url):
     validate_url(url, 'github.com', message, code)
     response = requests.get(url)
     if not response.ok:
-     raise ValidationError(message, code)
+        raise ValidationError(message, code)
 
 
 def validate_linkedin(url):
