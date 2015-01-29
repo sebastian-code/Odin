@@ -12,6 +12,15 @@ from courses.models import Course
 from students.models import CourseAssignment
 
 
+NO_COURSES_TO_APPLY_FOR_ERROR = 'За момента няма курсове, за които да се запишете. Следете блога на HackBulgaria\n\
+              или вижте някои от курсовете досега.'
+HASNT_ATTENDED_LAST_ENROLLED_COURSE_ERROR = 'Изглежда, че не сте завършили последният записан курс при нас.\n\
+                       Ще се наложи да кандидатствате отново за следващият.'
+HAS_ATTENDED_LAST_ENROLLED_COURSE_MESSAGE = 'Радваме се, че сте отново с нас.'
+ALREADY_ADMITTED_IN_COURSE_ERROR = 'Вие вече сте приет в {0}! :)'
+ALREADY_APPLIED_FOR_COURSE_ERROR = 'Вие вече сте кандидатствали за {0}'
+
+
 def apply(request):
     current_user = request.user
     latest_assignment = None
@@ -41,24 +50,22 @@ def apply(request):
 
     form_courses = form.fields['course'].queryset
     if not form_courses:
-        error_message = 'За момента няма курсове, за които да се запишете. Следете блога на HackBulgaria\n\
-                         или вижте някои от курсовете досега.'
+        error_message = NO_COURSES_TO_APPLY_FOR_ERROR
         return render(request, 'generic_error.html', {'error_message': error_message})
     elif getattr(latest_assignment, 'course', None) in form_courses:
-        error_message = 'Вие вече сте приет в {0}! :)'.format(latest_assignment.course)
+        error_message = ALREADY_ADMITTED_IN_COURSE_ERROR.format(latest_assignment.course)
         return render(request, 'generic_error.html', {'error_message': error_message})
 
     existing_applications = Application.objects.filter(student=current_user.pk, course__in=form_courses)
     if existing_applications:
         courses = [str(obj.course) for obj in existing_applications]
-        error_message = 'Вие вече сте кандидатствали за {0}'.format(', '.join(courses))
+        error_message = ALREADY_APPLIED_FOR_COURSE_ERROR .format(', '.join(courses))
         return render(request, 'generic_error.html', {'error_message': error_message})
 
     if latest_assignment and not latest_assignment.is_attending:
-        header_text = 'Изглежда, че не сте завършили последният записан курс при нас.\n\
-                       Ще се наложи да кандидатствате отново за следващият.'
+        header_text = HASNT_ATTENDED_LAST_ENROLLED_COURSE_ERROR
     elif latest_assignment and latest_assignment.is_attending:
-        header_text = 'Радваме се, че сте отново с нас.'
+        header_text = HAS_ATTENDED_LAST_ENROLLED_COURSE_MESSAGE
         form = ExistingAttendingUserApplicationForm(data=request.POST or None, user=current_user)
     return render(request, 'apply.html', locals())
 
