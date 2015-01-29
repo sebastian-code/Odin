@@ -52,7 +52,7 @@ def apply(request):
     if not form_courses:
         error_message = NO_COURSES_TO_APPLY_FOR_ERROR
         return render(request, 'generic_error.html', {'error_message': error_message})
-    elif getattr(latest_assignment, 'course', None) in form_courses:
+    elif latest_assignment and latest_assignment.course in form_courses:
         error_message = ALREADY_ADMITTED_IN_COURSE_ERROR.format(latest_assignment.course)
         return render(request, 'generic_error.html', {'error_message': error_message})
 
@@ -90,11 +90,11 @@ def show_submitted_applications(request, course_url):
 @login_required
 @require_http_methods(['POST'])
 def add_solution(request):
+    task = ApplicationTask.objects.filter(id=request.POST['task']).first()
     solution = ApplicationSolution.objects.filter(
         student=request.user,
-        task=request.POST['task'],
+        task=task,
     ).first()
-
     form = AddApplicationSolutionForm(request.POST, instance=solution or None, user=request.user)
 
     if form.is_valid():
