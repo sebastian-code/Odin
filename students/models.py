@@ -1,6 +1,10 @@
+import string
+import random
+
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser, BaseUserManager
-from django.core.mail import send_mail
+from django.contrib.auth.signals import user_logged_in
+from django.dispatch import receiver
 from django.core.urlresolvers import reverse
 from django.db import models
 
@@ -35,13 +39,6 @@ class UserManager(BaseUserManager):
                                   first_name, last_name, works_at)
 
 
-class EducationInstitution(models.Model):
-    name = models.CharField(max_length=128)
-
-    def __str__(self):
-        return self.name
-
-
 class User(AbstractUser):
     STUDENT = 1
     HR = 2
@@ -69,7 +66,6 @@ class User(AbstractUser):
     linkedin_account = models.URLField(validators=[validate_linkedin], null=True, blank=True)
     mac = models.CharField(validators=[validate_mac], max_length=17, null=True, blank=True)
     subscribed_topics = models.ManyToManyField('forum.Topic', blank=True)
-    studies_at = models.ForeignKey(EducationInstitution, null=True, blank=True)
     works_at = models.CharField(null=True, blank=True, max_length='40')
 
     AbstractUser._meta.get_field('email')._unique = True
@@ -88,6 +84,10 @@ class User(AbstractUser):
     def is_existing(email):
         return User.objects.filter(email=email).count() > 0
 
+    @staticmethod
+    def generate_password(size=9, chars=string.ascii_uppercase + string.digits):
+        return ''.join(random.choice(chars) for x in range(size))
+
     def get_avatar_url(self):
         if not self.avatar:
             return settings.STATIC_URL + settings.NO_AVATAR_IMG
@@ -96,9 +96,7 @@ class User(AbstractUser):
     def get_courses(self):
         return [ca.course for ca in self.courseassignment_set.all()]
 
-    def send_email(self, subject, message):
-        send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, (self.email,))
-
+    @receiver(user_logged_in)
     def log_hr_login(sender, user, request, **kwargs):
         if user.status == User.HR:
             log = HrLoginLog(user=user)
@@ -112,16 +110,6 @@ class User(AbstractUser):
 
     def is_student(self):
         return self.status == self.STUDENT
-
-    def set_full_name(self, full_name):
-        names = full_name.split()
-        if len(names) >= 2:
-            self.first_name = names[0]
-            self.last_name = names[-1]
-        elif len(names) == 1:
-            self.first_name = names[0]
-        else:
-            raise ValueError('Not valid full_name.')
 
 
 class HrLoginLog(models.Model):
@@ -140,12 +128,12 @@ class CourseAssignment(models.Model):
 
     course = models.ForeignKey(Course)
     cv = models.FileField(blank=True, null=True, upload_to='cvs')
-    favourite_partners = models.ManyToManyField(Partner, null=True, blank=True)
+    favourite_partners = models.ManyToManyField(Partner)
     group_time = models.SmallIntegerField(choices=GROUP_TIME_CHOICES)
     is_attending = models.BooleanField(default=True)
-    is_online = models.BooleanField(default=False)
     points = models.PositiveIntegerField(default=0)
     user = models.ForeignKey(User)
+    is_online = models.BooleanField(default=False)
 
     def __str__(self):
         return '<{}> {} - {}'.format(self.user.get_full_name(), self.course, self.group_time)
@@ -183,9 +171,6 @@ class UserNote(models.Model):
     author = models.ForeignKey(User, null=True, blank=True)
     post_time = models.DateTimeField(auto_now=True)
 
-    class Meta:
-        ordering = ('post_time',)
-
 
 class CheckIn(models.Model):
     mac = models.CharField(max_length=17)
@@ -199,7 +184,7 @@ class CheckIn(models.Model):
 class Solution(models.Model):
     task = models.ForeignKey(Task)
     user = models.ForeignKey(User)
-    repo = models.URLField()
+    repo = models.URLField(validators=[validate_github])
 
     def get_assignment(self):
         return CourseAssignment.objects.get(user=self.user, course=self.task.course)

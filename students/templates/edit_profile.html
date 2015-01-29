@@ -19,7 +19,7 @@
                 {% csrf_token %}
                 <div class="large-3 columns" style="height: 600px;">
                    <img src="{{ user.get_avatar_url }}" class="th">
-
+                    <p>Максимален размер - 5 mb</p>
                     <input id="id_avatar" name="avatar" type="file" style="margin-top:20px">
                     {{ form.avatar_clear }} Премахни снимката
                 </div>

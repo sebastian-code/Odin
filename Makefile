@@ -4,6 +4,18 @@ SSH_USERNAME = {{ USERNAME }}
 SSH_HOST = {{ HOST }}
 FAB_FOLDER = deploy_tools
 
+all: help
+
+help:
+	@echo ""
+	@echo "Your current settings are: $(SSH_USERNAME)@$(SSH_HOST)"
+	@echo "Available commands:"
+	@echo "make clean         - removes *.pyc files"
+	@echo "make help          - this help info"
+	@echo "make pip-update    - updates current virtualenv's python packages"
+	@echo "make deploy-update - deploys to production"
+	@echo ""
+
 clean:
 	rm -rf *~*
 	find . -name '*.pyc' -exec rm {} \;
@@ -17,4 +29,4 @@ deploy-update:
 
 
 
-.PHONY: clean pip-update deploy-update
+.PHONY: help clean pip-update deploy-update

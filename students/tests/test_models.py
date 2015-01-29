@@ -71,8 +71,7 @@ class UserModelTest(TestCase):
         self.assertEqual(
             settings.STATIC_URL + settings.NO_AVATAR_IMG, self.student_user.get_avatar_url())
         self.student_user.avatar = 'Kappa.jpg'
-        self.assertEqual(
-            '/media/Kappa.jpg', self.student_user.get_avatar_url())
+        self.assertEqual('/media/Kappa.jpg', self.student_user.get_avatar_url())
 
     def test_get_courses(self):
         self.assertCountEqual([self.course], self.student_user.get_courses())

@@ -15,9 +15,12 @@ class Command(BaseCommand):
         I will generate random passwords and send emails to them.
         You can edit the email template located in students/management/commands/template.txt
         The format of the CSV file must be:
-            email, first_name last_name, 1/2, course_id, works_at
+            email, first_name last_name, 1/2, course_id, works_at, is_online
         * 1 is for early group_time
         * 2 is for late group_time
+
+        * 1 is_online True
+        * 0 is_online False
 
         !!IMPORTANT: your emails and names must not contain comma [,].
         We use the comma for value separation!
@@ -40,6 +43,7 @@ class Command(BaseCommand):
                     group_time = row[2].strip()
                     course_id = row[3].strip()
                     works_at = row[4].strip()
+                    is_online = row[5].strip()
                     new_password = 'You know your password!'
 
                     current_course = Course.objects.get(id=course_id)
@@ -61,7 +65,7 @@ class Command(BaseCommand):
                     new_user = User.objects.get(email=email)
 
                     if not CourseAssignment.is_existing(new_user, current_course):
-                        CourseAssignment.objects.create(user=new_user, course=current_course, group_time=group_time)
+                        CourseAssignment.objects.create(user=new_user, course=current_course, group_time=group_time, is_online=is_online)
 
                     email_text = template_text.format(full_name[0], email, new_password)
                     new_user.email_user('Registration in hackbulgaria.com', email_text)

@@ -2,7 +2,7 @@ from django import forms
 
 from tinymce.widgets import TinyMCE
 
-from .models import Topic, Comment
+from forum.models import Topic, Comment
 
 EMPTY_COMMENT_ERROR = 'Празни коментари не са позволени'
 
@@ -22,11 +22,10 @@ class AddTopicForm(forms.ModelForm):
 
     class Meta:
         model = Topic
-        exclude = ['author', 'category']
+        fields = ('title', 'text',)
 
 
 class AddCommentForm(forms.ModelForm):
-    # text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}))
 
     def __init__(self, *args, **kwargs):
         self.author = kwargs.pop('author')

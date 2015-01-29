@@ -3,6 +3,8 @@ import re
 from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
 
+import requests
+
 
 def validate_mac(mac):
     # RegexValidator uses re.search, which has no use for us
@@ -21,7 +23,12 @@ def validate_url(url, needle, message, code):
 
 
 def validate_github(url):
-    validate_url(url, 'github.com', '{} is not a valid Github account URL'.format(url), 'invalid_github_account_url')
+    message = '{} is not a valid Github account URL'.format(url)
+    code = 'invalid_github_account_url'
+    validate_url(url, 'github.com', message, code)
+    response = requests.get(url)
+    if not response.ok:
+     raise ValidationError(message, code)
 
 
 def validate_linkedin(url):

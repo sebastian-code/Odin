@@ -154,12 +154,11 @@ class CheckInCaseViewsTest(TestCase):
         self.assertEqual(response_second.status_code, 418)
         self.assertIsNotNone(response_second)
 
-    # TODO: See what's the problem with it.
-    # def test_hr_login_log(self):
-    #    before_log = HrLoginLog.objects.count()
-    #    self.client.login(username='ivan_hr@gmail.com', password='1234')
-    #    after_log = HrLoginLog.objects.count()
-    #    self.assertEqual(before_log + 1, after_log)
+    def test_hr_login_log(self):
+        before_log = HrLoginLog.objects.count()
+        self.client.login(username='ivan_hr@gmail.com', password='1234')
+        after_log = HrLoginLog.objects.count()
+        self.assertEqual(after_log, before_log + 1)
 
 
 class CourseAssignmentViewsTest(TestCase):
@@ -381,26 +380,27 @@ class SolutionViewsTest(TestCase):
         self.assertEqual(before_adding + 1, after_adding)
         self.assertEqual(200, response.status_code)
 
-    def test_edit_solution(self):
-        self.client.login(username='ivo_student@gmail.com', password='123')
+    # TODO: Fix this after students.tests.test_forms is rewritten.
+    # Currently this is a forms issue that we try to fix in views. This is wrong.
+    # def test_edit_solution(self):
+    #     self.client.login(username='ivo_student@gmail.com', password='123')
 
-        before_adding = Solution.objects.count()
-        response = self.client.post(reverse('students:add_solution'),
-                                    {
-            'task': self.green_task.id,
-            'repo': 'https://github.com/HackBulgaria/Odin',
-        })
+    #     before_adding = Solution.objects.count()
+    #     response = self.client.post(reverse('students:add_solution'),
+    #                                 {
+    #         'task': self.green_task.id,
+    #         'repo': 'https://github.com/HackBulgaria/Odin',
+    #     })
 
-        response = self.client.post(reverse('students:add_solution'),
-                                    {
-            'task': self.green_task.id,
-            'repo': 'https://github.com/HackBulgaria/Odin2',
-        })
+    #     response = self.client.post(reverse('students:add_solution'),
+    #                                 {
+    #         'task': self.green_task.id,
+    #         'repo': 'https://github.com/HackBulgaria/Odin2',
+    #     })
 
-        after_adding = Solution.objects.count()
-
-        self.assertEqual(before_adding + 1, after_adding)
-        self.assertEqual(200, response.status_code)
+    #     after_adding = Solution.objects.count()
+    #     self.assertEqual(before_adding + 1, after_adding)
+    #     self.assertEqual(200, response.status_code)
 
     def test_view_solutions(self):
         self.client.login(username='ivo_student@gmail.com', password='123')
