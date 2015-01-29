@@ -1,5 +1,4 @@
 import datetime
-import mock
 
 from django.conf import settings
 from django.contrib.auth.hashers import make_password
@@ -20,11 +19,13 @@ class UserManagerModelTest(TestCase):
     def test_create_user(self):
         result = User.objects.create_user(self.email, self.raw_password)
         hashed_password = make_password(self.raw_password)
-        self.assertRaises(IntegrityError, User.objects.create, username=self.email, password=hashed_password)
+        self.assertRaises(IntegrityError, User.objects.create,
+                          username=self.email, password=hashed_password)
         self.assertEqual(self.email, result.username)
 
     def test_create_user_with_invalid_email(self):
-        self.assertRaises(ValueError, User.objects.create_user, email=None, password=self.raw_password)
+        self.assertRaises(
+            ValueError, User.objects.create_user, email=None, password=self.raw_password)
 
     def test_create_superuser(self):
         result = User.objects.create_superuser(self.email, self.raw_password)
@@ -35,7 +36,8 @@ class UserManagerModelTest(TestCase):
 class UserModelTest(TestCase):
 
     def setUp(self):
-        self.student_user = User.objects.create_user('ivo_student@gmail.com', '123')
+        self.student_user = User.objects.create_user(
+            'ivo_student@gmail.com', '123')
         self.student_user.status = User.STUDENT
         self.student_user.mac = '4c:80:93:1f:a4:50'
         self.student_user.save()
@@ -53,20 +55,24 @@ class UserModelTest(TestCase):
         self.assignment = CourseAssignment.objects.create(
             user=self.student_user, course=self.course, group_time=CourseAssignment.EARLY)
 
-    def test_unicode(self):
-        self.assertEqual(self.student_user.get_full_name(), str(self.student_user))
+    def test_string_representation(self):
+        self.assertEqual(
+            self.student_user.get_full_name(), str(self.student_user))
 
     def test_get_avatar_url(self):
         self.student_user.avatar = None
-        self.assertEqual(settings.STATIC_URL + settings.NO_AVATAR_IMG, self.student_user.get_avatar_url())
+        self.assertEqual(
+            settings.STATIC_URL + settings.NO_AVATAR_IMG, self.student_user.get_avatar_url())
         self.student_user.avatar = 'Kappa.jpg'
-        self.assertEqual('/media/Kappa.jpg', self.student_user.get_avatar_url())
+        self.assertEqual(
+            '/media/Kappa.jpg', self.student_user.get_avatar_url())
 
     def test_get_courses(self):
         self.assertCountEqual([self.course], self.student_user.get_courses())
-        assignment2 = CourseAssignment.objects.create(
+        CourseAssignment.objects.create(
             user=self.student_user, course=self.course2, group_time=CourseAssignment.LATE)
-        self.assertCountEqual([self.course, self.course2], self.student_user.get_courses())
+        self.assertCountEqual(
+            [self.course, self.course2], self.student_user.get_courses())
 
     def test_is_existing(self):
         self.assertFalse(User.is_existing('referee@real-madrid.com'))
@@ -84,7 +90,8 @@ class CourseAssignmentModelTest(TestCase):
             ask_for_feedback=True
         )
 
-        self.student_user = User.objects.create_user('ivo_student@gmail.com', '123')
+        self.student_user = User.objects.create_user(
+            'ivo_student@gmail.com', '123')
         self.student_user.first_name = 'Ivaylo'
         self.student_user.last_name = 'Bachvarov'
         self.student_user.status = User.STUDENT
@@ -103,20 +110,25 @@ class CourseAssignmentModelTest(TestCase):
         self.assignment = CourseAssignment.objects.create(
             user=self.student_user, course=self.course, group_time=CourseAssignment.EARLY)
         self.assignment.favourite_partners.add(self.partner_potato)
-        self.third_wheel = User.objects.create_user('third_wheel@gmail.com', '456')
+        self.third_wheel = User.objects.create_user(
+            'third_wheel@gmail.com', '456')
 
-    def test_unicode(self):
-        self.assertEqual('<Ivaylo Bachvarov> Test Course - 1', str(self.assignment))
+    def test_string_representation(self):
+        self.assertEqual(
+            '<Ivaylo Bachvarov> Test Course - 1', str(self.assignment))
 
     def test_get_absolute_url(self):
         actual = self.assignment.get_absolute_url()
-        expected = reverse('students:assignment', args=[str(self.assignment.id)])
+        expected = reverse(
+            'students:assignment', args=[str(self.assignment.id)])
         self.assertEqual(expected, actual)
 
     def test_get_favourite_partners(self):
-        self.assertEqual('Potato Company', self.assignment.get_favourite_partners())
+        self.assertEqual(
+            'Potato Company', self.assignment.get_favourite_partners())
         self.assignment.favourite_partners.add(self.partner_salad)
-        self.assertEqual('Potato Company; Salad Company', self.assignment.get_favourite_partners())
+        self.assertEqual(
+            'Potato Company; Salad Company', self.assignment.get_favourite_partners())
 
     def test_has_valid_github_account(self):
         self.assertFalse(self.assignment.has_valid_github_account())
@@ -127,16 +139,19 @@ class CourseAssignmentModelTest(TestCase):
         self.assertTrue(self.assignment.has_valid_github_account())
 
     def test_is_existing_when_part_of_course(self):
-        self.assertTrue(CourseAssignment.is_existing(self.student_user, self.course))
+        self.assertTrue(
+            CourseAssignment.is_existing(self.student_user, self.course))
 
     def test_is_existing_when_not_part_of_course(self):
-        self.assertFalse(CourseAssignment.is_existing(self.hr_user, self.course))
+        self.assertFalse(
+            CourseAssignment.is_existing(self.hr_user, self.course))
 
 
 class StudentStartedWorkingAtModelTest(TestCase):
 
     def setUp(self):
-        self.student_user = User.objects.create_user('ivo_student@gmail.com', '123')
+        self.student_user = User.objects.create_user(
+            'ivo_student@gmail.com', '123')
         self.student_user.first_name = 'Ivaylo'
         self.student_user.last_name = 'Bachvarov'
         self.student_user.status = User.STUDENT
@@ -147,15 +162,16 @@ class StudentStartedWorkingAtModelTest(TestCase):
             url='test-course',
             application_until=datetime.datetime.now(),
         )
-        self.partner = Partner.objects.create(name='Potato Company', description='Potato company')
+        self.partner = Partner.objects.create(
+            name='Potato Company', description='Potato company')
         self.assignment = CourseAssignment.objects.create(
             user=self.student_user, course=self.course, group_time=CourseAssignment.EARLY)
 
         self.started_working_at = StudentStartedWorkingAt.objects.create(assignment=self.assignment,
-                                       partner=self.partner,
-                                       partner_name=self.partner.name)
+                                                                         partner=self.partner,
+                                                                         partner_name=self.partner.name)
 
-    def test_unicode(self):
+    def test_string_representation(self):
         expected = '{} - {}'.format(self.assignment, self.partner)
         self.assertEqual(expected, str(self.started_working_at))
 
@@ -169,7 +185,8 @@ class SolutionTest(TestCase):
             application_until=datetime.datetime.now(),
         )
 
-        self.student_user = User.objects.create_user('ivo_student@gmail.com', '123')
+        self.student_user = User.objects.create_user(
+            'ivo_student@gmail.com', '123')
         self.student_user.status = User.STUDENT
         self.student_user.github_account = 'https://github.com/Ivaylo-Bachvarov'
         self.student_user.save()
@@ -187,16 +204,19 @@ class SolutionTest(TestCase):
         self.assignment = CourseAssignment.objects.create(
             user=self.student_user, course=self.course, group_time=CourseAssignment.EARLY)
         self.assignment.favourite_partners.add(self.partner_potato)
-        self.third_wheel = User.objects.create_user('third_wheel@gmail.com', '456')
+        self.third_wheel = User.objects.create_user(
+            'third_wheel@gmail.com', '456')
 
         self.green_task = Task.objects.create(
             name='Green task',
             course=self.course,
         )
         self.task_url = 'https://github.com/HackBulgaria/Frontend-JavaScript-1/tree/master/week1/2-jQuery-Gauntlet'
-        self.task = Task.objects.create(course=self.course, description=self.task_url, name='<2> jQuery-Gauntlet')
+        self.task = Task.objects.create(
+            course=self.course, description=self.task_url, name='<2> jQuery-Gauntlet')
         self.solution_url = 'https://github.com/syndbg/HackBulgaria/'
-        self.solution = Solution.objects.create(task=self.task, user=self.student_user, repo=self.solution_url)
+        self.solution = Solution.objects.create(
+            task=self.task, user=self.student_user, repo=self.solution_url)
 
     def test_get_assignment(self):
         self.assertEqual(self.solution.get_assignment(), self.assignment)
@@ -215,7 +235,8 @@ class SolutionTest(TestCase):
         self.assertNotEqual(solution_assignment, other_assignment)
 
     def test_get_user_github_username(self):
-        self.assertEqual('Ivaylo-Bachvarov', self.solution.get_user_github_username())
+        self.assertEqual(
+            'Ivaylo-Bachvarov', self.solution.get_user_github_username())
 
     def test_get_github_user_and_repo_names(self):
         result = self.solution.get_github_user_and_repo_names()

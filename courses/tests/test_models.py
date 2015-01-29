@@ -14,7 +14,7 @@ class CourseModelTest(TestCase):
             application_until=datetime.datetime.now(),
         )
 
-    def test_unicode(self):
+    def test_string_representation(self):
         self.assertEqual('Test Course', str(self.course))
 
     def test_get_statistics_url(self):
@@ -26,7 +26,7 @@ class PartnerModelTest(TestCase):
     def setUp(self):
         self.partner = Partner.objects.create(name='Potato Company', description='Potato company')
 
-    def test_unicode(self):
+    def test_string_representation(self):
         self.assertEqual(self.partner.name, str(self.partner))
 
     def test_get_statistics_url(self):
@@ -46,7 +46,7 @@ class TaskModelTest(TestCase):
             course=self.course,
         )
 
-    def test_unicode(self):
+    def test_string_representation(self):
         self.assertEqual('task1', str(self.task))
 
 
