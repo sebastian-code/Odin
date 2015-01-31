@@ -58,6 +58,13 @@
             <hr>
         </div>
         {% endfor %}
+
+        <ul class="breadcrumbs">
+            <li><a href="{% url 'forum:forum' %}">Форум</a></li>
+            <li><a href="{% url 'forum:show_category' topic.category.id %}">{{ topic.category }}</a></li>
+            <li class="current"><a href="#">{{ topic.title }}</a></li>
+        </ul>
+
         {% if current_user.is_authenticated %}
             <h3>Нов отговор:</h3>
             <form method="POST">
