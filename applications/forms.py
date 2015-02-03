@@ -8,24 +8,38 @@ from students.models import CourseAssignment
 from students.models import EducationInstitution, User
 
 
-EMAIL_DUPLICATE_ERROR = 'Този email вече е регистриран.'
-NAMES_ERROR = 'Моля въведете две имена.'
+EMAIL_DUPLICATE_ERROR = 'Ти вече имаш акаунт в нашата система! Влез в него и кандидатсвай оттам.'
+NAMES_ERROR = 'Моля въведи две имена.'
 
 
 class ApplicationForm(forms.ModelForm):
     course = forms.ModelChoiceField(
-        label='За кой курс кандидатстваш',
-        queryset=Course.objects.filter(application_until__gte=timezone.now())
+        label='За кой курс кандидатстваш* ',
+        queryset=Course.objects.filter(application_until__gte=timezone.now()),
+        initial=0
     )
-    name = forms.CharField(label='Как се казваш', widget=forms.TextInput(attrs={'placeholder': 'Две имена'}), max_length=100)
+    name = forms.CharField(
+        label='Как се казваш (две имена)* ',
+        max_length=100
+    )
     education = forms.ModelChoiceField(
-        label='Къде учиш',
+        label='Къде учиш* ',
         queryset=EducationInstitution.objects.all())
-    email = forms.EmailField(label='Email')
-    skype = forms.CharField(label='Skype', max_length=100)
-    phone = forms.CharField(label='Телефон', max_length=100)
-    github_account = forms.CharField(label='Github', widget=forms.TextInput(attrs={'placeholder': 'https://github.com/HackBulgaria'}), max_length=100, required=False)
-    linkedin_account = forms.CharField(label='Linkedin', widget=forms.TextInput(attrs={'placeholder': 'https://www.linkedin.com/'}), max_length=100, required=False)
+    email = forms.EmailField(label='Email* ')
+    skype = forms.CharField(label='Skype* ', max_length=100)
+    phone = forms.CharField(label='Телефон* ', max_length=100)
+    github_account = forms.CharField(
+        label='Github',
+        widget=forms.TextInput(attrs={'placeholder': 'https://github.com/HackBulgaria'}),
+        max_length=100,
+        required=False
+    )
+    linkedin_account = forms.CharField(
+        label='Linkedin',
+        widget=forms.TextInput(attrs={'placeholder': 'https://www.linkedin.com/'}),
+        max_length=100,
+        required=False
+    )
 
     def clean(self):
         cleaned_data = super(ApplicationForm, self).clean()
@@ -73,11 +87,12 @@ class ApplicationForm(forms.ModelForm):
 
 class ExistingUserApplicationForm(forms.ModelForm):
     course = forms.ModelChoiceField(
-        label='За кой курс кандидатстваш',
-        queryset=Course.objects.filter(application_until__gte=timezone.now())
+        label='За кой курс кандидатстваш* ',
+        queryset=Course.objects.filter(application_until__gte=timezone.now()),
+        initial=0
     )
-    skype = forms.CharField(label='Skype', max_length=100)
-    phone = forms.CharField(label='Телефон', max_length=100)
+    skype = forms.CharField(label='Skype* ', max_length=100)
+    phone = forms.CharField(label='Телефон* ', max_length=100)
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
@@ -108,7 +123,8 @@ class ExistingUserApplicationForm(forms.ModelForm):
 class ExistingAttendingUserApplicationForm(forms.ModelForm):
     course = forms.ModelChoiceField(
         label='За кой курс кандидатстваш',
-        queryset=Course.objects.filter(application_until__gte=timezone.now())
+        queryset=Course.objects.filter(application_until__gte=timezone.now()),
+        initial=0
     )
 
     def __init__(self, *args, **kwargs):

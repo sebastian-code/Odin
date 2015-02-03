@@ -14,9 +14,8 @@ from students.models import CourseAssignment
 
 NO_COURSES_TO_APPLY_FOR_ERROR = 'За момента няма курсове, за които да се запишете. Следете блога на HackBulgaria\n\
               или вижте някои от курсовете досега.'
-HASNT_ATTENDED_LAST_ENROLLED_COURSE_ERROR = 'Изглежда, че не сте завършили последният записан курс при нас.\n\
-                       Ще се наложи да кандидатствате отново за следващият.'
-HAS_ATTENDED_LAST_ENROLLED_COURSE_MESSAGE = 'Радваме се, че сте отново с нас.'
+HASNT_ATTENDED_LAST_ENROLLED_COURSE_ERROR = 'Тъй като не си завършил успешно курс в Хак България ще трябва да кандидатствая отново. Попълни формата за кандидатстване и ще получиш имейл със следващите стъпки.'
+HAS_ATTENDED_LAST_ENROLLED_COURSE_MESSAGE = 'Поздравления! Ти успешно си завършил поне един курс в Хак България и можеш да избереш следващ , в който да продължиш. От теб не се изисква да решаваш задачи за кандидатстване, нито пък да се явиш на интервю.'
 ALREADY_ADMITTED_IN_COURSE_ERROR = 'Вие вече сте приет в {0}! :)'
 ALREADY_APPLIED_FOR_COURSE_ERROR = 'Вие вече сте кандидатствали за {0}'
 

@@ -6,17 +6,20 @@
 {% endblock meta %}
 
 {% block content %}
-    <h3>Прием - {{ course.get_course_with_deadlines }}</h3>
+
+    <h3>Прием - {{ course.name }}</h3>
+    Това е финалната стъпка от твоята кандидатура!
+    Можеш да приакчиш своите решения до {{ course.application_until|date:"d.m.Y"  }}. Не се притеснявай, ако не предадеш всички задачи наведнъж! Последните проемни се запазват всеки път.
     {% for task in tasks %}
         <p>
             <a href="{{ task.description }}" target="_blank"><h4>{{ task }}</h4></a>
             <p>
                 <div class="row collapse">
                     <div class="small-10 columns">
-                        <input type="url" name="repo" data-task="{{ task.id }}" data-send-to="{% url 'applications:add_solution' %}" placeholder="Линк към Github repo или файл." class="task-sender" value="{{ task.solution.repo }}">
+                        <input type="url" name="repo" data-task="{{ task.id }}" data-send-to="{% url 'applications:add_solution' %}" placeholder="Линк към решението!" class="task-sender" value="{{ task.solution.repo }}">
                     </div>
                     <div class="small-1 columns">
-                        <button type="button" class="button postfix">Send</button>
+                        <button type="button" class="button postfix">Изпрати</button>
                     </div>
                     <div class="small-1 columns">
                         <span class="postfix radius status-info">
