@@ -7,11 +7,17 @@
 
 {% block content %}
 
-    <h4>{{ header_text }}</h4>
     <div class="row">
         <div class="large-12 columns">
             <div class="panel">
                 <h2 class="text-center">Hack Bulgaria кандидатстване</h3>
+
+                {% if header_text %}
+                    <div data-alert class="alert-box info radius">
+                        {{ header_text }}
+                    </div>
+                {% endif %}
+
                 {% if form.errors %}
                     <div data-alert class="alert-box info radius">
                         <ul>
