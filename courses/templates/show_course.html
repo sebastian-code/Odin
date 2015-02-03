@@ -19,7 +19,7 @@
                 </ul>
                 <div class="large-12 columns text-center">
                     {% if enable_applications %}
-                        <a target="_blank" href="{{ course.applications_url }}" class="button large-3">Кандидатствай</a>
+                        <a target="_blank" href="{{ course.applications_url }}" class="button large-3">{% url "applications:apply" %}</a>
                         <p>(Краен срок - {{ course.application_until | date:"d-m-Y" }})</p>
                     {% else %}
                         <p><strong>Срокът за записване изтече. <a href="{{ course. }}"  rel="nofollow">Абонирайте се за нашия бюлетин, за да получите информация за следващия сезон.</strong></a></p>
