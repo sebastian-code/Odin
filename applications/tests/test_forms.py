@@ -29,10 +29,6 @@ class ApplicationFormTest(TestCase):
                                           'education': self.education.pk, 'skype': 'foobar', 'phone': '007',
                                           'linkedin_account': self.given_linkedin, 'github_account': self.given_github})
 
-    def test_form_has_name_placeholder(self):
-        form = ApplicationForm()
-        self.assertIn('placeholder="Две имена"', form.as_p())
-
     def test_form_has_courses_choice_until_today_or_later(self):
         expired_course = Course.objects.create(
             name='Expired Course',

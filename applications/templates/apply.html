@@ -2,7 +2,7 @@
 
 
 {% block meta %}
-    <title>Прием</title>
+    <title>Hack Bulgaria кандидатстване</title>
 {% endblock meta %}
 
 {% block content %}
@@ -30,13 +30,14 @@
                 {% endif %}
 
                 <div class="large-5 columns" id="video-place">
+                    .
                 </div>
 
                 <p class="large-7 columns">
                     Tова е формата за кандидатсване за курсове в Хак България.
                 Попълни формата, след което ще получиш имейл с подробности за останалите стъпки по кандидатстването.
                 </p>
-
+                <hr>
                 <form method="POST">
                     {% csrf_token %}
                     {{ form }}
@@ -53,11 +54,11 @@
 {% endblock content %}
 
 {% block jsfooter %}
-    <script>
+    <script type="text/javascript">
     $(document).ready(function() {
         function linkToIframe(v){
             var id = v.split('watch?v=')[1];
-            return '<iframe width="100%" height="250" src="http://www.youtube.com/embed/' + id + '" frameborder="0" allowfullscreen></iframe>';
+            return '<iframe width="100%" height="240" src="http://www.youtube.com/embed/' + id + '" frameborder="0" allowfullscreen></iframe>';
         }
 
         function changeVideo(course_id) {
@@ -69,9 +70,11 @@
         }
 
         $("#id_course").change(function() {
-            var course_id = this.value;
+            var course_id = $(this).val()
             changeVideo(course_id);
         });
+
+        $("#id_course").trigger("change")
     });
     </script>
 {% endblock jsfooter %}
