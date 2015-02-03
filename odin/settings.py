@@ -28,8 +28,8 @@ INSTALLED_APPS = (
     'adminsortable',
     'debug_toolbar',
     'markdown_deux',
-    'tinymce',
     'debug_panel',
+    'ckeditor',
     'pagedown',
 
     'courses',
@@ -87,18 +87,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Examples: "http://example.com/media/", "http://media.example.com/"
 MEDIA_URL = '/media/'
 
-
-TINYMCE_DEFAULT_CONFIG = {
-    'plugins': "table,spellchecker,paste,searchreplace",
-    'theme': 'advanced',
-    'cleanup_on_startup': True,
-    'custom_undo_redo_levels': 10,
-    # 'width': 900,
-    # 'height': 400,
-}
-
-TINYMCE_COMPRESSOR = True
-
 try:
     if 'TRAVIS' in os.environ:
         from .travis_settings import *
@@ -107,3 +95,14 @@ try:
 
 except ImportError:
     exit("{}_settings.py not found!".format("travis" if 'TRAVIS' in os.environ else "local"))
+
+CKEDITOR_UPLOAD_PATH = "uploads/"
+CKEDITOR_JQUERY_URL = '//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js'
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+        'height': 300,
+        'width': 1000,
+    },
+}

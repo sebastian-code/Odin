@@ -1,11 +1,11 @@
 from django.core.urlresolvers import reverse
 from django.db import models
 
-from tinymce import models as tinymce_models
+from ckeditor.fields import RichTextField
 
 
 class Course(models.Model):
-    description = tinymce_models.HTMLField(blank=False)
+    description = RichTextField(blank=False)
     git_repository = models.CharField(blank=True, max_length=256)
     image = models.ImageField(upload_to="courses_logoes", null=True, blank=True)
     name = models.CharField(blank=False, max_length=64)
@@ -40,7 +40,7 @@ class Course(models.Model):
 
 
 class Partner(models.Model):
-    description = tinymce_models.HTMLField(blank=False)
+    description = RichTextField(blank=False)
     facebook = models.URLField(null=True, blank=True)
     is_active = models.BooleanField(default=False)
     logo = models.ImageField(upload_to="partner_logoes", null=True, blank=True)
