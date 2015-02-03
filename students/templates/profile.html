@@ -34,7 +34,16 @@
                             <button data-reveal-id="vote-for-partner-{{ forloop.counter  }}" >Към кои от партньорите на курса по {{ vote_form.assignment.course }} проявявате интерес?</button>
                         {% endfor %}
                     </p>
-                    <a href="{% url 'students:edit_profile' %}"><span class="fi-page-edit"></span> Редактирай профила</a>
+                    <div data-alert class="alert-box info radius">
+                        {% if current_user.is_student and applications %}
+                            <h5>Кандидатстване:</h5>
+                            {% for application in applications %}
+                                <a href="{% url 'applications:solutions' application.course.url %}">{{ application.course.name }}</a> - предаване на задачи за кандидатстване до.
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+
+                        <a href="{% url 'students:edit_profile' %}"><span class="fi-page-edit"></span> Редактирай профила</a>
                 </div>
                 <div class="medium-12 columns">
                     <h5>Курсове:</h5>
@@ -66,16 +75,6 @@
                     <ol>
                         {% for certificate in certificates %}
                             <li><a href="{{ certificate.get_absolute_url }}">{{ certificate.assignment.course }}</a></li>
-                        {% endfor %}
-                    </ol>
-                    {% endif %}
-
-
-                    {% if current_user.is_student %}
-                    <h5>Applications</h5>
-                    <ol>
-                        {% for application in applications %}
-                            <li><a href="{% url 'applications:solutions' application.course.url %}">{{ application.course.get_course_with_start_date }}</a></li>
                         {% endfor %}
                     </ol>
                     {% endif %}

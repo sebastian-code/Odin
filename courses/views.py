@@ -2,9 +2,11 @@ from datetime import date
 
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
 
 from statistics.helpers import division_or_zero
 from students.models import CourseAssignment, User, Solution
@@ -95,3 +97,13 @@ def show_submitted_solutions(request, course_url):
             task.solution = solutions_by_task[task]
 
     return render(request, 'show_submitted_solutions.html', locals())
+
+
+@csrf_exempt
+@require_http_methods(['POST'])
+def get_course_video(request):
+    course_id = request.POST['id']
+    course = get_object_or_404(Course, id=course_id)
+    needed_data = {"course_video": course.video}
+
+    return JsonResponse(needed_data)

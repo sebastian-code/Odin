@@ -24,6 +24,7 @@ class Course(models.Model):
     SEO_title = models.CharField(blank=False, max_length=255)
     start_time = models.DateField(blank=True, null=True)
     url = models.SlugField(max_length=80, unique=True)
+    video = models.URLField(blank=True)
 
     def __str__(self):
         return self.name
