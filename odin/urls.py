@@ -13,7 +13,6 @@ urlpatterns = patterns('',
     url(r'^pages/', include('django.contrib.flatpages.urls')),
     url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {
         'document_root': settings.MEDIA_ROOT}),
-    url(r'^tinymce/', include('tinymce.urls')),
 
     url(r'^api/', include('odin.api', namespace='api')),
     url(r'^polls/', include('polls.urls', namespace='polls')),

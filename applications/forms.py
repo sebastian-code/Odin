@@ -22,9 +22,10 @@ class ApplicationForm(forms.ModelForm):
         label='Как се казваш (две имена)* ',
         max_length=100
     )
-    education = forms.ModelChoiceField(
+    education = forms.CharField(
         label='Къде учиш* ',
-        queryset=EducationInstitution.objects.all())
+        max_length=110
+    )
     email = forms.EmailField(label='Email* ')
     skype = forms.CharField(label='Skype* ', max_length=100)
     phone = forms.CharField(label='Телефон* ', max_length=100)
