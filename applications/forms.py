@@ -22,6 +22,9 @@ class ApplicationForm(forms.ModelForm):
         label='Как се казваш (две имена)* ',
         max_length=100
     )
+    email = forms.EmailField(label='Email* ')
+    skype = forms.CharField(label='Skype* ', max_length=100)
+    phone = forms.CharField(label='Телефон* ', max_length=100)
     education = forms.CharField(
         label='Къде учиш',
         max_length=110,
@@ -32,9 +35,6 @@ class ApplicationForm(forms.ModelForm):
         max_length=110,
         required=False
     )
-    email = forms.EmailField(label='Email* ')
-    skype = forms.CharField(label='Skype* ', max_length=100)
-    phone = forms.CharField(label='Телефон* ', max_length=100)
     github_account = forms.CharField(
         label='Github',
         widget=forms.TextInput(attrs={'placeholder': 'https://github.com/HackBulgaria'}),
