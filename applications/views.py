@@ -31,14 +31,19 @@ def apply(request):
             pass
 
     if request.method == 'POST':
+        attending_user = False
         if latest_assignment and latest_assignment.is_attending:
             form = ExistingAttendingUserApplicationForm(data=request.POST, user=current_user)
+            attending_user = True
         elif current_user.is_authenticated():
             form = ExistingUserApplicationForm(data=request.POST, user=current_user)
         else:
             form = ApplicationForm(data=request.POST)
         if form.is_valid():
             form.save()
+            if attending_user:
+                return redirect('applications:thanks_user')
+
             return redirect('applications:thanks')
         return render(request, 'apply.html', locals())
 
@@ -71,6 +76,10 @@ def apply(request):
 
 def thanks(request):
     return render(request, 'thanks.html', locals())
+
+
+def thanks_user(request):
+    return render(request, 'thanks_ser.html', locals())
 
 
 @login_required

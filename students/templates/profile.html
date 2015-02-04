@@ -34,14 +34,15 @@
                             <button data-reveal-id="vote-for-partner-{{ forloop.counter  }}" >Към кои от партньорите на курса по {{ vote_form.assignment.course }} проявявате интерес?</button>
                         {% endfor %}
                     </p>
+
+                    {% if current_user.is_student and applications %}
                     <div data-alert class="alert-box info radius">
-                        {% if current_user.is_student and applications %}
                             <h5>Кандидатстване:</h5>
                             {% for application in applications %}
                                 <a href="{% url 'applications:solutions' application.course.url %}">{{ application.course.name }}</a> - предаване на задачи за кандидатстване до.
                             {% endfor %}
-                        {% endif %}
                     </div>
+                    {% endif %}
 
                         <a href="{% url 'students:edit_profile' %}"><span class="fi-page-edit"></span> Редактирай профила</a>
                 </div>

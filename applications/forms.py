@@ -140,8 +140,10 @@ class ExistingAttendingUserApplicationForm(forms.ModelForm):
             'course_name': course.name,
             'email': self.user.email,
             'was_registered': True,
+            'course_repo': course.git_repository,
         }
-        message = render_to_string('email_application_submit.html', context)
+
+        message = render_to_string('email_attending_user.html', context)
         subject = 'HackBulgaria application submitted for {0}'.format(course.name)
         self.instance.user = self.user
         self.user.send_email(subject, message)
