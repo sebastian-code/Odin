@@ -23,8 +23,14 @@ class ApplicationForm(forms.ModelForm):
         max_length=100
     )
     education = forms.CharField(
-        label='Къде учиш* ',
-        max_length=110
+        label='Къде учиш',
+        max_length=110,
+        required=False
+    )
+    works_at = forms.CharField(
+        label='Къде работиш',
+        max_length=110,
+        required=False
     )
     email = forms.EmailField(label='Email* ')
     skype = forms.CharField(label='Skype* ', max_length=100)
@@ -63,6 +69,9 @@ class ApplicationForm(forms.ModelForm):
         new_user.set_full_name(name)
         new_user.linkedin_account = self.cleaned_data.get('linkedin_account', '')
         new_user.github_account = self.cleaned_data.get('github_account', '')
+        new_user.studies_at = self.cleaned_data.get('education', '')
+        new_user.works_at = self.cleaned_data.get('works_at', '')
+
         new_user.save()
         self.instance.student = new_user
 

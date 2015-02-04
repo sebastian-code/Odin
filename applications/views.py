@@ -79,7 +79,7 @@ def thanks(request):
 
 
 def thanks_user(request):
-    return render(request, 'thanks_ser.html', locals())
+    return render(request, 'thanks_user.html', locals())
 
 
 @login_required

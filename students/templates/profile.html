@@ -39,7 +39,7 @@
                     <div data-alert class="alert-box info radius">
                             <h5>Кандидатстване:</h5>
                             {% for application in applications %}
-                                <a href="{% url 'applications:solutions' application.course.url %}">{{ application.course.name }}</a> - предаване на задачи за кандидатстване до.
+                                <a href="{% url 'applications:solutions' application.course.url %}">{{ application.course.name }}</a> - предаване на задачи за кандидатстване до {{application.course.application_until|date:"d.m.Y" }}.
                             {% endfor %}
                     </div>
                     {% endif %}
