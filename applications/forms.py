@@ -32,7 +32,7 @@ class ApplicationForm(forms.ModelForm):
     )
     works_at = forms.CharField(
         label='Къде работиш',
-        max_length=40,
+        max_length=110,
         required=False
     )
     github_account = forms.CharField(

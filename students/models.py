@@ -78,7 +78,7 @@ class User(AbstractUser):
         validators=[validate_mac], max_length=17, null=True, blank=True)
     subscribed_topics = models.ManyToManyField('forum.Topic', blank=True)
     studies_at = models.CharField(blank=True, null=True, max_length="110")
-    works_at = models.CharField(null=True, blank=True, max_length='40')
+    works_at = models.CharField(null=True, blank=True, max_length='110')
 
     AbstractUser._meta.get_field('email')._unique = True
 
