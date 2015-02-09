@@ -28,10 +28,12 @@ class CourseAssignmentAdmin(admin.ModelAdmin):
         'group_time',
         'get_favourite_partners',
         'cv',
+        'is_attending',
+        'is_online'
     ]
 
-    list_filter = ('course', 'group_time')
-
+    list_filter = ('course', 'group_time', 'is_attending', 'is_online')
+    search_fields = ['user__first_name', 'user__last_name', 'user__email']
     list_display_links = ['user']
 
 admin.site.register(CourseAssignment, CourseAssignmentAdmin)
