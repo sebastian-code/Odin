@@ -40,7 +40,7 @@
                 <h3>
                     {{ assignment.user.get_full_name }} и {{ assignment.course }}
                     <span style="float: right;">
-                        
+
                     {% if current_user.is_teacher %}
                         <span class="switch tiny radius has-tip" data-tooltip aria-haspopup="true" title="Завършил успешно курса?">
                             <input id="activity_switch" type="checkbox" data-assignment-id={{ assignment.id }}  data-send-to="{% url 'students:toggle_assignment_activity' %}"
@@ -54,7 +54,7 @@
                     {% endif %}
                     </span>
                 </h3>
-                
+
 
                 <div>
                     <ul style="list-style: none; margin-left:0px;">
@@ -63,11 +63,11 @@
                         {% endif %}
 
                         {% if assignment.user.github_account %}
-                            <li class="fi-social-github"> 
+                            <li class="fi-social-github">
                                 <a target="_blank" href="{{ assignment.user.github_account }}">{{ assignment.user.github_account }}</a>
                             </li>
                         {% else %}
-                            <li lass="fi-social-github">Няма GitHub регистрация!</li> 
+                            <li lass="fi-social-github">Няма GitHub регистрация!</li>
                         {% endif %}
                     </ul>
 
@@ -143,12 +143,12 @@
 {% endblock content %}
 
 {% block jsfooter %}
-    <script type="text/javascript" charset="utf-8" script="{{ STATIC_URL }}js/partners.js"></script>
+    <script type="text/javascript" charset="utf-8" src="{{ STATIC_URL }}js/partners.js"></script>
     <script charset="utf-8">
         $(document).ready(function () {
             var certificate = $('#certificate_url'),
                 $changeAssignmentActivity = $('#activity_switch');
-            
+
             certificate.on('click', function () {
                 window.location = certificate.attr('href');
             });
