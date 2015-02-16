@@ -4,6 +4,8 @@ from django.http import HttpResponseForbidden
 from django.shortcuts import redirect, render, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
+from django.http import JsonResponse
+from django.utils import timezone
 
 
 from applications.forms import ApplicationForm, AddApplicationSolutionForm, ExistingUserApplicationForm, ExistingAttendingUserApplicationForm
@@ -130,3 +132,20 @@ def solutions(request, course_url):
 
     header_text = 'Задачи за прием: {0}'.format(course.get_course_with_deadlines())
     return render(request, 'admission_solutions.html', locals())
+
+
+@csrf_exempt
+def get_applications(request):
+    applications = Application.objects.all()
+    courses_to_aply = Course.objects.filter(application_until__gte=timezone.now())
+    needed_data = {'items': []}
+
+    for course in courses_to_aply:
+        needed_data['items'].append(
+            {
+                'value': applications.filter(course=course).count(),
+                'text': course.name
+            }
+        )
+
+    return JsonResponse(needed_data)
