@@ -143,8 +143,8 @@ def get_applications(request):
     for course in courses_to_aply:
         needed_data['items'].append(
             {
-                'label': applications.filter(course=course).count(),
-                'text': course.name
+                'value': applications.filter(course=course).count(),
+                'label': course.name
             }
         )
 
