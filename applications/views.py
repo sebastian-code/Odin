@@ -160,7 +160,7 @@ def get_finished_applications(request):
     for course in courses_to_aply:
         needed_data['items'].append(
             {
-                'value': len(filter(lambda x: x.is_finished(), applications.filter(course=course))),
+                'value': len(list(filter(lambda x: x.is_finished(), applications.filter(course=course)))),
                 'label': course.name
             }
         )
