@@ -38,6 +38,7 @@ class Application(models.Model):
             return True
         return False
 
+
 class ApplicationTask(models.Model):
     course = models.ForeignKey('courses.Course')
     description = models.URLField()
