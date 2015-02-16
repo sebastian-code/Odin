@@ -32,9 +32,9 @@ class Application(models.Model):
         self.student.send_email(subject, message)
 
     def is_finished(self):
-        tasks = self.course.applicationtask_set.count()
-        solutions = ApplicationSolution.objects.filter(student=self.student, task__in=tasks).count()
-        if tasks == solutions:
+        tasks = self.course.applicationtask_set
+        solutions = ApplicationSolution.objects.filter(student=self.student, task__in=tasks)
+        if tasks.count() == solutions.count():
             return True
         return False
 
