@@ -138,10 +138,10 @@ def solutions(request, course_url):
 def get_applications(request):
     applications = Application.objects.all()
     courses_to_aply = Course.objects.filter(application_until__gte=timezone.now())
-    needed_data = {'item': []}
+    needed_data = {'items': []}
 
     for course in courses_to_aply:
-        needed_data['item'].append(
+        needed_data['items'].append(
             {
                 'value': applications.filter(course=course).count(),
                 'text': course.name
