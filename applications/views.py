@@ -149,3 +149,20 @@ def get_applications(request):
         )
 
     return JsonResponse(needed_data)
+
+
+@csrf_exempt
+def get_finished_applications(request):
+    applications = Application.objects.all()
+    courses_to_aply = Course.objects.filter(application_until__gte=timezone.now())
+    needed_data = {'items': []}
+
+    for course in courses_to_aply:
+        needed_data['items'].append(
+            {
+                'value': len(filter(lambda x: x.is_finished(), applications.filter(course=course))),
+                'label': course.name
+            }
+        )
+
+    return JsonResponse(needed_data)
