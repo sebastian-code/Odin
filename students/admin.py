@@ -78,6 +78,16 @@ class SolutionAdmin(admin.ModelAdmin):
     list_display_links = ['repo']
     list_filter = ('task__course', 'user')
 
+
+class StudentStartedWorkingAtAdmin(admin.ModelAdmin):
+    list_display = [
+        'assignment',
+        'partner',
+        'partner_name',
+    ]
+    list_filter = ('partner', 'assignment__user', 'assignment__course')
+
+admin.site.register(StudentStartedWorkingAt, StudentStartedWorkingAtAdmin)
+
 admin.site.register(Solution, SolutionAdmin)
-admin.site.register(StudentStartedWorkingAt)
 admin.site.register(EducationInstitution)
