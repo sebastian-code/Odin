@@ -39,7 +39,7 @@ def show_course_students(request, course_url):
     assignments = CourseAssignment.objects.only('id', 'user', 'course').filter(
         course=course,
         user__status=User.STUDENT
-    ).select_related('user', 'certificate').prefetch_related('usernote_set', 'usernote_set__author').order_by('-is_attending')
+    ).select_related('user', 'certificate').prefetch_related('usernote_set', 'usernote_set__author').order_by('-is_attending', '-is_online')
 
 
     is_teacher_or_hr = current_user.is_hr() or current_user.is_teacher()
