@@ -33,7 +33,9 @@
                             {% if not assignment.is_attending %}
                                 <small>- незавършил</small>
                             {% endif %}
-
+                            {% if not assignment.is_online %}
+                                <small>- online</small>
+                            {% endif %}
                             {% if assignment in interested_in_me and current_user.is_hr%}
                                 <small class="interested-in-me">- проявил интерес към {{ current_user.hr_of }}</small>
                             {% endif %}
