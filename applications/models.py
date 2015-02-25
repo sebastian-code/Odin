@@ -34,8 +34,8 @@ class Application(models.Model):
     def is_finished(self):
         tasks = self.course.applicationtask_set.all()
         solutions = ApplicationSolution.objects.filter(student=self.student, task__in=tasks)
-
-        if self.course.id == 12:
+        # This is the most ugly hardcode ever done in the history programming...
+        if self.course.id == 12 or self.course.id == 14:
             if solutions.count() == 3:
                 return True
 
