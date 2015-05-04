@@ -2,163 +2,159 @@
 {% load markdown_deux_tags %}
 
 {% block meta %}
-    <title>{{ assignment.user.get_full_name  }} и {{ assignment.course }}| HackBulgaria</title>
-    {{ form.media }}
-    <link rel="stylesheet" href="{{ STATIC_URL }}css/assignment.css" />
+<title>{{ assignment.user.get_full_name  }} и {{ assignment.course }}| HackBulgaria</title>
+{{ form.media }}
+<link rel="stylesheet" href="{{ STATIC_URL }}css/assignment.css" />
 {% endblock meta %}
 
 {% block content %}
 <div class="row">
-    <div id="give-feedback" class="reveal-modal" data-reveal>
-        <form method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            <p>Моля посочете къде сте започнали работа след курсът.</p>
-            {{ feedback_form.error }}
+  <div id="give-feedback" class="reveal-modal" data-reveal>
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <p>Моля посочете къде сте започнали работа след курсът.</p>
+      {{ feedback_form.error }}
 
-            <div id="partner-selection-container">
-                {{ feedback_form.partner }}
-            </div>
+      <div id="bloodhound">
+        <input name="partner_name" class="typeahead" type="text" placeholder="Company">
+      </div>
 
-            <div id="partner-name-input-container">
-                <label>Име на компанията:</label>
-                {{ feedback_form.partner_name }}
-            </div>
+      <button>Готово</button>
+    </form>
+    <a class="close-reveal-modal">&#215;</a>
+  </div>
 
-            <button id="back-to-partners-list" name="button">Назад</button>
-            <button id="cant-find-partner" name="button">Не намирам компанията в списъка</button>
-            <button>Готово</button>
-        </form>
-        <a class="close-reveal-modal">&#215;</a>
-    </div>
-
-    <div class="large-12 columns">
-        <div class="panel">
-            <div class="row" id="course-page">
-                <div class="medium-3 columns" style="padding-bottom: 20px;">
-                    <img src="{{ assignment.user.get_avatar_url }}" class="th">
-                </div>
-                <h3>
-                    {{ assignment.user.get_full_name }} и {{ assignment.course }}
-                    <span style="float: right;">
-
-                    {% if current_user.is_teacher %}
-                        <span class="switch tiny radius has-tip" data-tooltip aria-haspopup="true" title="Завършил успешно курса?">
-                            <input id="activity_switch" type="checkbox" data-assignment-id={{ assignment.id }}  data-send-to="{% url 'students:toggle_assignment_activity' %}"
-
-                            {% if assignment.is_attending %}
-                                checked
-                            {% endif %}
-                          >
-                          <label for="activity_switch"></label>
-                        </span>
-                    {% endif %}
-                    </span>
-                </h3>
-
-
-                <div>
-                    <ul style="list-style: none; margin-left:0px;">
-                        {% if current_user.is_teacher or current_user.is_hr %}
-                            <li class="fi-mail"> {{ assignment.user.email }}</li>
-                        {% endif %}
-
-                        {% if assignment.user.github_account %}
-                            <li class="fi-social-github">
-                                <a target="_blank" href="{{ assignment.user.github_account }}">{{ assignment.user.github_account }}</a>
-                            </li>
-                        {% else %}
-                            <li lass="fi-social-github">Няма GitHub регистрация!</li>
-                        {% endif %}
-                    </ul>
-
-                    {% if current_user.is_teacher or current_user.is_hr %}
-                        {% if assignment.after_course_works_at %}
-                            <p>
-                                След курса започна работа в: <a href="{{ assignment.after_course_works_at.website }}" target="_blank">{{ assignment.user.after_course_works_at }}</a>
-                            </p>
-                        {% endif %}
-                    {% endif %}
-
-                    <hr>
-
-                    {% if current_user.is_student and user == assignment.user %}
-                        {% if assignment.course.ask_for_feedback and has_ended and not has_started_working_at %}
-                        <p class="text-center">
-                            <button data-reveal-id="give-feedback">Посочете къде сте започнали работа след курсът</button>
-                        </p>
-                        {% endif %}
-                        <hr>
-                    {% endif %}
-
-
-
-                    <dl class="tabs" data-tab>
-                        {% if current_user.is_student %}
-                        <dd class="active"><a href="#comments">Коментари във форума</a></dd>
-                        {% else %}
-                            <dd class="active"><a href="#notes">Notes</a></dd>
-                            <dd><a href="#comments">Коментари във форума</a></dd>
-                        {% endif %}
-                        {% if certificate %}
-                            <dd><a id="certificate_url" href="{{ certificate.get_absolute_url }}" target="_blank">Сертификат</a></dd>
-                        {% endif %}
-                    </dl>
-
-                    <div class="tabs-content">
-                      <div class="content active" id="notes">
-                          {% if current_user.is_teacher or current_user.is_hr %}
-                              {% for note in notes %}
-                                  <strong>{{ note.author.get_full_name }}</strong>
-                                  <small>{{ note.post_time|date:"d-m-Y" }}</small>
-                                  <br>{{ note.text | markdown }}
-                                  <hr>
-                              {% endfor %}
-                          {% endif %}
-                          {% if current_user.is_teacher %}
-                              {{ form.errors }}
-                              <form method="POST">
-                                  {% csrf_token %} {{form.text}}
-                                  <input type="hidden" name="assignment" value="{{ assignment.id }}">
-                                  <button>Пусни коментара</button>
-                              </form>
-                          {% endif %}
-                      </div>
-                      <div class="content" id="comments">
-                        <p>
-                            Всички ваши коментари (по теми в форума):
-                            {% for comment in comments %}
-                            <ul>
-                                <li><a href="{% url 'forum:show_topic' comment.topic.id %}#{{ comment.id }}">{{ comment.topic }} #{{ comment.id }}</a>
-                                </li>
-                            </ul>
-                            {% endfor %}
-                        </p>
-                      </div>
-                    </div>
-                </div>
-            </div>
+  <div class="large-12 columns">
+    <div class="panel">
+      <div class="row" id="course-page">
+        <div class="medium-3 columns" style="padding-bottom: 20px;">
+          <img src="{{ assignment.user.get_avatar_url }}" class="th">
         </div>
+        <h3>
+          {{ assignment.user.get_full_name }} и {{ assignment.course }}
+          <span style="float: right;">
+
+            {% if current_user.is_teacher %}
+            <span class="switch tiny radius has-tip" data-tooltip aria-haspopup="true" title="Завършил успешно курса?">
+              <input id="activity_switch" type="checkbox" data-assignment-id={{ assignment.id }}  data-send-to="{% url 'students:toggle_assignment_activity' %}"
+
+                     {% if assignment.is_attending %}
+                     checked
+                     {% endif %}
+                     >
+              <label for="activity_switch"></label>
+            </span>
+            {% endif %}
+          </span>
+        </h3>
+
+
+        <div>
+          <ul style="list-style: none; margin-left:0px;">
+            {% if current_user.is_teacher or current_user.is_hr %}
+            <li class="fi-mail"> {{ assignment.user.email }}</li>
+            {% endif %}
+
+            {% if assignment.user.github_account %}
+            <li class="fi-social-github">
+              <a target="_blank" href="{{ assignment.user.github_account }}">{{ assignment.user.github_account }}</a>
+            </li>
+            {% else %}
+            <li lass="fi-social-github">Няма GitHub регистрация!</li>
+            {% endif %}
+          </ul>
+
+          {% if current_user.is_teacher or current_user.is_hr %}
+          {% if assignment.after_course_works_at %}
+          <p>
+            След курса започна работа в: <a href="{{ assignment.after_course_works_at.website }}" target="_blank">{{ assignment.user.after_course_works_at }}</a>
+          </p>
+          {% endif %}
+          {% endif %}
+
+          <hr>
+
+          {% if current_user.is_student and user == assignment.user %}
+          {% if assignment.course.ask_for_feedback and has_ended and not has_started_working_at %}
+          <p class="text-center">
+            <button data-reveal-id="give-feedback">Посочете къде сте започнали работа след курсът</button>
+          </p>
+          {% endif %}
+          <hr>
+          {% endif %}
+
+
+
+          <dl class="tabs" data-tab>
+            {% if current_user.is_student %}
+            <dd class="active"><a href="#comments">Коментари във форума</a></dd>
+            {% else %}
+            <dd class="active"><a href="#notes">Notes</a></dd>
+            <dd><a href="#comments">Коментари във форума</a></dd>
+            {% endif %}
+            {% if certificate %}
+            <dd><a id="certificate_url" href="{{ certificate.get_absolute_url }}" target="_blank">Сертификат</a></dd>
+            {% endif %}
+          </dl>
+
+          <div class="tabs-content">
+            <div class="content active" id="notes">
+              {% if current_user.is_teacher or current_user.is_hr %}
+              {% for note in notes %}
+              <strong>{{ note.author.get_full_name }}</strong>
+              <small>{{ note.post_time|date:"d-m-Y" }}</small>
+              <br>{{ note.text | markdown }}
+              <hr>
+              {% endfor %}
+              {% endif %}
+              {% if current_user.is_teacher %}
+              {{ form.errors }}
+              <form method="POST">
+                {% csrf_token %} {{form.text}}
+                <input type="hidden" name="assignment" value="{{ assignment.id }}">
+                <button>Пусни коментара</button>
+              </form>
+              {% endif %}
+            </div>
+            <div class="content" id="comments">
+              <p>
+                Всички ваши коментари (по теми в форума):
+                {% for comment in comments %}
+                <ul>
+                  <li><a href="{% url 'forum:show_topic' comment.topic.id %}#{{ comment.id }}">{{ comment.topic }} #{{ comment.id }}</a>
+                  </li>
+                </ul>
+                {% endfor %}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 {% endblock content %}
 
 {% block jsfooter %}
-    <script type="text/javascript" charset="utf-8" src="{{ STATIC_URL }}js/partners.js"></script>
-    <script charset="utf-8">
-        $(document).ready(function () {
-            var certificate = $('#certificate_url'),
-                $changeAssignmentActivity = $('#activity_switch');
+<script type="text/javascript" charset="utf-8" src="{{ STATIC_URL }}js/partners.js"></script>
+<script type="text/javascript" charset="utf-8" src="{{ STATIC_URL }}js/typeahead.bundle.js"></script>
+<script type="text/javascript" charset="utf-8" src="{{ STATIC_URL }}js/test.js"></script>
 
-            certificate.on('click', function () {
-                window.location = certificate.attr('href');
-            });
+<script charset="utf-8">
+  $(document).ready(function () {
+  var certificate = $('#certificate_url'),
+  $changeAssignmentActivity = $('#activity_switch');
 
-            var $changeAssignmentActivity = $('#activity_switch');
-            $changeAssignmentActivity.on("change", function(event) {
-                var sendTo = $changeAssignmentActivity.data('send-to');
-                var assignmentId = $changeAssignmentActivity.data('assignment-id');
-                $.post(sendTo, {id: assignmentId});
-            });
-        });
-    </script>
+  certificate.on('click', function () {
+  window.location = certificate.attr('href');
+  });
+
+  var $changeAssignmentActivity = $('#activity_switch');
+  $changeAssignmentActivity.on("change", function(event) {
+  var sendTo = $changeAssignmentActivity.data('send-to');
+  var assignmentId = $changeAssignmentActivity.data('assignment-id');
+  $.post(sendTo, {id: assignmentId});
+  });
+  });
+</script>
 {% endblock jsfooter %}
