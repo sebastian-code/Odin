@@ -10,6 +10,7 @@ urlpatterns = patterns('students.views',
     url(r'^add-solution/$', 'add_solution', name='add_solution'),
     url(r'^accounts/profile/$', 'user_profile', name='user_profile'),
     url(r'^set-check-in/$', 'set_check_in', name='set_check_in'),
+    url(r'^get_partners/$', 'api_companies', name='get_partners'),
     url(r'^accounts/edit/$', 'edit_profile', name='edit_profile'),
     url(r'^logout/$', 'logout', name='logout'),
 )

@@ -114,21 +114,14 @@ class GiveFeedbackForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.assignment = kwargs.pop('assignment')
-        super(GiveFeedbackForm, self).__init__(*args, **kwargs)
-        if self.assignment:
-            self.fields['partner'].queryset = Partner.objects.exclude(name='Other Company').order_by('name')
 
     def save(self, *args, **kwargs):
         instance = super(GiveFeedbackForm, self).save(commit=False)
         instance.assignment = self.assignment
-        other_company = Partner.objects.get(name='Other Company')
+        selected_partner = Partner.objects.filter(name=instance.partner_name)
+        if selected_partner:
+            instance.partner = selected_partner
 
-        if not instance.partner and not instance.partner_name:
-            return
-        elif instance.partner_name:
-            instance.partner = other_company
-        elif instance.partner:
-            instance.partner_name = instance.partner.name
         instance.save()
         return instance
 
@@ -136,6 +129,5 @@ class GiveFeedbackForm(forms.ModelForm):
         model = StudentStartedWorkingAt
 
         fields = (
-            'partner',
-            'partner_name'
+            'partner_name',
         )
