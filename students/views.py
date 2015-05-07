@@ -261,10 +261,6 @@ def api_companies(request):
     needed_data = []
 
     for partner in partners:
-        partner_dict = {
-            "id": partner.id,
-            "name": partner.name
-        }
-        needed_data.append(partner_dict)
+        needed_data.append(partner.name)
 
     return HttpResponse(json.dumps(needed_data, ensure_ascii=False), content_type='application/json; charset=utf8')
