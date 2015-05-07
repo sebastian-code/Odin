@@ -15,7 +15,7 @@ from applications.models import Application
 from courses.models import Course, Certificate
 from forum.models import Comment
 from students.forms import UserEditForm, AddNote, VoteForPartner, AddSolutionForm, GiveFeedbackForm
-from students.models import CourseAssignment, UserNote, User, CheckIn, Task, Solution
+from students.models import CourseAssignment, UserNote, User, CheckIn, Task, Solution, Partner
 
 
 def login(request):
@@ -253,3 +253,14 @@ def toggle_assignment_activity(request):
     assignment.is_attending = not assignment.is_attending
     assignment.save()
     return HttpResponse(status=200)
+
+
+@csrf_exempt
+def api_companies(request):
+    partners = Partner.objects.all()
+    needed_data = []
+
+    for partner in partners:
+        needed_data.append(partner.name)
+
+    return HttpResponse(json.dumps(needed_data, ensure_ascii=False), content_type='application/json; charset=utf8')

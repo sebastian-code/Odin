@@ -9,8 +9,8 @@
 
     <h3>Прием - {{ course.name }}</h3>
     Това е финалната стъпка от твоята кандидатура!
-    Можеш да прикачиш своите решения до {{ course.application_until|date:"d.m.Y"  }}. Не се притеснявай, ако не предадеш всички задачи наведнъж! Последните промени се запазват всеки път.
-    <p><strong>Желателно е да използваш gist или GitHub за линковете.</strong></p>
+    Можеш да прикачиш своите решения до {{ course.application_until|date:"d.m.Y"  }}.
+    <p><strong>Желателно е да използваш gist или GitHub за линка.</strong></p>
     {% for task in tasks %}
         <p>
             <a href="{{ task.description }}" target="_blank"><h4>{{ task }}</h4></a>
