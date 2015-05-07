@@ -23,7 +23,6 @@ class ApplicationForm(forms.ModelForm):
         max_length=100
     )
     email = forms.EmailField(label='Email* ')
-    skype = forms.CharField(label='Skype* ', max_length=100)
     phone = forms.CharField(label='Телефон* ', max_length=100)
     education = forms.CharField(
         label='Къде учиш',
@@ -71,7 +70,7 @@ class ApplicationForm(forms.ModelForm):
         new_user.github_account = self.cleaned_data.get('github_account', '')
         new_user.studies_at = self.cleaned_data.get('education', '')
         new_user.works_at = self.cleaned_data.get('works_at', '')
-
+        new_user.phone = self.cleaned_data.get('phone', '')
         new_user.save()
         self.instance.student = new_user
 
@@ -101,7 +100,6 @@ class ExistingUserApplicationForm(forms.ModelForm):
         queryset=Course.objects.filter(application_until__gte=timezone.now()),
         initial=0
     )
-    skype = forms.CharField(label='Skype* ', max_length=100)
     phone = forms.CharField(label='Телефон* ', max_length=100)
 
     def __init__(self, *args, **kwargs):
@@ -120,6 +118,7 @@ class ExistingUserApplicationForm(forms.ModelForm):
         message = render_to_string('email_application_submit.html', context)
         subject = 'HackBulgaria application submitted for {0}'.format(course.name)
         self.instance.student = self.user
+        self.user.phone = self.cleaned_data.get('phone', '')
         self.user.send_email(subject, message)
         return super().save()
 

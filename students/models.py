@@ -79,6 +79,7 @@ class User(AbstractUser):
     subscribed_topics = models.ManyToManyField('forum.Topic', blank=True)
     studies_at = models.CharField(blank=True, null=True, max_length="110")
     works_at = models.CharField(null=True, blank=True, max_length='110')
+    phone = models.CharField(null=True, blank=True, max_length='20')
 
     AbstractUser._meta.get_field('email')._unique = True
 
