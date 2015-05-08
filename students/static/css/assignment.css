@@ -17,7 +17,7 @@
   border: 2px solid #ccc;
   -webkit-border-radius: 8px;
      -moz-border-radius: 8px;
-          
+
   border-radius: 8px;
   outline: none;
 }
@@ -42,7 +42,7 @@
 
 .tt-menu {
   width: 422px;
-  margin: 12px 0;
+  margin: -10px 0;
   padding: 8px 0;
   background-color: #fff;
   border: 1px solid #ccc;
@@ -75,4 +75,8 @@
 
 .tt-suggestion p {
   margin: 0;
+}
+
+.tt-input {
+    width: 420px !important;
 }
