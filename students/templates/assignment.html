@@ -16,7 +16,7 @@
       {{ feedback_form.error }}
 
       <div id="bloodhound">
-        <input name="partner_name" class="typeahead" type="text" placeholder="Company">
+        <input name="partner_name" class="typeahead" type="text" value="{% if current_work_place.partner %}{{ current_work_place.partner }}{% else %}{{ current_work_place.partner_name }}{% endif %}">
       </div>
 
       <button>Готово</button>
@@ -75,7 +75,7 @@
           <hr>
 
           {% if current_user.is_student and user == assignment.user %}
-          {% if assignment.course.ask_for_feedback and has_ended and not has_started_working_at %}
+          {% if assignment.course.ask_for_feedback and has_ended %}
           <p class="text-center">
             <button data-reveal-id="give-feedback">Посочете къде сте започнали работа след курсът</button>
           </p>

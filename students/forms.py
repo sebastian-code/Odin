@@ -114,13 +114,15 @@ class GiveFeedbackForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.assignment = kwargs.pop('assignment')
+        super(GiveFeedbackForm, self).__init__(*args, **kwargs)
 
     def save(self, *args, **kwargs):
         instance = super(GiveFeedbackForm, self).save(commit=False)
         instance.assignment = self.assignment
         selected_partner = Partner.objects.filter(name=instance.partner_name)
         if selected_partner:
-            instance.partner = selected_partner
+            instance.partner_name = None
+            instance.partner = selected_partner[0]
 
         instance.save()
         return instance
