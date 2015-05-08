@@ -10,7 +10,8 @@
     <h3>Прием - {{ course.name }}</h3>
     Това е финалната стъпка от твоята кандидатура!
     Можеш да прикачиш своите решения до {{ course.application_until|date:"d.m.Y"  }}.
-    <p><strong>Желателно е да използваш gist или GitHub за линка.</strong></p>
+    <p>Тук ще намериш условието на задачата: https://github.com/HackBulgaria/Azure-Tech-Entrepreneurship-Course/tree/master/Application</p>
+    <p><strong>Напиши своето решение в Markdown формат и го качи в GitHub/Gist. В полето по-долу, копирай линк към решението и натисни бутона изпрати.</strong></p>
     {% for task in tasks %}
         <p>
             <a href="{{ task.description }}" target="_blank"><h4>{{ task }}</h4></a>
