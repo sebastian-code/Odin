@@ -157,6 +157,9 @@ def dashboard_api(request):
 
     for student in students:
         courses = map(lambda x: str(x), student.get_courses())
+        if not courses:
+            continue
+
         works_at = student.courseassignment_set.last().studentstartedworkingat_set.last()
         if works_at:
             partner = works_at.partner or works_at.partner_name
@@ -170,7 +173,6 @@ def dashboard_api(request):
                 "started_at": partner
             }
         )
-        print(dir(student))
 
     return HttpResponse(
         json.dumps(needed_data, ensure_ascii=False),
