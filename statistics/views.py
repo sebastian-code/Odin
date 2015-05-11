@@ -149,7 +149,7 @@ def show_course_stats(request, course_id):
     return render(request, 'show_course_stats.html', locals())
 
 
-# @staff_member_required
+@staff_member_required
 def dashboard_api(request):
     needed_data = {}
     needed_data["students"] = []
@@ -158,7 +158,10 @@ def dashboard_api(request):
     for student in students:
         courses = map(lambda x: str(x), student.get_courses())
         works_at = student.courseassignment_set.last().studentstartedworkingat_set.last()
-        partner = works_at.partner or works_at.partner_name
+        if works_at:
+            partner = works_at.partner or works_at.partner_name
+        else:
+            partner = ""
 
         needed_data["students"].append(
             {
