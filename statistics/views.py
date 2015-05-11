@@ -157,7 +157,7 @@ def dashboard_api(request):
 
     for student in students:
         courses = map(lambda x: str(x), student.get_courses())
-        if not courses:
+        if not student.get_courses():
             continue
 
         works_at = student.courseassignment_set.last().studentstartedworkingat_set.last()
