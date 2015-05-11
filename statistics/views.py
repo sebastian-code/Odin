@@ -179,7 +179,7 @@ def dashboard_api(request):
             }
         )
 
-    needed_data["courses"] = needed_courses
+    needed_data["courses"] = " ".join(map(lambda x: x.name, needed_courses))
 
     return HttpResponse(
         json.dumps(needed_data, ensure_ascii=False),
