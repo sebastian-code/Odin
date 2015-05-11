@@ -1,6 +1,7 @@
 from datetime import date
 
 from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
@@ -149,15 +150,19 @@ def show_course_stats(request, course_id):
     return render(request, 'show_course_stats.html', locals())
 
 
-@staff_member_required
+@csrf_exempt
 def dashboard_api(request):
     needed_data = {}
     needed_data["students"] = []
     students = User.objects.filter()
 
+    needed_courses = Course.objects.filter(id__in=[1, 2, 3, 5, 6, 7])
+
     for student in students:
-        courses = map(lambda x: str(x), student.get_courses())
-        if not student.get_courses():
+        student_courses = student.get_courses()
+        courses_str = " ".join(map(lambda x: str(x), student_courses))
+
+        if not student_courses:
             continue
 
         works_at = student.courseassignment_set.last().studentstartedworkingat_set.last()
@@ -169,10 +174,12 @@ def dashboard_api(request):
         needed_data["students"].append(
             {
                 "name": student.get_full_name(),
-                "courses": " ".join(courses),
+                "courses": courses_str,
                 "started_at": partner
             }
         )
+
+    needed_data["courses"] = needed_courses
 
     return HttpResponse(
         json.dumps(needed_data, ensure_ascii=False),
