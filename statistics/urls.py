@@ -17,4 +17,7 @@ urlpatterns = patterns('statistics.views',
 
     url(r'^courses/all/$', 'show_courses_stats', name='show_courses_stats'),
     url(r'^courses/(?P<course_id>[0-9]+)/$', 'show_course_stats', name='show_course_stats'),
+
+    url(r'^dashboard/api/$', 'dashboard_api', name='dashboard_api'),
+
 )

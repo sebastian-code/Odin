@@ -3,11 +3,13 @@ from datetime import date
 from django.conf import settings
 from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponse
 
 from courses.models import Course, Partner
 from .helpers import division_or_zero
-from students.models import CourseAssignment, StudentStartedWorkingAt
+from students.models import CourseAssignment, StudentStartedWorkingAt, User
 
+import json
 
 @staff_member_required
 def dashboard(request):
@@ -145,3 +147,29 @@ def show_course_stats(request, course_id):
     average_cost_per_recruitment = division_or_zero(average_cost_per_recruitment, partners.count())
     hired_percent = division_or_zero(started_working_ats_count, total_assignments.count()) * 100
     return render(request, 'show_course_stats.html', locals())
+
+
+# @staff_member_required
+def dashboard_api(request):
+    needed_data = {}
+    needed_data["students"] = []
+    students = User.objects.filter()
+
+    for student in students:
+        courses = map(lambda x: str(x), student.get_courses())
+        works_at = student.courseassignment_set.last().studentstartedworkingat_set.last()
+        partner = works_at.partner or works_at.partner_name
+
+        needed_data["students"].append(
+            {
+                "name": student.get_full_name(),
+                "courses": " ".join(courses),
+                "started_at": partner
+            }
+        )
+        print(dir(student))
+
+    return HttpResponse(
+        json.dumps(needed_data, ensure_ascii=False),
+        content_type='application/json; charset=utf8'
+    )

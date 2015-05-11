@@ -132,32 +132,6 @@ def set_check_in(request):
 
 
 @csrf_exempt
-def api_students(request):
-    all_students = User.objects.filter(status=User.STUDENT)
-    needed_data = []
-
-    for student in all_students:
-        student_courses = []
-        available = CheckIn.objects.filter(date=datetime.datetime.now, student=student).count() != 0
-
-        for assignment in student.courseassignment_set.all():
-            course = {
-                'name': assignment.course.name,
-                'group': assignment.group_time
-            }
-            student_courses.append(course)
-
-        needed_data.append({
-            'name': student.get_full_name(),
-            'courses': student_courses,
-            'github': student.github_account,
-            'available': available,
-        })
-
-    return HttpResponse(json.dumps(needed_data, ensure_ascii=False), content_type='application/json; charset=utf8')
-
-
-@csrf_exempt
 def api_checkins(request):
     checkins = CheckIn.objects.all()
     needed_data = []
