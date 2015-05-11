@@ -15,7 +15,11 @@
       <p>Моля посочете къде сте започнали работа след курсът.</p>
       {{ feedback_form.error }}
 
-      <div id="bloodhound">
+      <label>
+        <input type="checkbox" name="not_working" id="not_working" {% if current_work_place.not_working %}checked{% endif %}> Не съм започнал/a работа.
+      </label>
+
+      <div id="bloodhound" {% if current_work_place.not_working %}style="display:none;"{% endif %}>
         <input name="partner_name" class="typeahead" type="text" value="{% if current_work_place.partner %}{{ current_work_place.partner }}{% else %}{{ current_work_place.partner_name }}{% endif %}">
       </div>
 
@@ -156,5 +160,9 @@
   $.post(sendTo, {id: assignmentId});
   });
   });
+
+   $('#not_working').change(function() {
+    $('#bloodhound').toggle(!this.checked);
+});
 </script>
 {% endblock jsfooter %}

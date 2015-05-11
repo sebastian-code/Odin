@@ -132,4 +132,5 @@ class GiveFeedbackForm(forms.ModelForm):
 
         fields = (
             'partner_name',
+            'not_working',
         )

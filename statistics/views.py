@@ -154,7 +154,7 @@ def show_course_stats(request, course_id):
 def dashboard_api(request):
     needed_data = {}
     needed_data["students"] = []
-    students = User.objects.filter()
+    students = User.objects.prefetch_related('courseassignment_set')
 
     needed_courses = Course.objects.filter(id__in=[1, 2, 3, 5, 6, 7])
 

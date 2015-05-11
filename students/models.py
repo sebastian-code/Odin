@@ -182,6 +182,7 @@ class StudentStartedWorkingAt(models.Model):
     assignment = models.ForeignKey(CourseAssignment)
     partner = models.ForeignKey(Partner, blank=True, null=True)
     partner_name = models.CharField(max_length=128, blank=True, null=True)
+    not_working = models.BooleanField(default=False)
 
     def __str__(self):
         return '{} - {}'.format(self.assignment, self.partner)
