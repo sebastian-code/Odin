@@ -162,7 +162,7 @@ def dashboard_api(request):
 
         works_at = student.courseassignment_set.last().studentstartedworkingat_set.last()
         if works_at:
-            partner = works_at.partner or works_at.partner_name
+            partner = works_at.partner.name or works_at.partner_name
         else:
             partner = ""
 
