@@ -165,7 +165,11 @@ def dashboard_api(request):
         if not student_courses:
             continue
 
-        works_at = student.courseassignment_set.last().studentstartedworkingat_set.last()
+        works_at = StudentStartedWorkingAt.objects.filter(
+            assignment__user=student,
+            assignment__in=needed_courses
+        ).last()
+
         if works_at:
             partner = works_at.partner.name or works_at.partner_name
         else:
