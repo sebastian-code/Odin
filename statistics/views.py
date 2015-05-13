@@ -170,7 +170,7 @@ def dashboard_api(request):
         ).last()
 
         if works_at:
-            partner = works_at.partner.name or works_at.partner_name
+            partner = works_at.partner_name or works_at.partner.name
         else:
             partner = ""
 
