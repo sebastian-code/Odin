@@ -167,7 +167,6 @@ def dashboard_api(request):
 
         works_at = StudentStartedWorkingAt.objects.filter(
             assignment__user=student,
-            assignment__in=needed_courses
         ).last()
 
         if works_at:
