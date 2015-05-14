@@ -81,11 +81,12 @@ class SolutionAdmin(admin.ModelAdmin):
 
 class StudentStartedWorkingAtAdmin(admin.ModelAdmin):
     list_display = [
-        'user',
+        'assignment',
         'partner',
         'partner_name',
+        'not_working'
     ]
-    list_filter = ('partner', 'user')
+    list_filter = ('partner', 'not_working')
 
 admin.site.register(StudentStartedWorkingAt, StudentStartedWorkingAtAdmin)
 

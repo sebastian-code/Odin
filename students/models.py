@@ -179,7 +179,6 @@ class CourseAssignment(models.Model):
 
 
 class StudentStartedWorkingAt(models.Model):
-    user = models.ForeignKey(User, blank=True, null=True)
     assignment = models.ForeignKey(CourseAssignment)
     partner = models.ForeignKey(Partner, blank=True, null=True)
     partner_name = models.CharField(max_length=128, blank=True, null=True)
