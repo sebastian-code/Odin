@@ -150,6 +150,7 @@ def show_course_stats(request, course_id):
     return render(request, 'show_course_stats.html', locals())
 
 
+@staff_member_required
 @csrf_exempt
 def dashboard_api(request):
     needed_data = {}
@@ -160,7 +161,7 @@ def dashboard_api(request):
 
     for student in students:
         student_courses = student.get_courses()
-        courses_str = " ".join(map(lambda x: str(x), student_courses))
+        courses_str = ", ".join(map(lambda x: str(x), student_courses))
 
         if not student_courses:
             continue
