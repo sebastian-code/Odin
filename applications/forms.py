@@ -160,7 +160,7 @@ class ExistingAttendingUserApplicationForm(forms.ModelForm):
     class Meta:
         model = CourseAssignment
         labels = {
-            'group_time': 'Избери група за посещаване',
+            'group_time': 'Избери група за посещаване. <strong>Ако курса има само вечерна група избери late.</strong>',
         }
 
         fields = (
