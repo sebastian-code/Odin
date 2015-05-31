@@ -12,7 +12,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         arg_course_id = args[0]
-        assignments = CourseAssignment.objects.filter(course__id=arg_course_id).exclude(User__status=User.HR)
+        assignments = CourseAssignment.objects.filter(course__id=arg_course_id).exclude(user__status=User.HR)
         for assignment in assignments:
             solutions = Solution.objects.select_related('task').filter(user=assignment.user, task__course__id=arg_course_id)
             if assignment.has_valid_github_account() and solutions:
