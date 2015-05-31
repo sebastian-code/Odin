@@ -50,7 +50,7 @@ def get_user_and_repo_names(github_url):
 
 
 def is_weekly_task(tree_element):
-    regex = re.compile(r'^week\d+/[1-9][0-9]*')
+    regex = re.compile(r'^week[0-9]+/[1-9][0-9]*')
     # paths as week1/2-jQuery-Gauntlet/<N>/README.md won't be counted as single tasks
     # instead there'll be only one week1/2-jQuery-Gauntlet/README.md task
     return regex.match(tree_element.path) is not None and tree_element.path.count('/') < 3
@@ -63,8 +63,7 @@ def is_exam_task(tree_element):
 
 
 def get_dir_and_task_names(path):
-    print(path)
-    regex = re.compile(r'(week\d|exam[1-9][0-9]*)(/.+?/)')
+    regex = re.compile(r'(week[0-9]+|exam[1-9][0-9]*)(/.+?/)')
     result = regex.search(path).groups()
     return {'dir': result[0], 'raw_task': result[1]}
 
