@@ -63,6 +63,7 @@ def is_exam_task(tree_element):
 
 
 def get_dir_and_task_names(path):
+    print(path)
     regex = re.compile(r'(week\d|exam[1-9][0-9]*)(/.+?/)')
     result = regex.search(path).groups()
     return {'dir': result[0], 'raw_task': result[1]}
