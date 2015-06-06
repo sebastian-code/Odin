@@ -16,13 +16,19 @@
 
   <hr/>
 
-  <div class="row">
     {% for course in courses %}
-      <div class="medium-5 columns text-center">
-        <a href="{% url 'courses:show_course' course.url %}"><img src="{{MEDIA_URL}}{{ course.image }}" style="height: 300px;"></a>
-        <h4>{{ course.name }}</h4>
-        <p style="min-height: 150px;">{{ course.short_description }}</p>
-      </div>
+      {% if forloop.counter0|divisibleby:2 %}
+        <div class="row">
+      {% endif %}
+          <div class="medium-6 columns text-center">
+            <a href="{% url 'courses:show_course' course.url %}"><img src="{{MEDIA_URL}}{{ course.image }}" style="height: 300px;"></a>
+            <h4>{{ course.name }}</h4>
+            <p style="min-height: 150px;">{{ course.short_description }}</p>
+          </div>
+      {% if forloop.counter0|divisibleby:2 %}
+        </div>
+      {% endif %}
+
     {% endfor %}
   </div>
 {% endblock content %}
