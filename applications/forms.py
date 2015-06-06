@@ -115,7 +115,7 @@ class ExistingUserApplicationForm(forms.ModelForm):
             'email': self.user.email,
             'was_registered': True,
         }
-        message = render_to_string('email_application_submit.html', context)
+        message = render_to_string('email_attending_user.html', context)
         subject = 'HackBulgaria application submitted for {0}'.format(course.name)
         self.instance.student = self.user
         self.user.phone = self.cleaned_data.get('phone', '')
