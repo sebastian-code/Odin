@@ -16,12 +16,17 @@
 
   <hr/>
 
-    {% for course in courses %}
-      <div class="medium-6 columns text-center">
-        <a href="{% url 'courses:show_course' course.url %}"><img src="{{MEDIA_URL}}{{ course.image }}" style="height: 300px;"></a>
-        <h4>{{ course.name }}</h4>
-        <p style="min-height: 150px;">{{ course.short_description }}</p>
-      </div>
+    {% for chunk in courses_chunked %}
+    <div class="row">
+        {% for course in chunk %}
+          <div class="medium-6 columns text-center">
+            <a href="{% url 'courses:show_course' course.url %}"><img src="{{MEDIA_URL}}{{ course.image }}" style="height: 300px;"></a>
+            <h4>{{ course.name }}</h4>
+            <p style="min-height: 150px;">{{ course.short_description }}</p>
+          </div>
+        {% endfor %}
+    </div>
     {% endfor %}
+
   </div>
 {% endblock content %}
