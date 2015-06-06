@@ -62,9 +62,7 @@ def apply(request):
         error_message = ALREADY_APPLIED_FOR_COURSE_ERROR .format(', '.join(courses))
         return render(request, 'generic_error.html', {'error_message': error_message})
 
-    if latest_assignment and not latest_assignment.is_attending:
-        header_text = HASNT_ATTENDED_LAST_ENROLLED_COURSE_ERROR
-    elif latest_assignment and latest_assignment.is_attending:
+    if latest_assignment:
         form = ExistingAttendingUserApplicationForm(data=request.POST or None, user=current_user)
     return render(request, 'apply.html', locals())
 
