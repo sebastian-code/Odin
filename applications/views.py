@@ -63,7 +63,7 @@ def apply(request):
         return render(request, 'generic_error.html', {'error_message': error_message})
 
     if latest_assignment:
-        form = ExistingAttendingUserApplicationForm(data=request.POST or None, user=current_user)
+        form = ExistingUserApplicationForm(data=request.POST or None, user=current_user)
     return render(request, 'apply.html', locals())
 
 
