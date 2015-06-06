@@ -16,7 +16,7 @@ def index(request):
         is_student = current_user.status == current_user.STUDENT
         is_hr = current_user.status == current_user.HR
         is_teacher = current_user.status == current_user.TEACHER
-    courses = Course.objects.filter(show_on_index=True)
+    courses = Course.objects.filter(show_on_index=True).order_by('-id')
 
     courses_chunked = list(chunks(courses, 2))
 
